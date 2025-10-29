@@ -1,5 +1,5 @@
 import * as ReactDOM from "react-dom/client";
-
+import "./styles/index.css";
 import { AppModule,SharedModule } from "./app";
 
 const container = document.getElementById("root");

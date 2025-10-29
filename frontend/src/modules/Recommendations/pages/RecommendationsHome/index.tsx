@@ -3,25 +3,32 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useI18n } from "../../../../shared/i18n";
-import { ButtonGroup,Container, Title } from "./styles";
 
 const RecommendationsHome: React.FC = () => {
   const { translate } = useI18n();
   const navigate = useNavigate();
 
   return (
-    <Container>
-      <Title>{translate({ id: "recommendations.home.title" })}</Title>
+    <div className="flex flex-col items-center justify-center gap-6 min-h-[calc(100vh-56px)] bg-[var(--color-bg-layout)] text-[var(--color-text)] text-center transition-colors duration-300">
+      <h1 className="text-[1.8rem] font-semibold tracking-wider text-[var(--color-text)] m-0">
+        {translate({ id: "recommendations.home.title" })}
+      </h1>
 
-      <ButtonGroup>
-        <Button onClick={() => navigate("/recommendations/page")}>
+      <div className="grid gap-3 w-[220px]">
+        <Button 
+          className="font-medium tracking-wider"
+          onClick={() => navigate("/recommendations/page")}
+        >
           {translate({ id: "recommendations.button.access.page" })}
         </Button>
-        <Button onClick={() => navigate("/")}>
+        <Button 
+          className="font-medium tracking-wider"
+          onClick={() => navigate("/")}
+        >
           {translate({ id: "button.home" })}
         </Button>
-      </ButtonGroup>
-    </Container>
+      </div>
+    </div>
   );
 };
 
