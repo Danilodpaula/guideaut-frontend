@@ -1,13 +1,5 @@
-import * as ReactDOM from "react-dom/client";
-import "./styles/index.css";
-import { AppModule,SharedModule } from "./app";
+import { createRoot } from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
 
-const container = document.getElementById("root");
-if (!container) throw new Error("Failed to find the root element");
-const root = ReactDOM.createRoot(container);
-
-root.render(
-  <SharedModule>
-    <AppModule />
-  </SharedModule>
-);
+createRoot(document.getElementById("root")!).render(<App />);
