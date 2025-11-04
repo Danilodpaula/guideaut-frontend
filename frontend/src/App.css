@@ -1,0 +1,52 @@
+/* Define o contêiner principal da aplicação */
+#root {
+  max-width: 1280px; /* largura máxima para evitar telas muito largas */
+  margin: 0 auto; /* centraliza horizontalmente */
+  padding: 2rem; /* espaçamento interno padrão */
+  text-align: center; /* centraliza o conteúdo por padrão */
+}
+
+/* Estilo base para o logo do Vite/React */
+.logo {
+  height: 6em; /* tamanho fixo do logo */
+  padding: 1.5em; /* espaçamento ao redor */
+  will-change: filter; /* otimiza performance de animações no hover */
+  transition: filter 300ms; /* animação suave na troca de filtro */
+}
+
+/* Efeito de brilho ao passar o mouse */
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+/* Cor diferenciada para o logo React */
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+/* Animação de rotação contínua */
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Aplica a rotação apenas se o usuário não preferir movimento reduzido */
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+/* Padding genérico para cartões (exemplo de container) */
+.card {
+  padding: 2em;
+}
+
+/* Cor neutra para textos secundários */
+.read-the-docs {
+  color: #888;
+}
