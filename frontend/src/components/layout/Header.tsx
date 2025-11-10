@@ -19,32 +19,40 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { useTheme } from "@/core/theme/ThemeContext"; // Contexto do tema (claro/escuro)
-import { useI18n } from "@/core/i18n/I18nContext"; // Contexto de idioma
-import { useAuth } from "@/core/auth/AuthContext"; // Contexto de autenticação
-import { useNavigate } from "react-router-dom"; // Navegação programática
-import { SidebarTrigger } from "@/components/ui/sidebar"; // Botão para abrir a Sidebar
+import { useTheme } from "@/core/theme/ThemeContext";
+import { useI18n } from "@/core/i18n/I18nContext";
+import { useAuth } from "@/core/auth/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+
+// ✅ Importa o logo SVG
+import GuideAutLogo from "@/assets/base.svg";
 
 // ------------------------------------------------------------
 // 🧩 Componente principal
 // ------------------------------------------------------------
 export const Header = () => {
-  // Hooks e contextos globais
   const { theme, setTheme } = useTheme();
   const { language, setLanguage, t } = useI18n();
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   return (
-    // Cabeçalho fixo no topo com leve desfoque (backdrop-blur)
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 items-center px-4 gap-4">
         {/* Botão para abrir/fechar a Sidebar */}
         <SidebarTrigger />
 
-        {/* Logo ou título do app */}
+        {/* Logo + nome do app */}
         <div className="flex items-center gap-2 flex-1">
-          <h1 className="text-xl font-bold text-primary">GuideAut</h1>
+          <img
+            src={GuideAutLogo}
+            alt="GuideAut logo"
+            className="h-8 w-8 object-contain"
+          />
+          <h1 className="text-xl font-bold text-primary tracking-tight">
+            GuideAut
+          </h1>
         </div>
 
         {/* Ações do cabeçalho */}
@@ -66,7 +74,7 @@ export const Header = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* ☀️🌙 Alternar tema claro/escuro */}
+          {/* ☀️🌙 Alternar tema */}
           <Button
             variant="ghost"
             size="icon"
@@ -80,7 +88,7 @@ export const Header = () => {
             )}
           </Button>
 
-          {/* 👤 Menu do usuário (quando logado) */}
+          {/* 👤 Menu do usuário */}
           {isAuthenticated ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -90,28 +98,26 @@ export const Header = () => {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end" className="w-56">
-                {/* Cabeçalho do menu com nome e email */}
                 <div className="flex flex-col space-y-1 p-2">
                   <p className="text-sm font-medium">{user?.name}</p>
                   <p className="text-xs text-muted-foreground">{user?.email}</p>
                 </div>
                 <DropdownMenuSeparator />
 
-                {/* Opção: Meu perfil */}
                 <DropdownMenuItem onClick={() => navigate("/me")}>
                   <User className="mr-2 h-4 w-4" />
                   {t("nav.profile")}
                 </DropdownMenuItem>
 
-                {/* Opção: Configurações de acessibilidade */}
-                <DropdownMenuItem onClick={() => navigate("/settings/accessibility")}>
+                <DropdownMenuItem
+                  onClick={() => navigate("/settings/accessibility")}
+                >
                   <Settings className="mr-2 h-4 w-4" />
                   {t("nav.accessibility")}
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
 
-                {/* Opção: Sair */}
                 <DropdownMenuItem onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   {t("nav.logout")}
@@ -119,7 +125,6 @@ export const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            // 🔑 Caso o usuário não esteja autenticado, mostra o botão "Entrar"
             <Button onClick={() => navigate("/login")} variant="default">
               Entrar
             </Button>

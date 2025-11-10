@@ -42,6 +42,7 @@ const REFRESH_KEY = "guideaut_refresh_token";
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const bootstrapped = useRef(false);
 
   // Efeito inicial: Tenta carregar dados do usuário se houver token
   useEffect(() => {
@@ -92,9 +93,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await loadUserData();
   };
 
-  // ------------------------------------------------------------
-  // 🚪 Logout
-  // ------------------------------------------------------------
   const logout = async () => {
     // TODO: Chamar /auth/logout do backend (passando o refresh token)
     localStorage.removeItem(TOKEN_KEY);
@@ -141,9 +139,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 // ⚙️ Hook de uso do contexto (sem alteração)
 // ------------------------------------------------------------
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth deve ser usado dentro de um AuthProvider");
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth deve ser usado dentro de um AuthProvider");
+  return ctx;
 };

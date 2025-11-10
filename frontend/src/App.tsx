@@ -35,6 +35,7 @@ import Categories from "./modules/Adm+Base/pages/Categories"
 import Audit from "./modules/Adm+Base/pages/Audit"
 import Profile from "./modules/Adm+Base/pages/Profile"
 import NotFound from "./modules/Adm+Base/pages/NotFound"
+import { Footer } from "./components/layout/Footer"
 
 const queryClient = new QueryClient()
 
@@ -96,6 +97,7 @@ const AppLayout = () => (
             />
           </Routes>
         </main>
+        <Footer />
       </div>
     </div>
   </SidebarProvider>
