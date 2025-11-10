@@ -281,7 +281,6 @@ export type Database = {
           description: string;
           disagree_count: number;
           id: string;
-          phase: Database["public"]["Enums"]["proaut_phase"];
           source: string | null;
           status: Database["public"]["Enums"]["recommendation_status"];
           title: string;
@@ -295,7 +294,6 @@ export type Database = {
           description: string;
           disagree_count?: number;
           id?: string;
-          phase: Database["public"]["Enums"]["proaut_phase"];
           source?: string | null;
           status?: Database["public"]["Enums"]["recommendation_status"];
           title: string;
@@ -309,7 +307,6 @@ export type Database = {
           description?: string;
           disagree_count?: number;
           id?: string;
-          phase?: Database["public"]["Enums"]["proaut_phase"];
           source?: string | null;
           status?: Database["public"]["Enums"]["recommendation_status"];
           title?: string;
@@ -340,6 +337,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      // 🔹 Recomendações (feedbacks e análises)
+      recommendation_ratings: {
+        Row: {
+          id: string;
+          created_at: string;
+          user_id: string;
+          recommendation_id: string;
+          rating: number;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          user_id: string;
+          recommendation_id: string;
+          rating: number;
+        };
+        Update: {
+          rating?: number;
+        };
+        Relationships: [];
+      };
     };
     // =======================================
     // 👁️ VISÕES / FUNÇÕES / ENUMS
@@ -360,7 +378,6 @@ export type Database = {
     // 🎭 Tipos enumerados (Enums)
     Enums: {
       app_role: "ADMIN" | "USER";
-      proaut_phase: "IMMERSION" | "ANALYSIS" | "IDEATION" | "PROTOTYPING";
       recommendation_category:
         | "NAVIGATION"
         | "INTERACTION"
@@ -393,7 +410,7 @@ export type Tables<
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never
+    : never
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals;
 }
@@ -497,12 +514,10 @@ export type CompositeTypes<
   ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
   : never;
 
-// 📌 Constantes úteis para autocomplete e segurança de tipagem
 export const Constants = {
   public: {
     Enums: {
       app_role: ["ADMIN", "USER"],
-      proaut_phase: ["IMMERSION", "ANALYSIS", "IDEATION", "PROTOTYPING"],
       recommendation_category: [
         "NAVIGATION",
         "INTERACTION",
