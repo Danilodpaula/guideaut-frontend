@@ -83,33 +83,29 @@
   }
 
   .dark {
-    /* ===== Dark Theme (alto contraste) ===== */
-    /* Fundo escuro com leve azul para manter identidade GuideAut */
-    --background: 222 84% 5%;
-    --foreground: 210 40% 98%;
+    /* 🌚 Tema Escuro - completo */
+    --background: 222 84% 5%; /* Fundo (escuro) */
+    --foreground: 210 40% 98%; /* Texto (claro) */
 
-    --card: 222 84% 5%;
+    /* Cartões, popovers e áreas padrão (ESCURAS) */
+    --card: 222 84% 8%; /* Cor do card (um pouco mais claro que o fundo) */
     --card-foreground: 210 40% 98%;
-
-    --popover: 222 84% 5%;
+    --popover: 222 84% 8%;
     --popover-foreground: 210 40% 98%;
 
-    /* Mantemos o mesmo primary do light para consistência cross-theme */
+    /* Paleta principal */
     --primary: 199 94% 55%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Chamadas de atenção no dark ainda quentes */
+    --primary-foreground: 0 0% 100%; /* Texto do botão primário */
     --secondary: 48 100% 67%;
-    --secondary-foreground: 222 84% 5%;
-
-    /* Superfícies internas no dark */
-    --muted: 217 33% 18%;
-    --muted-foreground: 215 20% 65%;
-
-    /* Semânticas preservadas no dark */
+    --secondary-foreground: 222 84% 5%; /* Texto do badge 'secondary' (escuro) */
     --accent: 142 71% 45%;
     --accent-foreground: 0 0% 100%;
 
+    /* Texto "muted" (cinza claro) */
+    --muted: 217 33% 18%;
+    --muted-foreground: 217 33% 50%; /* Cor do texto "muted" (ex: descrições) */
+
+    /* Estados e feedback */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
@@ -120,14 +116,13 @@
     --warning-foreground: 222 84% 5%;
 
     --info: 199 94% 55%;
-    --info-foreground: 0 0% 100%;
 
-    /* Bordas mais escuras para não “brilhar” demais no dark */
+    /* Bordas, inputs e raio padrão */
     --border: 217 33% 18%;
     --input: 217 33% 18%;
     --ring: 199 94% 55%;
 
-    /* Sidebar escura com realce no hover */
+    /* Sidebar */
     --sidebar-background: 222 84% 8%;
     --sidebar-foreground: 210 40% 98%;
     --sidebar-primary: 199 94% 55%;

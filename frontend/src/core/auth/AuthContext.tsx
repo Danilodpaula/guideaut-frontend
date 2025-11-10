@@ -1,23 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-refresh/only-export-components */
-// ============================================================
-// 🔐 CONTEXTO DE AUTENTICAÇÃO: AuthContext (via API própria)
-// ============================================================
-
+// src/core/auth/AuthContext.tsx
 import {
   createContext,
   useContext,
-  useEffect,
-  useRef,
   useState,
+  useEffect,
   ReactNode,
 } from "react";
-import type { AxiosError } from "axios";
-import { api, getStoredTokens, setTokens, clearTokens } from "@/api/client";
+// REMOVIDO: import { supabase } from "@/integrations/supabase/client";
+import { loginApi, getProfileApi } from "@/api/authService"; // IMPORTADO
+import { AuthRequest } from "@/api/types/authTypes"; // IMPORTADO
 
-// Tipagens
+// ------------------------------------------------------------
+// 🧩 Tipagens (Simplificado para o backend Spring)
+// ------------------------------------------------------------
 interface User {
-  id: string;
+  id: string; // Usaremos o email por enquanto
   email: string;
   name: string;
   roles: string[];
@@ -27,126 +24,97 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (credentials: { email: string; password: string }) => Promise<void>;
-  signup: (data: { name: string; email: string; password: string }) => Promise<void>;
-  logout: () => Promise<void>;
+  login: (credentials: AuthRequest) => Promise<void>;
+  signup: (data: any) => Promise<void>; // Signup não está no backend, será mockado
+  logout: () => void;
   can: (role: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Chaves do Local Storage
+const TOKEN_KEY = "guideaut_access_token";
+const REFRESH_KEY = "guideaut_refresh_token";
+
+// ------------------------------------------------------------
+// 🧭 Provedor de Autenticação (Modificado)
+// ------------------------------------------------------------
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const bootstrapped = useRef(false);
 
+  // Efeito inicial: Tenta carregar dados do usuário se houver token
   useEffect(() => {
-    if (bootstrapped.current) return;
-    bootstrapped.current = true;
-
-    const bootstrap = async () => {
-      const { accessToken, refreshToken } = getStoredTokens();
-
-      if (!accessToken && !refreshToken) {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        const me = await api.get("/me");
-        const apiUser = me.data as Partial<User> & {
-          id?: string;
-          email?: string;
-          name?: string;
-          roles?: string[];
-          authorities?: string[];
-        };
-
-        const roles =
-          Array.isArray(apiUser.roles)
-            ? apiUser.roles
-            : Array.isArray(apiUser.authorities)
-            ? apiUser.authorities.map((a: string) => a.replace(/^ROLE_/, ""))
-            : [];
-
-        setUser({
-          id: apiUser.id ?? "",
-          email: apiUser.email ?? "",
-          name: apiUser.name ?? apiUser.email?.split("@")[0] ?? "User",
-          roles,
-        });
-      } catch (_err) {
-        // Interceptor já tentou refresh; se ainda falhou, limpa sessão.
-        clearTokens();
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    bootstrap();
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+      loadUserData();
+    } else {
+      setIsLoading(false);
+    }
   }, []);
 
-  const login = async (credentials: { email: string; password: string }) => {
-    const { data } = await api.post<{ accessToken: string; refreshToken: string }>(
-      "/auth/login",
-      credentials
-    );
-    setTokens(data.accessToken, data.refreshToken);
+  // ------------------------------------------------------------
+  // 🧠 Função para carregar dados do usuário (do backend Spring)
+  // ------------------------------------------------------------
+  const loadUserData = async () => {
+    try {
+      // O interceptor do Axios em 'api/client.ts' já injeta o token
+      const { data } = await getProfileApi(); // Chama GET /me
 
-    const me = await api.get("/me");
-    const apiUser = me.data as any;
-    const roles =
-      Array.isArray(apiUser.roles)
-        ? apiUser.roles
-        : Array.isArray(apiUser.authorities)
-        ? apiUser.authorities.map((a: string) => a.replace(/^ROLE_/, ""))
-        : [];
-
-    setUser({
-      id: apiUser.id ?? "",
-      email: apiUser.email ?? "",
-      name: apiUser.name ?? apiUser.email?.split("@")[0] ?? "User",
-      roles,
-    });
+      // O backend /me só retorna o email (e roles, se o JWTAuthFilter for ajustado)
+      // Vamos simular os dados do usuário
+      setUser({
+        id: data.email,
+        email: data.email,
+        name: data.email.split("@")[0], // Simples
+        roles: ["USER"], // TODO: O backend precisa popular isso
+      });
+    } catch (error) {
+      console.error("❌ Erro ao carregar dados do usuário:", error);
+      // Se deu erro (token expirado), força o logout
+      logout();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const signup = async (data: { name: string; email: string; password: string }) => {
-    try {
-      // API espera { nome, email, password }
-      await api.post("/users", {
-        nome: data.name,
-        email: data.email,
-        password: data.password,
-      });
+  // ------------------------------------------------------------
+  // 🔑 Login (agora usa o backend Spring)
+  // ------------------------------------------------------------
+  const login = async (credentials: AuthRequest) => {
+    const { data } = await loginApi(credentials); // Chama POST /auth/login
 
-      // opcional: auto-login após criar
-      await login({ email: data.email, password: data.password });
-    } catch (err) {
-      const ax = err as AxiosError<any>;
-      if (ax.response?.status === 409) {
-        throw new Error("email_exists");
-      }
-      throw err;
-    }
+    // Salva os tokens recebidos do backend
+    localStorage.setItem(TOKEN_KEY, data.accessToken);
+    localStorage.setItem(REFRESH_KEY, data.refreshToken);
+
+    // Carrega os dados do usuário (/me) e atualiza o estado
+    await loadUserData();
   };
 
   const logout = async () => {
-    try {
-      const { refreshToken } = getStoredTokens();
-      if (refreshToken) {
-        await api.post("/auth/logout", { refreshToken });
-      }
-    } catch {
-      // ignore rede
-    } finally {
-      clearTokens();
-      setUser(null);
-    }
+    // TODO: Chamar /auth/logout do backend (passando o refresh token)
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(REFRESH_KEY);
+    setUser(null);
   };
 
-  const can = (role: string) => {
+  // ------------------------------------------------------------
+  // 📝 Cadastro (Ainda não implementado no backend)
+  // ------------------------------------------------------------
+  const signup = async (data: any) => {
+    // Esta função precisa ser implementada no backend (ex: POST /users/register)
+    console.warn("Signup não implementado no backend Spring.");
+    throw new Error("Signup não disponível.");
+  };
+
+  // ------------------------------------------------------------
+  // 🛡️ Verificação de permissões (simplificada)
+  // ------------------------------------------------------------
+  const can = (role: string): boolean => {
     if (!user) return false;
+    // O backend precisa popular 'roles' no JWT para isso funcionar 100%
     return user.roles.includes(role);
   };
 
@@ -167,6 +135,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// ------------------------------------------------------------
+// ⚙️ Hook de uso do contexto (sem alteração)
+// ------------------------------------------------------------
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth deve ser usado dentro de um AuthProvider");

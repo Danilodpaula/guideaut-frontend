@@ -47,10 +47,27 @@ export default function Login() {
     return <Navigate to="/" replace />;
   }
 
-  // Submit: Login
-  const handleSubmitLogin = async (e: FormEvent) => {
+  /**
+   * 🎯 Lida com o envio do formulário de login.
+   * - Chama a função `login()` do AuthContext
+   * - Exibe feedback via toast
+   * - Redireciona para Home em caso de sucesso
+   */
+  // Em Login.tsx
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setIsLoadingLogin(true);
+
+    // ==========================================================
+    // 👇 ADICIONE ESTA VALIDAÇÃO AQUI 👇
+    // ==========================================================
+    if (!email || !password) {
+      toast.error(t("auth.invalidCredentials")); // Mostra o erro
+      return; // Para a execução da função aqui
+    }
+    // ==========================================================
+
+    setIsLoading(true);
+
     try {
       await login({ email, password });
       toast.success(t("auth.loginSuccess"));
