@@ -77,6 +77,8 @@ export const translations = {
       signupSuccess: "Conta criada com sucesso!",
       signupError: "Erro ao criar conta",
       emailAlreadyExists: "Este e-mail já está cadastrado",
+      continueAsGuest: "Acessar como visitante",
+      continueAsGuestMessage: "Navegando como visitante!",
     },
 
     // ♿ Acessibilidade
@@ -183,6 +185,12 @@ export const translations = {
       termsRequired: "Você deve aceitar os termos para continuar",
       termsAccepted: "Termos aceitos",
     },
+    footer: {
+      privacyPolicy: "Política de Privacidade",
+      rightsReserved: "Todos os direitos reservados.",
+      institutional:
+        "Desenvolvido pela turma de Engenharia de Software da Universidade do Estado do Amazonas (UEA), no período 2025/2, sob orientação da Professora Áurea Hiléia da Silva Melo.",
+    },
   },
 
   // ------------------------------------------------------------
@@ -250,6 +258,8 @@ export const translations = {
       signupSuccess: "Account created successfully!",
       signupError: "Error creating account",
       emailAlreadyExists: "This email is already registered",
+      continueAsGuest: "Continue as guest",
+      continueAsGuestMessage: "Browsing as a guest!",
     },
 
     // ♿ Accessibility
@@ -356,6 +366,13 @@ export const translations = {
       termsRequired: "You must accept the terms to continue",
       termsAccepted: "Terms accepted",
     },
+    footer: {
+  privacyPolicy: "Privacy Policy",
+  rightsReserved: "All rights reserved.",
+  institutional:
+    "Developed by the Software Engineering class at the State University of Amazonas (UEA), in the 2025/2 term, under the supervision of Professor Áurea Hiléia da Silva Melo.",
+},
+
   },
 } as const;
 

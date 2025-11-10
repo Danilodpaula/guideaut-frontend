@@ -1,13 +1,16 @@
-// Profile.tsx
+// src/pages/Profile.tsx
 // Página de perfil do usuário no GuideAut.
-// Permite visualizar e editar informações pessoais, alterar o avatar,
-// e acompanhar as atividades recentes registradas na plataforma.
+// Clique na foto => abre preview em tela cheia com opções de trocar/remover.
 
 import { useState, useRef, useEffect } from "react";
+import { Navigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR, enUS } from "date-fns/locale";
+
 import { useAuth } from "@/core/auth/AuthContext";
 import { useI18n } from "@/core/i18n/I18nContext";
-import { useProfile } from "@/hooks/useProfile";
 import { useActivityLogs } from "@/hooks/useActivityLogs";
+
 import {
   Card,
   CardContent,
@@ -23,6 +26,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+
+import {
   User,
   Mail,
   Shield,
@@ -30,28 +42,33 @@ import {
   Camera,
   Save,
   X,
+  Trash2,
+  Upload,
 } from "lucide-react";
-import { Navigate } from "react-router-dom";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR, enUS } from "date-fns/locale";
+import { useProfile } from "../hooks/useProfile";
 
-/**
- * 👤 Componente de Perfil de Usuário
- * - Exibe dados do usuário logado (nome, email, papel)
- * - Permite editar nome de exibição e biografia
- * - Suporta upload de imagem de perfil com validação
- * - Lista as últimas atividades registradas
- */
+// helper: resolve URL do avatar para absoluta quando backend retorna /files/...
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "";
+const toAbsolute = (url?: string | null) => {
+  if (!url) return undefined;
+  if (/^https?:\/\//i.test(url)) return url;
+  const base = API_BASE.replace(/\/+$/, "");
+  return `${base}${url}`;
+};
+
 export default function Profile() {
   const { user, isAuthenticated } = useAuth();
   const { language } = useI18n();
+
   const {
     profile,
     isLoading: profileLoading,
     isSaving,
     updateProfile,
     uploadAvatar,
+    deleteAvatar, // <- exposto pelo hook
   } = useProfile();
+
   const {
     activities,
     isLoading: activitiesLoading,
@@ -63,6 +80,9 @@ export default function Profile() {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // estado do preview (lightbox)
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   /** 🔄 Inicializa campos quando o perfil for carregado */
   useEffect(() => {
@@ -102,23 +122,26 @@ export default function Profile() {
     setIsEditing(false);
   };
 
-  /** 📷 Aciona seletor de arquivo para upload de avatar */
-  const handleAvatarClick = () => {
-    fileInputRef.current?.click();
-  };
+  /** 📷 Abrir seletor de arquivo (usado no Dialog) */
+  const triggerFileSelect = () => fileInputRef.current?.click();
 
-  /** 🖼️ Faz upload da nova imagem de perfil com validações */
+  /** 🖼️ Upload do avatar */
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (!file.type.startsWith("image/")) return; // Apenas imagens
-    if (file.size > 2 * 1024 * 1024) return; // Máximo 2MB
-
+    if (!file.type.startsWith("image/")) return;
+    if (file.size > 2 * 1024 * 1024) return; // 2MB
     await uploadAvatar(file);
+    setPreviewOpen(false); // fecha preview após trocar
   };
 
-  /** 🕒 Formata data para exibição amigável */
+  /** 🗑️ Remover avatar */
+  const handleRemoveAvatar = async () => {
+    await deleteAvatar();
+    setPreviewOpen(false);
+  };
+
+  /** 🕒 Data amigável */
   const formatDate = (dateString: string) => {
     const locale = language === "pt-BR" ? ptBR : enUS;
     return formatDistanceToNow(new Date(dateString), {
@@ -127,7 +150,7 @@ export default function Profile() {
     });
   };
 
-  /** ⏳ Estado de carregamento do perfil */
+  /** ⏳ Carregando perfil */
   if (profileLoading) {
     return (
       <div className="flex-1 flex items-center justify-center p-6">
@@ -135,6 +158,9 @@ export default function Profile() {
       </div>
     );
   }
+
+  const avatarSrc = toAbsolute(profile?.avatar_url);
+  const initials = displayName ? getInitials(displayName) : "U";
 
   return (
     <div className="flex-1 space-y-6 p-6 animate-fade-in">
@@ -161,33 +187,22 @@ export default function Profile() {
           </CardHeader>
           <CardContent className="flex flex-col items-center space-y-4">
             <div className="relative group">
-              <Avatar className="h-32 w-32">
-                <AvatarImage
-                  src={profile?.avatar_url || undefined}
-                  alt={displayName}
-                />
-                <AvatarFallback className="text-2xl">
-                  {displayName ? getInitials(displayName) : "U"}
-                </AvatarFallback>
-              </Avatar>
+              {/* Clique na foto => abre preview */}
               <button
-                onClick={handleAvatarClick}
-                disabled={isSaving}
-                className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                type="button"
+                onClick={() => setPreviewOpen(true)}
+                className="block rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                aria-label={
+                  language === "pt-BR" ? "Ampliar avatar" : "Open avatar"
+                }
               >
-                {isSaving ? (
-                  <Loader2 className="h-6 w-6 text-white animate-spin" />
-                ) : (
-                  <Camera className="h-6 w-6 text-white" />
-                )}
+                <Avatar className="h-32 w-32">
+                  <AvatarImage src={avatarSrc} alt={displayName} />
+                  <AvatarFallback className="text-2xl">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
               </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
             </div>
 
             <div className="text-center">
@@ -198,9 +213,7 @@ export default function Profile() {
             </div>
 
             <Badge
-              variant={
-                user?.roles.includes("ADMIN") ? "default" : "secondary"
-              }
+              variant={user?.roles.includes("ADMIN") ? "default" : "secondary"}
             >
               <Shield className="mr-1 h-3 w-3" />
               {user?.roles[0] || "USER"}
@@ -227,9 +240,7 @@ export default function Profile() {
               {/* Nome de exibição */}
               <div className="space-y-2">
                 <Label htmlFor="displayName">
-                  {language === "pt-BR"
-                    ? "Nome de Exibição"
-                    : "Display Name"}
+                  {language === "pt-BR" ? "Nome de Exibição" : "Display Name"}
                 </Label>
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-muted-foreground" />
@@ -283,9 +294,7 @@ export default function Profile() {
               {isEditing && (
                 <p className="text-xs text-muted-foreground">
                   {bio.length}/500{" "}
-                  {language === "pt-BR"
-                    ? "caracteres"
-                    : "characters"}
+                  {language === "pt-BR" ? "caracteres" : "characters"}
                 </p>
               )}
             </div>
@@ -294,9 +303,7 @@ export default function Profile() {
             <div className="pt-4 border-t flex gap-2">
               {!isEditing ? (
                 <Button onClick={() => setIsEditing(true)}>
-                  {language === "pt-BR"
-                    ? "Editar Perfil"
-                    : "Edit Profile"}
+                  {language === "pt-BR" ? "Editar Perfil" : "Edit Profile"}
                 </Button>
               ) : (
                 <>
@@ -326,9 +333,7 @@ export default function Profile() {
       <Card>
         <CardHeader>
           <CardTitle>
-            {language === "pt-BR"
-              ? "Atividade Recente"
-              : "Recent Activity"}
+            {language === "pt-BR" ? "Atividade Recente" : "Recent Activity"}
           </CardTitle>
           <CardDescription>
             {language === "pt-BR"
@@ -353,10 +358,7 @@ export default function Profile() {
                 <div key={activity.id}>
                   <div className="flex items-start gap-3">
                     <div className="text-2xl">
-                      {getActivityIcon(
-                        activity.action,
-                        activity.entity_type
-                      )}
+                      {getActivityIcon(activity.action, activity.entity_type)}
                     </div>
                     <div className="flex-1 space-y-1">
                       <p className="text-sm font-medium">
@@ -380,6 +382,96 @@ export default function Profile() {
           )}
         </CardContent>
       </Card>
+
+      {/* =======================
+          DIALOG DE PREVIEW AVATAR
+         ======================= */}
+
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        {/* mais largo e com padding padrão */}
+        <DialogContent className="sm:max-w-[90vw] md:max-w-[960px]">
+          <DialogHeader>
+            <DialogTitle>
+              {language === "pt-BR" ? "Foto do Perfil" : "Profile Picture"}
+            </DialogTitle>
+          </DialogHeader>
+
+          {/* Área de visualização: centralizada, sem overflow hidden */}
+          <div className="w-full">
+            <div
+              className="
+          flex items-center justify-center
+          bg-muted/20 rounded-xl border
+          p-3
+          max-h-[80svh]  /* usa 80% da altura segura da viewport */
+        "
+            >
+              {avatarSrc ? (
+                <img
+                  src={avatarSrc}
+                  alt={displayName}
+                  className="
+              block
+              h-auto w-auto            /* mantém proporção natural */
+              max-h-[78svh]            /* nunca passa da janela */
+              max-w-[86vw]             /* respeita largura do Dialog */
+              object-contain           /* garante que a imagem caiba sem cortar */
+              select-none
+            "
+                  draggable={false}
+                />
+              ) : (
+                <div className="flex items-center justify-center h-[320px]">
+                  <Avatar className="h-32 w-32">
+                    <AvatarFallback className="text-2xl">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:justify-between">
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={triggerFileSelect}
+                disabled={isSaving}
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                {language === "pt-BR" ? "Trocar foto" : "Change photo"}
+              </Button>
+
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={handleRemoveAvatar}
+                disabled={isSaving || !avatarSrc}
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                {language === "pt-BR" ? "Remover foto" : "Remove photo"}
+              </Button>
+            </div>
+
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
+                {language === "pt-BR" ? "Fechar" : "Close"}
+              </Button>
+            </DialogClose>
+
+            {/* input escondido para upload */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

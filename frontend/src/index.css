@@ -2,112 +2,198 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 🎨 Design System Global
-   Todas as cores, gradientes, fontes e animações devem ser declaradas aqui.
-   ⚠️ Todas as cores devem ser definidas em HSL.
+/* 
+  Design System centralizado.
+  - Tudo que for token global (cores, raios, fontes, transições) fica aqui.
+  - Mantido em HSL para facilitar ajustes de tema e variações de opacidade.
 */
 
 @layer base {
   :root {
-    /* 🌞 Tema Claro - baseado na identidade GuideAut */
+    /* ===== Light Theme (padrão) ===== */
+    /* Fundo geral da aplicação */
     --background: 0 0% 98%;
+    /* Cor principal de texto (boa legibilidade sobre fundo claro) */
     --foreground: 217 19% 17%;
 
-    /* Cartões, popovers e áreas padrão */
+    /* Tokens de cartão / superfícies elevadas */
     --card: 0 0% 100%;
     --card-foreground: 217 19% 17%;
+
+    /* Popovers, dropdowns, tooltips */
     --popover: 0 0% 100%;
     --popover-foreground: 217 19% 17%;
 
-    /* Paleta principal */
+    /* Ação principal (CTA) – azul inspirado no GuideAut */
     --primary: 199 94% 55%;
     --primary-foreground: 0 0% 100%;
+
+    /* Ações secundárias / elementos de destaque quentes */
     --secondary: 48 100% 67%;
     --secondary-foreground: 222 84% 5%;
+
+    /* Áreas neutras (chips, abas, placeholders) */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Acentos positivos (tags, badges de status OK) */
     --accent: 142 71% 45%;
     --accent-foreground: 0 0% 100%;
 
-    /* Estados e feedback */
+    /* Estado destrutivo (erros, remoção) */
     --destructive: 0 84% 60%;
-    --success: 142 71% 45%;
-    --warning: 48 100% 67%;
-    --info: 199 94% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    /* Bordas, inputs e raio padrão */
+    /* Estados semânticos extras */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 48 100% 67%;
+    --warning-foreground: 222 84% 5%;
+
+    --info: 199 94% 55%;
+    --info-foreground: 0 0% 100%;
+
+    /* Bordas, inputs e foco */
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 199 94% 55%;
+
+    /* Raio base para componentes (pode ser usado no Tailwind via var) */
     --radius: 0.5rem;
 
-    /* Sidebar (tema claro) */
+    /* Tokens específicos de sidebar / layouts com painel lateral */
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 217 19% 17%;
+    --sidebar-primary: 199 94% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 199 94% 95%;
+    --sidebar-accent-foreground: 199 94% 25%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 199 94% 55%;
 
-    /* 🔠 Tamanhos de fonte para acessibilidade */
+    /* Acessibilidade – tamanhos mínimos de fonte globais */
     --font-size-sm: 0.875rem;
     --font-size-md: 1rem;
     --font-size-lg: 1.125rem;
 
-    /* ⚡ Velocidades de transição */
+    /* Transições padrão para hover / focus */
     --transition-normal: 200ms ease-in-out;
     --transition-fast: 100ms ease-in-out;
   }
 
   .dark {
-    /* 🌚 Tema Escuro - alto contraste e fidelidade com o tema claro */
+    /* ===== Dark Theme (alto contraste) ===== */
+    /* Fundo escuro com leve azul para manter identidade GuideAut */
     --background: 222 84% 5%;
     --foreground: 210 40% 98%;
+
+    --card: 222 84% 5%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 84% 5%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Mantemos o mesmo primary do light para consistência cross-theme */
     --primary: 199 94% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Chamadas de atenção no dark ainda quentes */
     --secondary: 48 100% 67%;
+    --secondary-foreground: 222 84% 5%;
+
+    /* Superfícies internas no dark */
+    --muted: 217 33% 18%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Semânticas preservadas no dark */
     --accent: 142 71% 45%;
+    --accent-foreground: 0 0% 100%;
+
     --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
     --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
     --warning: 48 100% 67%;
+    --warning-foreground: 222 84% 5%;
+
     --info: 199 94% 55%;
+    --info-foreground: 0 0% 100%;
+
+    /* Bordas mais escuras para não “brilhar” demais no dark */
     --border: 217 33% 18%;
     --input: 217 33% 18%;
     --ring: 199 94% 55%;
+
+    /* Sidebar escura com realce no hover */
     --sidebar-background: 222 84% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 199 94% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 199 94% 15%;
+    --sidebar-accent-foreground: 199 94% 95%;
+    --sidebar-border: 217 33% 18%;
+    --sidebar-ring: 199 94% 55%;
   }
 
-  /* 🧠 Preferência de movimento reduzido (acessibilidade) */
+  /* 
+    Respeito à preferência do usuário por menos movimento.
+    Útil para acessibilidade e testes de UI.
+  */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
   }
 
-  /* Classes de tamanho de fonte reutilizáveis */
+  /* Classe manual para forçar redução de movimento na UI */
+  .reduce-motion *,
+  .reduce-motion *::before,
+  .reduce-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Helpers de tipografia acessível */
   .font-size-sm {
     font-size: var(--font-size-sm);
   }
+
   .font-size-md {
     font-size: var(--font-size-md);
   }
+
   .font-size-lg {
     font-size: var(--font-size-lg);
   }
 }
 
 @layer base {
-  /* Aplicação global das cores de borda e background */
   * {
+    /* Garantimos que todas as bordas usem o token global de border */
     @apply border-border;
   }
 
   body {
+    /* Fundo e texto acordados com o tema atual (light/dark) */
     @apply bg-background text-foreground;
   }
 
-  /* ✨ Utilitários de interação */
+  /* ===== Utilitários globais ===== */
+
+  /* Efeito de “card vivo” para dashboards e listagens */
   .hover-scale {
     @apply transition-transform duration-200 hover:scale-[1.02];
   }
 
-  /* 🔗 Link com animação de sublinhado */
+  /* Link com underline animado – bom para navegação secundária */
   .story-link {
     @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
   }

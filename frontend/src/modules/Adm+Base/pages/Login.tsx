@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Login.tsx
 // Página de autenticação do GuideAut
-// Permite ao usuário acessar a plataforma com e-mail e senha.
-// Inclui redirecionamento automático para a Home se já estiver autenticado.
+// Login e Cadastro (na mesma tela) com tabs
 
 import { useState, FormEvent } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
@@ -15,122 +15,266 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/core/auth/AuthContext";
 import { useI18n } from "@/core/i18n/I18nContext";
 import { toast } from "sonner";
 
-/**
- * 🔐 Componente de Login
- * Responsável por autenticar o usuário e redirecioná-lo para a Home.
- * Exibe mensagens de erro e sucesso utilizando o sistema de toasts.
- */
+// ✅ Importa o mesmo logo usado no Header
+import GuideAutLogo from "@/assets/base.svg";
+
 export default function Login() {
+  const [tab, setTab] = useState<"login" | "signup">("login");
+
+  // estados - login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { login, isAuthenticated } = useAuth();
+  const [isLoadingLogin, setIsLoadingLogin] = useState(false);
+
+  // estados - signup
+  const [name, setName] = useState("");
+  const [email2, setEmail2] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [isLoadingSignup, setIsLoadingSignup] = useState(false);
+
+  const { login, signup, isAuthenticated } = useAuth();
   const { t } = useI18n();
   const navigate = useNavigate();
 
-  // Caso o usuário já esteja autenticado, redireciona para a Home
+  // Redireciona se já autenticado
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
-  /**
-   * 🎯 Lida com o envio do formulário de login.
-   * - Chama a função `login()` do AuthContext
-   * - Exibe feedback via toast
-   * - Redireciona para Home em caso de sucesso
-   */
-  const handleSubmit = async (e: FormEvent) => {
+  // Submit: Login
+  const handleSubmitLogin = async (e: FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
+    setIsLoadingLogin(true);
     try {
       await login({ email, password });
       toast.success(t("auth.loginSuccess"));
-      navigate("/");
-    } catch (error) {
+      navigate("/", { replace: true });
+    } catch {
       toast.error(t("auth.invalidCredentials"));
     } finally {
-      setIsLoading(false);
+      setIsLoadingLogin(false);
     }
+  };
+
+  // Submit: Signup
+  const handleSubmitSignup = async (e: FormEvent) => {
+    e.preventDefault();
+    if (password2 !== confirm)
+      return toast.error(t("auth.passwordsDoNotMatch"));
+    if (password2.length < 6) return toast.error(t("auth.passwordTooShort"));
+
+    setIsLoadingSignup(true);
+    try {
+      await signup({ name, email: email2, password: password2 });
+      toast.success(t("auth.signupSuccess"));
+      navigate("/", { replace: true });
+    } catch (err: any) {
+      if (err?.message === "email_exists")
+        toast.error(t("auth.emailAlreadyExists"));
+      else toast.error(t("auth.signupError"));
+    } finally {
+      setIsLoadingSignup(false);
+    }
+  };
+
+  // Acesso visitante
+  const handleGuestAccess = () => {
+    toast.info(t("auth.continueAsGuestMessage"));
+    navigate("/", { replace: true });
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
-            GuideAut
-          </CardTitle>
-          <CardDescription className="text-center">
-            {t("auth.login")}
+        <CardHeader className="space-y-2">
+          {/* 🔹 Logo + nome lado a lado */}
+          <div className="flex items-center justify-center gap-2">
+            <img
+              src={GuideAutLogo}
+              alt="GuideAut logo"
+              className="h-9 w-9 object-contain"
+            />
+            <CardTitle className="text-2xl font-bold text-center text-primary">
+              GuideAut
+            </CardTitle>
+          </div>
+
+          <CardDescription className="text-center mt-1">
+            {tab === "login" ? t("auth.login") : t("auth.createAccount")}
           </CardDescription>
         </CardHeader>
 
         <CardContent>
-          {/* Formulário principal */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">{t("auth.email")}</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="seu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-              />
-            </div>
+          <Tabs
+            value={tab}
+            onValueChange={(v) => setTab(v as "login" | "signup")}
+            className="w-full"
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="login">{t("auth.login")}</TabsTrigger>
+              <TabsTrigger value="signup">{t("auth.signup")}</TabsTrigger>
+            </TabsList>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">{t("auth.password")}</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                autoComplete="current-password"
-              />
-            </div>
+            {/* ======== LOGIN ======== */}
+            <TabsContent value="login" className="mt-4">
+              <form onSubmit={handleSubmitLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">{t("auth.email")}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                    disabled={isLoadingLogin || isLoadingSignup}
+                  />
+                </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? t("common.loading") : t("auth.login")}
-            </Button>
-          </form>
+                <div className="space-y-2">
+                  <Label htmlFor="password">{t("auth.password")}</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete="current-password"
+                    disabled={isLoadingLogin || isLoadingSignup}
+                  />
+                </div>
 
-          {/* Credenciais de demonstração */}
-          <div className="mt-6 text-center text-sm">
-            <p className="text-muted-foreground">
-              Demo: <strong>admin@guideaut.com</strong> / 123456
-            </p>
-            <p className="text-muted-foreground mt-1">
-              ou <strong>user@guideaut.com</strong> / 123456
-            </p>
-          </div>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isLoadingLogin || isLoadingSignup}
+                >
+                  {isLoadingLogin ? t("common.loading") : t("auth.login")}
+                </Button>
 
-          {/* Links adicionais */}
-          <div className="mt-4 space-y-2 text-center text-sm">
-            <button
-              type="button"
-              onClick={() => navigate("/signup")}
-              className="text-primary hover:underline"
-            >
-              {t("auth.signup")}
-            </button>
-            <br />
-            <button
-              type="button"
-              onClick={() => navigate("/forgot-password")}
-              className="text-muted-foreground hover:underline"
-            >
-              {t("auth.forgotPassword")}
-            </button>
-          </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={handleGuestAccess}
+                  disabled={isLoadingLogin || isLoadingSignup}
+                  aria-label="Acessar como visitante"
+                >
+                  {t("auth.continueAsGuest")}
+                </Button>
+
+                <div className="mt-2 text-center text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setTab("signup")}
+                    className="text-primary hover:underline"
+                  >
+                    {t("auth.createAccount")}
+                  </button>
+                  <br />
+                  <button
+                    type="button"
+                    onClick={() => navigate("/forgot-password")}
+                    className="text-muted-foreground hover:underline"
+                  >
+                    {t("auth.forgotPassword")}
+                  </button>
+                </div>
+              </form>
+            </TabsContent>
+
+            {/* ======== SIGNUP ======== */}
+            <TabsContent value="signup" className="mt-4">
+              <form onSubmit={handleSubmitSignup} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">{t("auth.name")}</Label>
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={t("auth.namePlaceholder")}
+                    required
+                    disabled={isLoadingLogin || isLoadingSignup}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email2">{t("auth.email")}</Label>
+                  <Input
+                    id="email2"
+                    type="email"
+                    value={email2}
+                    onChange={(e) => setEmail2(e.target.value)}
+                    placeholder="seu@email.com"
+                    autoComplete="email"
+                    required
+                    disabled={isLoadingLogin || isLoadingSignup}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password2">{t("auth.password")}</Label>
+                  <Input
+                    id="password2"
+                    type="password"
+                    value={password2}
+                    onChange={(e) => setPassword2(e.target.value)}
+                    autoComplete="new-password"
+                    required
+                    disabled={isLoadingLogin || isLoadingSignup}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirm">{t("auth.confirmPassword")}</Label>
+                  <Input
+                    id="confirm"
+                    type="password"
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    autoComplete="new-password"
+                    required
+                    disabled={isLoadingLogin || isLoadingSignup}
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isLoadingLogin || isLoadingSignup}
+                >
+                  {isLoadingSignup ? t("common.loading") : t("auth.signup")}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={handleGuestAccess}
+                  disabled={isLoadingLogin || isLoadingSignup}
+                >
+                  {t("auth.continueAsGuest")}
+                </Button>
+
+                <div className="mt-2 text-center text-sm">
+                  <button
+                    type="button"
+                    onClick={() => setTab("login")}
+                    className="text-primary hover:underline"
+                  >
+                    {t("auth.alreadyHaveAccount")}
+                  </button>
+                </div>
+              </form>
+            </TabsContent>
+          </Tabs>
         </CardContent>
       </Card>
     </div>
