@@ -54,19 +54,40 @@
   }
 
   .dark {
-    /* 🌚 Tema Escuro - alto contraste e fidelidade com o tema claro */
-    --background: 222 84% 5%;
-    --foreground: 210 40% 98%;
+    /* 🌚 Tema Escuro - completo */
+    --background: 222 84% 5%; /* Fundo (escuro) */
+    --foreground: 210 40% 98%; /* Texto (claro) */
+
+    /* Cartões, popovers e áreas padrão (ESCURAS) */
+    --card: 222 84% 8%; /* Cor do card (um pouco mais claro que o fundo) */
+    --card-foreground: 210 40% 98%;
+    --popover: 222 84% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Paleta principal */
     --primary: 199 94% 55%;
+    --primary-foreground: 0 0% 100%; /* Texto do botão primário */
     --secondary: 48 100% 67%;
+    --secondary-foreground: 222 84% 5%; /* Texto do badge 'secondary' (escuro) */
     --accent: 142 71% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Texto "muted" (cinza claro) */
+    --muted: 217 33% 18%;
+    --muted-foreground: 217 33% 50%; /* Cor do texto "muted" (ex: descrições) */
+
+    /* Estados e feedback */
     --destructive: 0 84% 60%;
     --success: 142 71% 45%;
     --warning: 48 100% 67%;
     --info: 199 94% 55%;
+
+    /* Bordas, inputs e raio padrão */
     --border: 217 33% 18%;
     --input: 217 33% 18%;
     --ring: 199 94% 55%;
+
+    /* Sidebar */
     --sidebar-background: 222 84% 8%;
   }
 

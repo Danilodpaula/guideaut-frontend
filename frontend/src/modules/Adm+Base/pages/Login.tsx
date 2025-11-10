@@ -43,8 +43,19 @@ export default function Login() {
    * - Exibe feedback via toast
    * - Redireciona para Home em caso de sucesso
    */
+  // Em Login.tsx
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    // ==========================================================
+    // 👇 ADICIONE ESTA VALIDAÇÃO AQUI 👇
+    // ==========================================================
+    if (!email || !password) {
+      toast.error(t("auth.invalidCredentials")); // Mostra o erro
+      return; // Para a execução da função aqui
+    }
+    // ==========================================================
+
     setIsLoading(true);
 
     try {

@@ -1,168 +1,125 @@
-// ============================================================
-// 🔐 CONTEXTO DE AUTENTICAÇÃO: AuthContext
-// ============================================================
-// Este arquivo define o **AuthProvider** e o hook `useAuth()`,
-// que centralizam toda a lógica de autenticação do app.
-//
-// Ele integra o Supabase para:
-// - Login e logout de usuários
-// - Cadastro (sign up)
-// - Carregamento automático de perfil e papéis (roles)
-// - Controle de sessão persistente
-// - Proteção condicional de rotas e recursos
-// ============================================================
-
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import type { User as SupabaseUser } from "@supabase/supabase-js";
+// src/core/auth/AuthContext.tsx
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+// REMOVIDO: import { supabase } from "@/integrations/supabase/client";
+import { loginApi, getProfileApi } from "@/api/authService"; // IMPORTADO
+import { AuthRequest } from "@/api/types/authTypes"; // IMPORTADO
 
 // ------------------------------------------------------------
-// 🧩 Tipagens
+// 🧩 Tipagens (Simplificado para o backend Spring)
 // ------------------------------------------------------------
-
-// Modelo do usuário autenticado
 interface User {
-  id: string;
+  id: string; // Usaremos o email por enquanto
   email: string;
   name: string;
   roles: string[];
 }
 
-// Tipagem do contexto de autenticação
 interface AuthContextType {
-  user: User | null; // Usuário autenticado
-  isAuthenticated: boolean; // Se há sessão ativa
-  isLoading: boolean; // Indica se está carregando dados de sessão
-  login: (credentials: { email: string; password: string }) => Promise<void>; // Login
-  signup: (data: { name: string; email: string; password: string }) => Promise<void>; // Cadastro
-  logout: () => void; // Logout
-  can: (role: string) => boolean; // Verifica permissão (role)
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (credentials: AuthRequest) => Promise<void>;
+  signup: (data: any) => Promise<void>; // Signup não está no backend, será mockado
+  logout: () => void;
+  can: (role: string) => boolean;
 }
 
-// ------------------------------------------------------------
-// 🧱 Criação do Contexto
-// ------------------------------------------------------------
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Chaves do Local Storage
+const TOKEN_KEY = "guideaut_access_token";
+const REFRESH_KEY = "guideaut_refresh_token";
+
 // ------------------------------------------------------------
-// 🧭 Provedor de Autenticação
+// 🧭 Provedor de Autenticação (Modificado)
 // ------------------------------------------------------------
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // ------------------------------------------------------------
-  // 🧩 Efeito inicial: carrega sessão atual e escuta mudanças
-  // ------------------------------------------------------------
+  // Efeito inicial: Tenta carregar dados do usuário se houver token
   useEffect(() => {
-    // 1️⃣ Recupera a sessão ativa do Supabase
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        loadUserData(session.user); // Carrega perfil e roles
-      } else {
-        setIsLoading(false);
-      }
-    });
-
-    // 2️⃣ Escuta eventos de login/logout do Supabase
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        loadUserData(session.user);
-      } else {
-        setUser(null);
-        setIsLoading(false);
-      }
-    });
-
-    // 3️⃣ Limpeza ao desmontar
-    return () => subscription.unsubscribe();
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+      loadUserData();
+    } else {
+      setIsLoading(false);
+    }
   }, []);
 
   // ------------------------------------------------------------
-  // 🧠 Função para carregar dados do usuário autenticado
+  // 🧠 Função para carregar dados do usuário (do backend Spring)
   // ------------------------------------------------------------
-  const loadUserData = async (supabaseUser: SupabaseUser) => {
+  const loadUserData = async () => {
     try {
-      // Busca o perfil do usuário
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("display_name")
-        .eq("user_id", supabaseUser.id)
-        .maybeSingle();
+      // O interceptor do Axios em 'api/client.ts' já injeta o token
+      const { data } = await getProfileApi(); // Chama GET /me
 
-      // Busca os papéis (roles) associados ao usuário
-      const { data: userRoles } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", supabaseUser.id);
-
-      const roles = userRoles?.map((r) => r.role) || [];
-
-      // Define o estado do usuário
+      // O backend /me só retorna o email (e roles, se o JWTAuthFilter for ajustado)
+      // Vamos simular os dados do usuário
       setUser({
-        id: supabaseUser.id,
-        email: supabaseUser.email || "",
-        name: profile?.display_name || supabaseUser.email?.split("@")[0] || "User",
-        roles,
+        id: data.email,
+        email: data.email,
+        name: data.email.split("@")[0], // Simples
+        roles: ["USER"], // TODO: O backend precisa popular isso
       });
     } catch (error) {
       console.error("❌ Erro ao carregar dados do usuário:", error);
+      // Se deu erro (token expirado), força o logout
+      logout();
     } finally {
       setIsLoading(false);
     }
   };
 
   // ------------------------------------------------------------
-  // 🔑 Login com e-mail e senha
+  // 🔑 Login (agora usa o backend Spring)
   // ------------------------------------------------------------
-  const login = async (credentials: { email: string; password: string }) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email: credentials.email,
-      password: credentials.password,
-    });
+  const login = async (credentials: AuthRequest) => {
+    const { data } = await loginApi(credentials); // Chama POST /auth/login
 
-    if (error) throw error;
-  };
+    // Salva os tokens recebidos do backend
+    localStorage.setItem(TOKEN_KEY, data.accessToken);
+    localStorage.setItem(REFRESH_KEY, data.refreshToken);
 
-  // ------------------------------------------------------------
-  // 📝 Cadastro de novo usuário
-  // ------------------------------------------------------------
-  const signup = async (data: { name: string; email: string; password: string }) => {
-    const { error } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: {
-        data: {
-          name: data.name, // Salva o nome no metadata
-        },
-        emailRedirectTo: `${window.location.origin}/`, // Redireciona após confirmação
-      },
-    });
-
-    if (error) throw error;
+    // Carrega os dados do usuário (/me) e atualiza o estado
+    await loadUserData();
   };
 
   // ------------------------------------------------------------
   // 🚪 Logout
   // ------------------------------------------------------------
   const logout = async () => {
-    await supabase.auth.signOut();
+    // TODO: Chamar /auth/logout do backend (passando o refresh token)
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(REFRESH_KEY);
     setUser(null);
   };
 
   // ------------------------------------------------------------
-  // 🛡️ Verificação de permissões
+  // 📝 Cadastro (Ainda não implementado no backend)
   // ------------------------------------------------------------
-  const can = (role: string): boolean => {
-    if (!user) return false;
-    return user.roles.includes(role);
+  const signup = async (data: any) => {
+    // Esta função precisa ser implementada no backend (ex: POST /users/register)
+    console.warn("Signup não implementado no backend Spring.");
+    throw new Error("Signup não disponível.");
   };
 
   // ------------------------------------------------------------
-  // 🧩 Provedor do contexto
+  // 🛡️ Verificação de permissões (simplificada)
   // ------------------------------------------------------------
+  const can = (role: string): boolean => {
+    if (!user) return false;
+    // O backend precisa popular 'roles' no JWT para isso funcionar 100%
+    return user.roles.includes(role);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -181,7 +138,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // ------------------------------------------------------------
-// ⚙️ Hook de uso do contexto
+// ⚙️ Hook de uso do contexto (sem alteração)
 // ------------------------------------------------------------
 export const useAuth = () => {
   const context = useContext(AuthContext);
