@@ -20,7 +20,6 @@ import { useAuth } from "@/core/auth/AuthContext";
 import { useI18n } from "@/core/i18n/I18nContext";
 import { toast } from "sonner";
 
-// ✅ Importa o mesmo logo usado no Header
 import GuideAutLogo from "@/assets/base.svg";
 
 export default function Login() {
@@ -57,16 +56,11 @@ export default function Login() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // ==========================================================
-    // 👇 ADICIONE ESTA VALIDAÇÃO AQUI 👇
-    // ==========================================================
     if (!email || !password) {
       toast.error(t("auth.invalidCredentials")); // Mostra o erro
       return; // Para a execução da função aqui
     }
     // ==========================================================
-
-    setIsLoading(true);
 
     try {
       await login({ email, password });
@@ -140,7 +134,7 @@ export default function Login() {
 
             {/* ======== LOGIN ======== */}
             <TabsContent value="login" className="mt-4">
-              <form onSubmit={handleSubmitLogin} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">{t("auth.email")}</Label>
                   <Input

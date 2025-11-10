@@ -33,7 +33,8 @@ import {
   KeyRound,
   Loader2,
 } from "lucide-react";
-import { api } from "@/api/client";
+import api from "@/api/client";
+
 
 // -----------------------------
 // Tipos da API e da view

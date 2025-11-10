@@ -22,8 +22,6 @@ api.interceptors.response.use(
   (error) => {
     console.error("Erro na API:", error.response?.data || error.message)
     return Promise.reject(error)
-  }
-  return config;
 });
 
 export default api

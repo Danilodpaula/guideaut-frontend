@@ -1,5 +1,5 @@
-// src/api/profile.ts
-import { api } from "@/api/client";
+import api from "./client";
+
 
 export type MeResponse = {
   id: string;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/core/auth/AuthContext.tsx
 import {
   createContext,
@@ -5,6 +6,7 @@ import {
   useState,
   useEffect,
   ReactNode,
+  useRef,
 } from "react";
 // REMOVIDO: import { supabase } from "@/integrations/supabase/client";
 import { loginApi, getProfileApi } from "@/api/authService"; // IMPORTADO
