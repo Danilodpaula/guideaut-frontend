@@ -12,6 +12,6 @@ export const listarRecomendacoesApi = () => {
  * Cria uma nova recomendação (POST /recomendacoes).
  */
 export const criarRecomendacaoApi = (data: RecomendacaoRequest) => {
-  // O token é injetado automaticamente pelo interceptor do client
+  // Nenhuma mudança aqui, 'data' já conterá o novo campo
   return api.post("/recomendacoes", data);
 };

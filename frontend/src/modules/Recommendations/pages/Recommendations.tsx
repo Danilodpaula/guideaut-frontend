@@ -3,15 +3,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/core/auth/AuthContext";
 import { useI18n } from "@/core/i18n/I18nContext";
-// REMOVIDO: import { supabase } from "@/integrations/supabase/client";
 import {
   listarRecomendacoesApi,
   criarRecomendacaoApi,
-} from "@/api/recomendacaoService"; // IMPORTADO
+} from "@/api/recomendacaoService";
 import {
   RecomendacaoRequest,
   Recomendacao,
-} from "@/api/types/recomendacaoTypes"; // IMPORTADO
+} from "@/api/types/recomendacaoTypes";
 import {
   Card,
   CardContent,
@@ -41,56 +40,46 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Search, Plus, Filter } from "lucide-react";
-// REMOVIDO: ThumbsUp, ThumbsDown, Heart (backend não suporta)
 
 /**
  * 📘 Tipagem ADAPTADA para o backend Spring
  */
 interface RecommendationUi extends Recomendacao {
-  // Campos da UI que o backend não tem
   user_vote?: string;
   is_favorited?: boolean;
 }
 
 export default function Recommendations() {
   const { t } = useI18n();
-  const { isAuthenticated, user, can } = useAuth();
+  const { isAuthenticated } = useAuth(); // Removido 'user' e 'can'
   const navigate = useNavigate();
 
   const [recommendations, setRecommendations] = useState<RecommendationUi[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
-  // REMOVIDO: const [phaseFilter, setPhaseFilter] = useState<string>("ALL");
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Estado do formulário ADAPTADO
+  // 1. ATUALIZAR ESTADO DO FORMULÁRIO
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    justificativa: "", // <-- NOVO CAMPO
     category: "",
-    referencia: "", // 'source' virou 'referencia'
+    referencia: "",
   });
 
   useEffect(() => {
     loadRecommendations();
-  }, []); // Só carrega 1x
+  }, []);
 
-  /**
-   * 🔍 Carrega recomendações do BACKEND SPRING
-   */
   const loadRecommendations = async () => {
     try {
       setIsLoading(true);
-
-      const { data: recs } = await listarRecomendacoesApi(); // Chama GET /recomendacoes/list-all
-
-      // Mapeia os dados do backend (que são simples)
+      const { data: recs } = await listarRecomendacoesApi();
       setRecommendations(
         recs.map((rec: Recomendacao) => ({
           ...rec,
-          // Adiciona campos da UI (votos, etc.) como vazios
-          // pois o backend atual não os fornece
           agree_count: 0,
           disagree_count: 0,
           user_vote: undefined,
@@ -105,12 +94,7 @@ export default function Recommendations() {
     }
   };
 
-  // REMOVIDO: handleVote (Backend não suporta)
-  // REMOVIDO: handleFavorite (Backend não suporta)
-
-  /**
-   * 📝 Submissão de nova recomendação (BACKEND SPRING)
-   */
+  // 3. ATUALIZAR HANDLESUBMIT
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -119,38 +103,42 @@ export default function Recommendations() {
       return;
     }
 
+    // Validação simples para o novo campo
+    if (!formData.justificativa.trim()) {
+      toast.error("Por favor, preencha a justificativa.");
+      return;
+    }
+
     try {
-      // Monta o DTO que o backend espera (RecomendacaoRequest.java)
       const requestData: RecomendacaoRequest = {
         titulo: formData.title,
         descricao: formData.description,
+        justificativa: formData.justificativa, // <-- ENVIAR CAMPO
         categoria: formData.category,
         referencia: formData.referencia || null,
       };
 
-      await criarRecomendacaoApi(requestData); // Chama POST /recomendacoes
+      await criarRecomendacaoApi(requestData);
 
-      toast.success(
-        can("ADMIN")
-          ? "Recomendação publicada com sucesso!"
-          : "Recomendação enviada para aprovação!" // O backend Spring já tem essa lógica
-      );
+      // A lógica de "ADMIN" foi removida do backend
+      toast.success("Recomendação publicada com sucesso!");
 
+      // Limpar o formulário
       setFormData({
         title: "",
         description: "",
+        justificativa: "", // <-- LIMPAR CAMPO
         category: "",
         referencia: "",
       });
       setIsDialogOpen(false);
-      await loadRecommendations(); // Recarrega a lista
+      await loadRecommendations();
     } catch (error) {
       console.error("Erro ao criar recomendação:", error);
       toast.error("Erro ao criar recomendação");
     }
   };
 
-  /** 🎨 Ícones e rótulos (simplificado) */
   const getCategoryIcon = (category: string) =>
     ({
       NAVIGATION: "🧭",
@@ -171,20 +159,16 @@ export default function Recommendations() {
       GENERAL: "Geral",
     }[category] || category);
 
-  // REMOVIDO: getPhaseLabel
-
-  /** 🔎 Aplica filtros de busca e seleção (simplificado) */
   const filteredRecommendations = recommendations.filter((rec) => {
     const matchesSearch =
       rec.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      rec.descricao.toLowerCase().includes(searchTerm.toLowerCase());
+      rec.descricao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      rec.justificativa.toLowerCase().includes(searchTerm.toLowerCase()); // <-- BUSCAR NO NOVO CAMPO
     const matchesCategory =
       categoryFilter === "ALL" || rec.categoria === categoryFilter;
-    // REMOVIDO: matchesPhase
     return matchesSearch && matchesCategory;
   });
 
-  // === Renderização principal ===
   return (
     <div className="flex-1 space-y-6 p-6">
       {/* Cabeçalho */}
@@ -211,11 +195,11 @@ export default function Recommendations() {
               <DialogHeader>
                 <DialogTitle>Nova Recomendação</DialogTitle>
                 <DialogDescription>
-                  Compartilhe sua recomendação com a comunidade{" "}
-                  {!can("ADMIN") && " (será enviada para aprovação)"}
+                  Compartilhe sua recomendação com a comunidade.
                 </DialogDescription>
               </DialogHeader>
 
+              {/* 2. ATUALIZAR FORMULÁRIO (JSX) */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="title">Título</Label>
@@ -241,6 +225,22 @@ export default function Recommendations() {
                     required
                   />
                 </div>
+
+                {/* --- NOVO CAMPO NO FORMULÁRIO --- */}
+                <div className="space-y-2">
+                  <Label htmlFor="justificativa">Justificativa</Label>
+                  <Textarea
+                    id="justificativa"
+                    value={formData.justificativa}
+                    onChange={(e) =>
+                      setFormData({ ...formData, justificativa: e.target.value })
+                    }
+                    rows={3}
+                    required
+                    placeholder="Por que esta recomendação é importante?"
+                  />
+                </div>
+                {/* --- FIM NOVO CAMPO --- */}
 
                 <div className="space-y-2">
                   <Label>Categoria</Label>
@@ -296,10 +296,10 @@ export default function Recommendations() {
         )}
       </div>
 
+      {/* Filtros */}
       <Card>
         <CardContent className="pt-6">
           <div className="grid gap-4 md:grid-cols-2">
-            {" "}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -328,6 +328,7 @@ export default function Recommendations() {
         </CardContent>
       </Card>
 
+      {/* Lista de Recomendações */}
       {isLoading ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground">Carregando...</p>
@@ -356,11 +357,20 @@ export default function Recommendations() {
                       </Badge>
                     </div>
                     <CardTitle className="text-xl">{rec.titulo}</CardTitle>
+                    
+                    {/* 4. ATUALIZAR EXIBIÇÃO DO CARD */}
                     <CardDescription className="text-base">
                       {rec.descricao}
                     </CardDescription>
+                    
+                    {/* --- NOVO CAMPO NA EXIBIÇÃO --- */}
+                    <p className="text-sm text-muted-foreground pt-2">
+                      <strong>Justificativa:</strong> {rec.justificativa}
+                    </p>
+                    {/* --- FIM NOVO CAMPO --- */}
+
                     {rec.referencia && (
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-sm text-muted-foreground pt-2">
                         <strong>Referência:</strong> {rec.referencia}
                       </p>
                     )}
