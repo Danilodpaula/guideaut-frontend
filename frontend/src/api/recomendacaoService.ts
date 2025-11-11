@@ -12,6 +12,24 @@ export const listarRecomendacoesApi = () => {
  * Cria uma nova recomendação (POST /recomendacoes).
  */
 export const criarRecomendacaoApi = (data: RecomendacaoRequest) => {
-  // Nenhuma mudança aqui, 'data' já conterá o novo campo
   return api.post("/recomendacoes", data);
+};
+
+/**
+ * -------------------------------------------------------------------
+ * ✏️ NOVO: Atualiza uma recomendação (requer token de admin no backend).
+ * -------------------------------------------------------------------
+ */
+export const atualizarRecomendacaoApi = (
+  id: string,
+  data: RecomendacaoRequest,
+) => {
+  return api.put(`/recomendacoes/${id}`, data);
+};
+
+/**
+ * Deleta uma recomendação (requer token de admin no backend).
+ */
+export const deletarRecomendacaoApi = (id: string) => {
+  return api.delete(`/recomendacoes/${id}`);
 };
