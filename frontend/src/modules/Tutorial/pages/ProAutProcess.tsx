@@ -12,8 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Checkbox } from "@/components/ui/checkbox";
 import { FileText as FileTextIcon } from "lucide-react";
 import { useI18n } from "@/core/i18n/I18nContext";
 import {
@@ -31,37 +29,6 @@ import {
  * Ideal para orientar equipes que aplicam o método no desenvolvimento de interfaces acessíveis.
  */
 export default function ProAutProcess() {
-
-  // Lista de Atividades para o Checklist 
-  const initialPhaseActivities = {
-    imersao: [
-      { id: 'pc', name_pt: "Pesquisa Contextual", name_en: "Contextual Research", completed: false },
-      { id: 'es', name_pt: "Entrevistas com stakeholder", name_en: "Stakeholder Interviews", completed: false },
-      { id: 'ec', name_pt: "Entrevistas com cuidadores", name_en: "Caregiver Interviews", completed: false },
-      { id: 'et', name_pt: "Entrevistas com terapeutas", name_en: "Therapist Interviews", completed: false },
-      { id: 'fca', name_pt: "Ficha de Caracterização do Autista (FCA)", name_en: "Autistic Characterization Sheet (ACS)", completed: false },
-      { id: 'vga', name_pt: "Geração do Gráfico de Visão Geral do Autista (VGA)", name_en: "Autistic Overview Graph (AOG)", completed: false },
-      { id: 'mc', name_pt: "Mapeamento de Canvas", name_en: "Canvas Mapping", completed: false },
-    ],
-    analise: [
-      { id: 'td', name_pt: "Triangulação de Dados", name_en: "Data Triangulation", completed: false },
-      { id: 'ca', name_pt: "Criação do PersonAut", name_en: "Creation of PersonAut", completed: false },
-      { id: 'ee', name_pt: "Elaboração do EmpathyAut", name_en: "Development of EmpathyAut", completed: false },
-      { id: 'do', name_pt: "Definição de Oportunidades", name_en: "Definition of Opportunities", completed: false },
-    ],
-    ideacao: [
-      { id: 'sb', name_pt: "Sessões de Brainstorming/Braindraw", name_en: "Brainstorming/Braindraw Sessions", completed: false },
-      { id: 'fi', name_pt: "Filtragem de Ideias", name_en: "Idea Filtering", completed: false },
-      { id: 'trr', name_pt: "Construção da TRR (Tabela de Requisitos)", name_en: "Building the TRR (Requirements Table)", completed: false },
-      { id: 'ef', name_pt: "Esboço de Fluxos (Wireframes)", name_en: "Flow Sketching (Wireframes)", completed: false },
-    ],
-    prototipacao: [
-      { id: 'cp', name_pt: "Construção do Protótipo", name_en: "Prototype Construction", completed: false },
-      { id: 'agdp', name_pt: "Aplicação GuideAut e DPAut", name_en: "Application of GuideAut and DPAut", completed: false },
-      { id: 'vs', name_pt: "Validação com Stakeholders", name_en: "Stakeholder Validation", completed: false },
-      { id: 'ri', name_pt: "Refinamento Iterativo", name_en: "Iterative Refinement", completed: false },
-    ],
-  };
 
   const phaseDeliverables = {
     imersao: [
@@ -85,32 +52,45 @@ export default function ProAutProcess() {
 
   const { language } = useI18n();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [phaseActivities, setPhaseActivities] = useState(initialPhaseActivities);
-
-  // Função para atualizar o estado das atividades
-  const handleActivityToggle = (phaseId: string, activityId: string) => {
-    setPhaseActivities(prev => ({
-      ...prev,
-      [phaseId]: prev[phaseId].map(activity =>
-        activity.id === activityId 
-          ? { ...activity, completed: !activity.completed }
-          : activity
-      )
-    }));
-  };
 
   // Estrutura de fases do processo ProAut, com conteúdo bilíngue
   const phases = [
-    {
-      id: "imersao",
-      name: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
-      icon: Users,
-      color: "bg-blue-500",
-      description:
-        language === "pt-BR"
-          ? "É o alicerce do ProAut. O objetivo é transcender a coleta de requisitos e alcançar uma compreensão profunda e empática do contexto de vida, desafios e talentos do indivíduo autista, focando em suas necessidades sensoriais, cognitivas e de comunicação."
-          : "This is the foundation of ProAut. The goal is to transcend the collection of requirements and achieve a deep and empathetic understanding of the life context, challenges, and talents of the autistic individual, focusing on their sensory, cognitive, and communication needs."
-    },
+  {
+    id: "imersao",
+    name: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
+    icon: Users,
+    color: "bg-blue-500",
+    description: 
+      language === "pt-BR" 
+        ? <>
+            <p className="mb-4">
+              Antes de realizar a elicitação dos requisitos, é de extrema importância que todos os envolvidos no projeto conheçam o domínio do problema a ser resolvido pela aplicação a ser desenvolvida. Acreditamos que a abordagem para alcançar tal domínio é ser capaz de estabelecer uma comunicação ativa com seu usuário, permitindo que a pessoa autista participe do processo de design da tecnologia. É neste aspecto que a imersão trabalha.
+            </p>
+            <p className="mb-4">
+              A fase de imersão é a fase caracterizada pela aproximação do problema. É nesta etapa que a equipe busca conhecer conceitos que permeiam o tema da aplicação a ser projetada.
+            </p>
+            <ul className="space-y-3 text-lg list-disc list-inside mb-4">
+              <li><strong>Entrada da fase:</strong> a ideia ou visão geral de aplicação.</li>
+              <li><strong>Saída da fase:</strong> CCA (Canvas dos Cuidadores de Autistas); CTA (Canvas dos Terapeutas de Autistas); CSS (Canvas do Solicitante do Software); Formulário de Caracterização do Autista; e VGA (Gráfico de Visão Geral do Autista).</li>
+              <li><strong>Envolvidos:</strong> Pais, especialistas, solicitantes de software, designers/desenvolvedores.</li>
+              <li><strong>Atividades da Fase:</strong> Aprender sobre o contexto, Elicitar Requisitos e Consolidar Dados.</li>
+            </ul>
+          </>
+        : <>
+            <p className="mb-4">
+              Before performing requirements elicitation, it is extremely important that everyone involved in the project knows the domain of the problem to be solved by the application to be developed. We believe that the approach to achieve such domain is to be able to establish active communication with your user, allowing the autistic person to participate in the technology design process. This is the aspect that immersion works on.
+            </p>
+            <p className="mb-4">
+              The immersion phase is characterized by approaching the problem. It is at this stage that the team seeks to understand concepts that permeate the theme of the application to be designed.
+            </p>
+            <ul className="space-y-3 text-lg list-disc list-inside mb-4">
+              <li><strong>Phase input:</strong> the application idea or overview.</li>
+              <li><strong>Phase output:</strong> ACC (Autistic Caregivers Canvas); ATC (Autistic Therapists Canvas); RSC (Software Requester Canvas); Autistic Characterization Form; and AOG (Autistic Overview Graph).</li>
+              <li><strong>Involved:</strong> Parents, specialists, software requesters, designers/developers.</li>
+              <li><strong>Phase Activities:</strong> Learn about the context, Elicit Requirements and Consolidate Data.</li>
+            </ul>
+          </>
+  },
     {
       id: "analise",
       name: language === "pt-BR" ? "2. Análise" : "2. Analysis",
@@ -239,35 +219,52 @@ export default function ProAutProcess() {
                 : <>
                     Each phase has activities that must be performed with artifacts provided in the
                     <FileTextIcon className="h-5 w-5 inline mx-1" />
-                    Artifacts tab on the left of the current page."
+                    Artifacts tab on the left of the current page.
                   </>
               }
             </p>
           </div>
           
+          {/* Fluxograma ProAut*/}
           <div className="my-8 p-4 bg-card rounded-lg border">
             <div className="max-w-3xl mx-auto">
               <img 
-                src="Tutorial/assets/jpg" 
-                alt={language === "pt-BR" ? "Diagrama do processo ProAut" : "ProAut process diagram"}
+                src={language === "pt-BR" 
+                  ? "src/modules/Tutorial/assets/imersion-phase/FluxoProAut-pt-br.png" 
+                  : "src/modules/Tutorial/assets/imersion-phase/FluxoProAut-en-us.png"
+                } 
+                alt={language === "pt-BR" 
+                  ? "Diagrama do processo ProAut" 
+                  : "ProAut process diagram"
+                }
                 className="w-full h-auto rounded-md shadow-sm"
               />
               <p className="text-sm text-muted-foreground text-center mt-2">
                 {language === "pt-BR" 
                   ? "Figura 1: Diagrama ilustrativo do processo ProAut"
-                  : "Figure 1: Illustrative diagram of the ProAut process"}
+                  : "Figure 1: Illustrative diagram of the ProAut process"
+                }
               </p>
             </div>
           </div>
 
+          {/* Novos parágrafos adicionados abaixo da imagem */}
+          <div className="space-y-4 text-lg">
+            <p>
+              {language === "pt-BR" 
+                ? "Cada atividade possui sua particularidade e funcionalidade dado às necessidades do seu desenvolvimento. Elas são baseadas em técnicas já consolidadas de entrevistas, Desk Research, geração de personas e mapa de empatias, por exemplo, montadas para o contexto do TEA."
+                : "Each activity has its particularity and functionality given the needs of your development. They are based on already consolidated techniques such as interviews, Desk Research, persona generation and empathy maps, for example, tailored for the ASD context."}
+            </p>
+            
+            <p>
+              {language === "pt-BR" 
+                ? "Caso já tenha feito uso do ProAut anteriormente e esteja em dúvida acerca de alguma atividade ou artefato, acesse o referido conteúdo através da Tabela de Conteúdos na barra lateral esquerda. Caso nunca tenha usado, recomendamos fortemente que prossiga pelo tutorial até se sentir confortável para explorar os artefatos e iniciar a sua jornada de prototipação!"
+                : "If you have used ProAut before and are in doubt about any activity or artifact, access the mentioned content through the Table of Contents in the left sidebar. If you have never used it, we strongly recommend that you proceed with the tutorial until you feel comfortable exploring the artifacts and starting your prototyping journey!"}
+            </p>
+          </div>
+
           {phases.map((phase) => {
             const Icon = phase.icon;
-
-            const activities = phaseActivities[phase.id];
-            const completedCount = activities.filter(a => a.completed).length;
-            const totalCount = activities.length;
-            const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-
             const deliverables = phaseDeliverables[phase.id] || [];
 
             return (
@@ -288,7 +285,7 @@ export default function ProAutProcess() {
 
                   <div className="grid md:grid-cols-3 gap-6">
                     {/* Card Principal: Descrição da Fase */}
-                    <Card className="md:col-span-2">
+                    <Card className="md:col-span-2 min-h-0 flex flex-col">
                       <CardHeader>
                         <CardTitle>{language === "pt-BR" ? "Descrição" : "Description"}</CardTitle>
                         <CardDescription>{language === "pt-BR"
@@ -301,70 +298,40 @@ export default function ProAutProcess() {
                       </CardContent>
                     </Card>
 
-                    {/* Container para Cards Secundários */}
-                    <div className="space-y-6 flex flex-col">
-
-                      {/* Card 2: Progresso e Checklist */}
-                      <Card>
-                        <CardHeader>
-                          <CardTitle>{language === "pt-BR" ? "Progresso da Fase" : "Phase Progress"}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <Progress value={progress} className="w-full" />
-
-                          <div className="space-y-2 pt-2">
-                            <h4 className="text-sm font-semibold border-b pb-1">{language === "pt-BR" ? "Checklist de Atividades:" : "Activities Checklist"}</h4>
-                            {activities.map((activity) => (
-                              <div key={activity.id} className="flex items-center space-x-3 text-sm">
-                                <Checkbox 
-                                  checked={activity.completed}
-                                  onCheckedChange={() => handleActivityToggle(phase.id, activity.id)}
-                                />
-                                <span className={`${activity.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
-                                  {language === "pt-BR" ? activity.name_pt : activity.name_en}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* Card 3: Artefatos */}
-                      <Card className="flex-1">
-                        <CardHeader>
-                          <CardTitle>{language === "pt-BR" ? "Artefatos e Deliverables" : "Artifacts and Deliverables"}</CardTitle>
-                          <CardDescription>{language === "pt-BR" ? "Documentos e saídas essenciais para a próxima fase." : "Essential documents and outputs for the next phase."}</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                          {deliverables.map((deliverable) => (
-                            <div key={deliverable.id} className="flex items-center space-x-3">
-                              <Download className="h-5 w-5 text-blue-500 shrink-0" />
-                              <p className="font-medium">
-                                {language === "pt-BR" ? deliverable.name_pt : deliverable.name_en}
-                              </p>
-                            </div>
-                          ))}
-
-                          {deliverables.length === 0 && (
-                            <p className="text-muted-foreground text-sm">
-                              {language === "pt-BR" 
-                                ? "Nenhum artefato específico para esta fase." 
-                                : "No specific artifacts for this phase."}
+                    {/* Card: Artefatos */}
+                    <Card className="md:col-span-2 min-h 0 flex flex-col">
+                      <CardHeader>
+                        <CardTitle>{language === "pt-BR" ? "Artefatos e Deliverables" : "Artifacts and Deliverables"}</CardTitle>
+                        <CardDescription>{language === "pt-BR" ? "Documentos e saídas essenciais para a próxima fase." : "Essential documents and outputs for the next phase."}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        {deliverables.map((deliverable) => (
+                          <div key={deliverable.id} className="flex items-center space-x-3">
+                            <Download className="h-5 w-5 text-blue-500 shrink-0" />
+                            <p className="font-medium">
+                              {language === "pt-BR" ? deliverable.name_pt : deliverable.name_en}
                             </p>
-                          )}
-
-                          <div className="pt-4">
-                            <Button className="w-full justify-center" variant="secondary">
-                              <Download className="mr-2 h-4 w-4" />
-                              {language === "pt-BR"
-                                ? `Baixar Templates`
-                                : `Download Templates`}
-                            </Button>
                           </div>
-                        </CardContent>
-                      </Card>
+                        ))}
 
-                    </div>
+                        {deliverables.length === 0 && (
+                          <p className="text-muted-foreground text-sm">
+                            {language === "pt-BR" 
+                              ? "Nenhum artefato específico para esta fase." 
+                              : "No specific artifacts for this phase."}
+                          </p>
+                        )}
+
+                        <div className="pt-4">
+                          <Button className="w-full justify-center" variant="secondary">
+                            <Download className="mr-2 h-4 w-4" />
+                            {language === "pt-BR"
+                              ? `Baixar Templates`
+                              : `Download Templates`}
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
               </React.Fragment>
