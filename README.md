@@ -134,11 +134,11 @@ Crie um pequeno utilitário que adiciona/remove a classe `dark` no `<html>` e sa
 
 ```ts
 // src/shared/utils/theme.ts
-export function applyTheme(t: 'light' | 'dark') {
+export function applyTheme(t: "light" | "dark") {
   const root = document.documentElement;
-  if (t === 'dark') root.classList.add('dark');
-  else root.classList.remove('dark');
-  localStorage.setItem('APP:THEME', t);
+  if (t === "dark") root.classList.add("dark");
+  else root.classList.remove("dark");
+  localStorage.setItem("APP:THEME", t);
 }
 ```
 
@@ -230,6 +230,7 @@ frontend/
 ## 🧾 Padrão de commits (Conventional Commits)
 
 **Formato:**
+
 ```
 <tipo>(<escopo>): <descrição>
 ```
@@ -238,6 +239,7 @@ frontend/
 `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
 
 **Exemplos:**
+
 ```
 feat(tutorial): adicionar fluxo de onboarding
 fix(recommendations): corrigir paginação na lista
@@ -253,15 +255,17 @@ chore: atualizar dependências
 ## 🌿 Fluxo de branches e PRs
 
 **Branches principais:**
+
 - `main`: estável, versionado (**protegido – merge via PR**)
 - `develop`: integração contínua do time
 - `feature/*`: novas funcionalidades (ex.: `feature/tutorial-onboarding`)
 - `fix/*`: correções (ex.: `fix/ui-button-loading`)
 
 **Regras de PR:**
-- Título no formato Conventional Commits  
-- Descrever objetivo, passos de teste e impacto  
-- 1 review obrigatório  
+
+- Título no formato Conventional Commits
+- Descrever objetivo, passos de teste e impacto
+- 1 review obrigatório
 - Preferir **squash merge** para manter histórico limpo
 
 ---
