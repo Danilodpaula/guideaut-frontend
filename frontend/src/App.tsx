@@ -57,12 +57,11 @@ const AppLayout = () => (
           <Routes>
             {/* Rotas gerais */}
             <Route index element={<Index />} />
-            <Route path="proaut-process" element={<ProAutProcess />}>
-              <Route path="imersion-phase" element={<ImersionPhase />} />
-              <Route path="analysis-phase" element={<AnalysisPhase />} />
-              <Route path="ideation-phase" element={<IdeationPhase />} />
-              <Route path="prototyping-phase" element={<PrototypingPhase />} />
-            </Route>
+            <Route path="proaut-process" element={<ProAutProcess />} />
+            <Route path="imersion-phase" element={<ImersionPhase />} />
+            <Route path="analysis-phase" element={<AnalysisPhase />} />
+            <Route path="ideation-phase" element={<IdeationPhase />} />
+            <Route path="prototyping-phase" element={<PrototypingPhase />} />
             <Route path="artifacts" element={<Artifacts />} />
             <Route path="design-patterns" element={<DesignPatterns />} />
             <Route path="recommendations" element={<Recommendations />} />

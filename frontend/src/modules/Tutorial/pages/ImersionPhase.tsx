@@ -22,7 +22,7 @@ import {
  * Mostra a fase de imersão com atividades, artefatos e processos detalhados.
  * Ideal para orientar equipes na aplicação do método para desenvolvimento de interfaces acessíveis.
  */
-export default function IdeationPhase() {
+export default function ImersionPhase() {
 
   const phaseDeliverables = [
     { id: 'cca', name_pt: "Canvas dos Cuidadores de Autistas (CCA)", name_en: "Autistic Caregivers Canvas (ACC)" },

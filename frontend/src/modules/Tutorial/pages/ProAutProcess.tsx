@@ -18,7 +18,6 @@ import {
   Users,
   Palette,
   Boxes,
-  Download,
   Info,
   ChevronRight,
 } from "lucide-react";
@@ -57,35 +56,45 @@ export default function ProAutProcess() {
   // Estrutura da tabela de conteúdos com paths de navegação
   const tableOfContents = [
     { 
+      id: 'proaut-phases', 
+      title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
+      type: 'scroll'
+    },
+    { 
       id: 'imersao', 
       title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
-      path: 'imersion-phase'
+      type: 'navigate',
+      path: '/imersion-phase'
     },
     { 
       id: 'analise', 
       title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
-      path: 'analysis-phase'
+      type: 'navigate', 
+      path: '/analysis-phase'
     },
     { 
       id: 'ideacao', 
       title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
-      path: 'ideation-phase'
+      type: 'navigate',
+      path: '/ideation-phase'
     },
     { 
       id: 'prototipacao', 
       title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
-      path: 'prototyping-phase'
+      type: 'navigate',
+      path: '/prototyping-phase'
     },
   ];
 
-  // Detecta a seção ativa durante o scroll (apenas para highlight visual)
+  // Efeito para detectar a seção ativa durante o scroll
   useEffect(() => {
     const handleScroll = () => {
-      const sections = tableOfContents.map(item => 
-        document.getElementById(item.id)
-      ).filter(Boolean);
+      const sections = tableOfContents
+        .filter(item => item.type === 'scroll')
+        .map(item => document.getElementById(item.id))
+        .filter(Boolean);
 
-      const scrollPosition = window.scrollY + 100; // Offset para navbar
+      const scrollPosition = window.scrollY + 100;
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = sections[i];
@@ -97,24 +106,25 @@ export default function ProAutProcess() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Verifica a seção ativa inicial
+    handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [language]); // Re-executa quando o idioma muda
+  }, [language]);
 
   const handleNavigation = (item: typeof tableOfContents[0]) => {
-    if (item.path) {
+    if (item.type === 'navigate' && item.path) {
       // Navega para a página específica da fase
       navigate(item.path);
     } else {
-      // Para a seção "Fases do Processo" (que está na mesma página), faz scroll
+      // Para seções internas, faz scroll
       const element = document.getElementById(item.id);
       if (element) {
-        const offsetTop = element.offsetTop - 80; // Ajuste para navbar
+        const offsetTop = element.offsetTop - 80;
         window.scrollTo({
           top: offsetTop,
           behavior: 'smooth'
         });
+        setActiveSection(item.id);
       }
     }
   };
