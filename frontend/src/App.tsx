@@ -22,9 +22,13 @@ import Index from "./modules/Adm+Base/pages/Index"
 import Login from "./modules/Adm+Base/pages/Login"
 import Signup from "./modules/Adm+Base/pages/Signup"
 import Forbidden from "./modules/Adm+Base/pages/Forbidden"
-import Help from "./modules/Tutorial/pages/Help"
+import Help from "./modules/Tutorial/Help"
 import Search from "./modules/Adm+Base/pages/Search"
-import ProAutProcess from "./modules/Artifacts/pages/ProAutProcess"
+import ProAutProcess from "./modules/Tutorial/pages/ProAutProcess"
+import ImersionPhase from "./modules/Tutorial/pages/ImersionPhase"
+import AnalysisPhase from "./modules/Tutorial/pages/AnalysisPhase"
+import IdeationPhase from "./modules/Tutorial/pages/IdeationPhase"
+import PrototypingPhase from "./modules/Tutorial/pages/PrototypingPhase"
 import Recommendations from "./modules/Recommendations/pages/Recommendations"
 import DesignPatterns from "./modules/Artifacts/pages/DesignPatterns"
 import Artifacts from "./modules/Artifacts/pages/Artifacts"
@@ -54,6 +58,10 @@ const AppLayout = () => (
             {/* Rotas gerais */}
             <Route index element={<Index />} />
             <Route path="proaut-process" element={<ProAutProcess />} />
+            <Route path="imersion-phase" element={<ImersionPhase />} />
+            <Route path="analysis-phase" element={<AnalysisPhase />} />
+            <Route path="ideation-phase" element={<IdeationPhase />} />
+            <Route path="prototyping-phase" element={<PrototypingPhase />} />
             <Route path="artifacts" element={<Artifacts />} />
             <Route path="design-patterns" element={<DesignPatterns />} />
             <Route path="recommendations" element={<Recommendations />} />
