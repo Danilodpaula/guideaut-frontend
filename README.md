@@ -220,10 +220,32 @@ frontend/
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format:fix": "prettier --write .",
+    "format:check": "prettier --check ."
   }
 }
 ```
+
+---
+
+## 🌠 Formatando o Código (Prettier + Husky)
+
+O projeto está configurado para formatar o código **automaticamente** antes de cada commit.
+
+Isso usa o **Husky** (para gerenciar os _hooks_ do Git) e o **lint-staged** (para rodar o **Prettier**).
+
+### ⚙️ Como Funciona (Fluxo de Trabalho)
+
+1.  Você faz suas mudanças no código.
+2.  Você usa `git add .` para adicionar seus arquivos ao "stage".
+3.  Você roda `git commit -m "sua mensagem"`.
+4.  **Automaticamente**, o Husky vai disparar o `lint-staged`.
+5.  O `lint-staged` vai rodar `npx prettier --write` **apenas** nos arquivos que você adicionou.
+6.  O Prettier corrige a formatação, o `lint-staged` adiciona essas correções ao commit, e o commit é finalizado com sucesso.
+
+Isso garante que todo o código no repositório siga o mesmo padrão de formatação, sem que você precise rodar o Prettier manualmente.
 
 ---
 
@@ -235,8 +257,7 @@ frontend/
 <tipo>(<escopo>): <descrição>
 ```
 
-**Tipos comuns:**  
-`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+**Tipos comuns:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
 
 **Exemplos:**
 
@@ -247,8 +268,7 @@ docs(readme): instruções de tailwind e shadcn/ui
 chore: atualizar dependências
 ```
 
-**Escopos sugeridos:**  
-`tutorial`, `adm`, `recommendations`, `artifacts`, `shared`, `router`, `i18n`, `ui`.
+**Escopos sugeridos:** `tutorial`, `adm`, `recommendations`, `artifacts`, `shared`, `router`, `i18n`, `ui`.
 
 ---
 
@@ -272,3 +292,7 @@ chore: atualizar dependências
 
 Desenvolvido pela **turma de Engenharia de Software da Universidade do Estado do Amazonas (UEA)**,  
 no período **2025/2**, sob orientação da **Professora Áurea Hiléia da Silva Melo**.
+
+```
+
+```
