@@ -3,15 +3,14 @@
 // Apresenta as 4 fases do método baseado em Design Thinking, atividades,
 // artefatos gerados e recursos adicionais para equipes de desenvolvimento.
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { FileText as FileTextIcon } from "lucide-react";
 import { useI18n } from "@/core/i18n/I18nContext";
 import {
@@ -21,6 +20,7 @@ import {
   Boxes,
   Download,
   Info,
+  ChevronRight,
 } from "lucide-react";
 
 /**
@@ -51,7 +51,73 @@ export default function ProAutProcess() {
   };
 
   const { language } = useI18n();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState('');
+
+  // Estrutura da tabela de conteúdos com paths de navegação
+  const tableOfContents = [
+    { 
+      id: 'imersao', 
+      title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
+      path: 'imersion-phase'
+    },
+    { 
+      id: 'analise', 
+      title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
+      path: 'analysis-phase'
+    },
+    { 
+      id: 'ideacao', 
+      title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
+      path: 'ideation-phase'
+    },
+    { 
+      id: 'prototipacao', 
+      title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
+      path: 'prototyping-phase'
+    },
+  ];
+
+  // Detecta a seção ativa durante o scroll (apenas para highlight visual)
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = tableOfContents.map(item => 
+        document.getElementById(item.id)
+      ).filter(Boolean);
+
+      const scrollPosition = window.scrollY + 100; // Offset para navbar
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        if (section && section.offsetTop <= scrollPosition) {
+          setActiveSection(section.id);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Verifica a seção ativa inicial
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [language]); // Re-executa quando o idioma muda
+
+  const handleNavigation = (item: typeof tableOfContents[0]) => {
+    if (item.path) {
+      // Navega para a página específica da fase
+      navigate(item.path);
+    } else {
+      // Para a seção "Fases do Processo" (que está na mesma página), faz scroll
+      const element = document.getElementById(item.id);
+      if (element) {
+        const offsetTop = element.offsetTop - 80; // Ajuste para navbar
+        window.scrollTo({
+          top: offsetTop,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
 
   // Estrutura de fases do processo ProAut, com conteúdo bilíngue
   const phases = [
@@ -124,249 +190,207 @@ export default function ProAutProcess() {
   ]
 
   return (
-    <div className="flex-1 space-y-6 p-6 animate-fade-in">
-      {/* Cabeçalho da página */}
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold tracking-tight">
-          {language === "pt-BR" ? "Visão geral do ProAut" : "ProAut Overview"}
-        </h1>
-        
-        {/* Introdução ao ProAut */}
-        <div className="space-y-4 text-lg text-muted-foreground">
-          <p>
-            {language === "pt-BR"
-              ? "Muitas tecnologias atuais são, geralmente, inacessíveis, pois as pessoas que criam as tecnologias convencionais não incorporam, regularmente, design acessível e como desenvolvedores, sabemos que cada etapa do desenvolvimento de uma aplicação precisa ser meticulosamente idealizada e analisada antes de ser propriamente implementada."
-              : "Many current technologies are generally inaccessible because the people who create conventional technologies do not regularly incorporate accessible design, and as developers, we know that each stage of application development needs to be meticulously conceived and analyzed before being properly implemented."
-            }
-          </p>
-          <p>
-            {language === "pt-BR"
-              ? "O grande impasse é: somos levados a ignorar muitos contextos importantes que precisam ser desvendados para evitar problemas com aqueles que mais devemos satisfazer, os clientes e inevitavelmente, até mesmo as coisas mais simples passam despercebidas dado certos contextos. É nesse entremeio que a falta de cuidado no desenvolvimento de tecnologias para usuários com condições neurodivergentes fica evidente."
-              : "The great impasse is: we are led to ignore many important contexts that need to be uncovered to avoid problems with those we must satisfy the most - the clients - and inevitably, even the simplest things go unnoticed given certain contexts. It is in this interlude that the lack of care in developing technologies for users with neurodivergent conditions becomes evident."
-            }
-          </p>
-          <p>
-            {language === "pt-BR"
-              ? "Mitigar esse problema é o nosso objetivo e o GuideAut, como ferramenta WEB colaborativa, disponibiliza as ferramentas e repositório de informações necessárias para que sua equipe possa facilmente construir um protótipo de qualidade da sua aplicação. Com o ProAut, o processo baseado em Design Thinking (DT) que permeia o funcionamento do GuideAut, é possível realizar o alinhamento de requisitos com foco nos autistas."
-              : "Mitigating this problem is our goal, and GuideAut, as a collaborative WEB tool, provides the tools and information repository necessary for your team to easily build a quality prototype of your application. With ProAut, the Design Thinking (DT) based process that permeates GuideAut's functioning, it is possible to align requirements with a focus on autistic individuals."
-            }
-          </p>
-        </div>
-
-        {/* Informação sobre as fases */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-          <div className="flex items-start space-x-3">
-            <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="text-blue-800 font-medium">
-                {language === "pt-BR" 
-                  ? "INFO: O ProAut é indicado, principalmente, para construção de protótipos de baixa fidelidade."
-                  : "INFO: ProAut is mainly recommended for building low-fidelity prototypes."}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Fases do processo */}
-      <div className="grid gap-6">
-        <section id="proaut-phases" className="space-y-12 scroll-m-20 pt-6">
-          <h2 className="text-3xl font-bold tracking-tight border-b pb-2">
-            {language === "pt-BR" ? "Fases do Processo" : "Process Phases"}
-          </h2>
-
-          <div className="space-y-4">
-            <p className="text-lg">
-              {language === "pt-BR" 
-                ? "O ProAut possui 4 fases: Fase de imersão, Análise, Ideação e Prototipação. Nas quais:"
-                : "ProAut has 4 phases: Immersion phase, Analysis, Ideation and Prototyping. In which:"}
+    <div className="flex gap-6">
+      {/* Conteúdo Principal */}
+      <div className="flex-1 space-y-6 p-6 animate-fade-in">
+        {/* Cabeçalho da página */}
+        <div className="space-y-4">
+          <h1 className="text-3xl font-bold tracking-tight">
+            {language === "pt-BR" ? "Visão geral do ProAut" : "ProAut Overview"}
+          </h1>
+          
+          {/* Introdução ao ProAut */}
+          <div className="space-y-4 text-lg text-muted-foreground">
+            <p>
+              {language === "pt-BR"
+                ? "Muitas tecnologias atuais são, geralmente, inacessíveis, pois as pessoas que criam as tecnologias convencionais não incorporam, regularmente, design acessível e como desenvolvedores, sabemos que cada etapa do desenvolvimento de uma aplicação precisa ser meticulosamente idealizada e analisada antes de ser propriamente implementada."
+                : "Many current technologies are generally inaccessible because the people who create conventional technologies do not regularly incorporate accessible design, and as developers, we know that each stage of application development needs to be meticulously conceived and analyzed before being properly implemented."
+              }
             </p>
-            
-            <ul className="space-y-3 text-lg list-disc list-inside">
-              <li>
-                <strong>{language === "pt-BR" ? "Fase de imersão" : "Immersion phase"}:</strong>{' '}
-                {language === "pt-BR" 
-                  ? "você conhece aspectos relacionados ao autismo, adaptação da fase de imersão original do DT. Te direciona para uma solução e guia na geração de documentação para definir o problema a ser resolvido;"
-                  : "you learn aspects related to autism, adaptation of the original DT immersion phase. It directs you to a solution and guides in generating documentation to define the problem to be solved;"}
-              </li>
-              <li>
-                <strong>{language === "pt-BR" ? "Fase de análise" : "Analysis phase"}:</strong>{' '}
-                {language === "pt-BR" 
-                  ? "observe padrões e elimine discordâncias na documentação da fase de imersão. Isso possibilita gerar empatia e personas com mais precisão;"
-                  : "observe patterns and eliminate discrepancies in the immersion phase documentation. This enables generating empathy and personas with more accuracy;"}
-              </li>
-              <li>
-                <strong>{language === "pt-BR" ? "Fase de ideação" : "Ideation phase"}:</strong>{' '}
-                {language === "pt-BR" 
-                  ? "conheça requisitos, reunindo a equipe de desenvolvimento para uma comunicação aberta acerca de melhorias, adições e remoções de ferramentas pensadas para resolver o problema definido;"
-                  : "learn requirements, gathering the development team for open communication about improvements, additions and removals of tools designed to solve the defined problem;"}
-              </li>
-              <li>
-                <strong>{language === "pt-BR" ? "Fase de prototipação" : "Prototyping phase"}:</strong>{' '}
-                {language === "pt-BR" 
-                  ? "a concepção do protótipo e seu refinamento."
-                  : "the conception of the prototype and its refinement."}
-              </li>
-            </ul>
-
-            <p className="text-lg pt-2 flex items-center gap-2">
-              {language === "pt-BR" 
-                ? <>
-                    Cada fase possui atividades que devem ser realizadas com artefatos disponibilizados na aba
-                    <FileTextIcon className="h-5 w-5 inline mx-1" />
-                    Artefatos da barra lateral esquerda da página atual.
-                  </>
-                : <>
-                    Each phase has activities that must be performed with artifacts provided in the
-                    <FileTextIcon className="h-5 w-5 inline mx-1" />
-                    Artifacts tab on the left of the current page.
-                  </>
+            <p>
+              {language === "pt-BR"
+                ? "O grande impasse é: somos levados a ignorar muitos contextos importantes que precisam ser desvendados para evitar problemas com aqueles que mais devemos satisfazer, os clientes e inevitavelmente, até mesmo as coisas mais simples passam despercebidas dado certos contextos. É nesse entremeio que a falta de cuidado no desenvolvimento de tecnologias para usuários com condições neurodivergentes fica evidente."
+                : "The great impasse is: we are led to ignore many important contexts that need to be uncovered to avoid problems with those we must satisfy the most - the clients - and inevitably, even the simplest things go unnoticed given certain contexts. It is in this interlude that the lack of care in developing technologies for users with neurodivergent conditions becomes evident."
+              }
+            </p>
+            <p>
+              {language === "pt-BR"
+                ? "Mitigar esse problema é o nosso objetivo e o GuideAut, como ferramenta WEB colaborativa, disponibiliza as ferramentas e repositório de informações necessárias para que sua equipe possa facilmente construir um protótipo de qualidade da sua aplicação. Com o ProAut, o processo baseado em Design Thinking (DT) que permeia o funcionamento do GuideAut, é possível realizar o alinhamento de requisitos com foco nos autistas."
+                : "Mitigating this problem is our goal, and GuideAut, as a collaborative WEB tool, provides the tools and information repository necessary for your team to easily build a quality prototype of your application. With ProAut, the Design Thinking (DT) based process that permeates GuideAut's functioning, it is possible to align requirements with a focus on autistic individuals."
               }
             </p>
           </div>
-          
-          {/* Fluxograma ProAut*/}
-          <div className="my-8 p-4 bg-card rounded-lg border">
-            <div className="max-w-3xl mx-auto">
-              <img 
-                src={language === "pt-BR" 
-                  ? "src/modules/Tutorial/assets/imersion-phase/FluxoProAut-pt-br.png" 
-                  : "src/modules/Tutorial/assets/imersion-phase/FluxoProAut-en-us.png"
-                } 
-                alt={language === "pt-BR" 
-                  ? "Diagrama do processo ProAut" 
-                  : "ProAut process diagram"
-                }
-                className="w-full h-auto rounded-md shadow-sm"
-              />
-              <p className="text-sm text-muted-foreground text-center mt-2">
+
+          {/* Informação sobre as fases */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <div className="flex items-start space-x-3">
+              <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-blue-800 font-medium">
+                  {language === "pt-BR" 
+                    ? "INFO: O ProAut é indicado, principalmente, para construção de protótipos de baixa fidelidade."
+                    : "INFO: ProAut is mainly recommended for building low-fidelity prototypes."}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fases do processo */}
+        <div className="grid gap-6">
+          <section id="proaut-phases" className="space-y-12 scroll-m-20 pt-6">
+            <h2 className="text-3xl font-bold tracking-tight border-b pb-2">
+              {language === "pt-BR" ? "Fases do Processo" : "Process Phases"}
+            </h2>
+
+            <div className="space-y-4">
+              <p className="text-lg">
                 {language === "pt-BR" 
-                  ? "Figura 1: Diagrama ilustrativo do processo ProAut"
-                  : "Figure 1: Illustrative diagram of the ProAut process"
+                  ? "O ProAut possui 4 fases: Fase de imersão, Análise, Ideação e Prototipação. Nas quais:"
+                  : "ProAut has 4 phases: Immersion phase, Analysis, Ideation and Prototyping. In which:"}
+              </p>
+              
+              <ul className="space-y-3 text-lg list-disc list-inside">
+                <li>
+                  <strong>{language === "pt-BR" ? "Fase de imersão" : "Immersion phase"}:</strong>{' '}
+                  {language === "pt-BR" 
+                    ? "você conhece aspectos relacionados ao autismo, adaptação da fase de imersão original do DT. Te direciona para uma solução e guia na geração de documentação para definir o problema a ser resolvido;"
+                    : "you learn aspects related to autism, adaptation of the original DT immersion phase. It directs you to a solution and guides in generating documentation to define the problem to be solved;"}
+                </li>
+                <li>
+                  <strong>{language === "pt-BR" ? "Fase de análise" : "Analysis phase"}:</strong>{' '}
+                  {language === "pt-BR" 
+                    ? "observe padrões e elimine discordâncias na documentação da fase de imersão. Isso possibilita gerar empatia e personas com mais precisão;"
+                    : "observe patterns and eliminate discrepancies in the immersion phase documentation. This enables generating empathy and personas with more accuracy;"}
+                </li>
+                <li>
+                  <strong>{language === "pt-BR" ? "Fase de ideação" : "Ideation phase"}:</strong>{' '}
+                  {language === "pt-BR" 
+                    ? "conheça requisitos, reunindo a equipe de desenvolvimento para uma comunicação aberta acerca de melhorias, adições e remoções de ferramentas pensadas para resolver o problema definido;"
+                    : "learn requirements, gathering the development team for open communication about improvements, additions and removals of tools designed to solve the defined problem;"}
+                </li>
+                <li>
+                  <strong>{language === "pt-BR" ? "Fase de prototipação" : "Prototyping phase"}:</strong>{' '}
+                  {language === "pt-BR" 
+                    ? "a concepção do protótipo e seu refinamento."
+                    : "the conception of the prototype and its refinement."}
+                </li>
+              </ul>
+
+              <p className="text-lg pt-2 flex items-center gap-1 flex-wrap">
+                {language === "pt-BR" 
+                  ? "Cada fase possui atividades que devem ser realizadas com artefatos disponibilizados na aba"
+                  : "Each phase has activities that must be performed with artifacts provided in the"
+                }
+                <FileTextIcon className="h-5 w-5 mx-1" />
+                {language === "pt-BR" 
+                  ? "Artefatos da barra lateral esquerda da página atual."
+                  : "Artifacts tab on the left of the current page."
                 }
               </p>
             </div>
-          </div>
-
-          {/* Novos parágrafos adicionados abaixo da imagem */}
-          <div className="space-y-4 text-lg">
-            <p>
-              {language === "pt-BR" 
-                ? "Cada atividade possui sua particularidade e funcionalidade dado às necessidades do seu desenvolvimento. Elas são baseadas em técnicas já consolidadas de entrevistas, Desk Research, geração de personas e mapa de empatias, por exemplo, montadas para o contexto do TEA."
-                : "Each activity has its particularity and functionality given the needs of your development. They are based on already consolidated techniques such as interviews, Desk Research, persona generation and empathy maps, for example, tailored for the ASD context."}
-            </p>
             
-            <p>
-              {language === "pt-BR" 
-                ? "Caso já tenha feito uso do ProAut anteriormente e esteja em dúvida acerca de alguma atividade ou artefato, acesse o referido conteúdo através da Tabela de Conteúdos na barra lateral esquerda. Caso nunca tenha usado, recomendamos fortemente que prossiga pelo tutorial até se sentir confortável para explorar os artefatos e iniciar a sua jornada de prototipação!"
-                : "If you have used ProAut before and are in doubt about any activity or artifact, access the mentioned content through the Table of Contents in the left sidebar. If you have never used it, we strongly recommend that you proceed with the tutorial until you feel comfortable exploring the artifacts and starting your prototyping journey!"}
-            </p>
-          </div>
+            {/* Fluxograma ProAut*/}
+            <div className="my-8 p-4 bg-card rounded-lg border">
+              <div className="max-w-3xl mx-auto">
+                <img 
+                  src={language === "pt-BR" 
+                    ? "src/modules/Tutorial/assets/imersion-phase/FluxoProAut-pt-br.png" 
+                    : "src/modules/Tutorial/assets/imersion-phase/FluxoProAut-en-us.png"
+                  } 
+                  alt={language === "pt-BR" 
+                    ? "Diagrama do processo ProAut" 
+                    : "ProAut process diagram"
+                  }
+                  className="w-full h-auto rounded-md shadow-sm"
+                />
+                <p className="text-sm text-muted-foreground text-center mt-2">
+                  {language === "pt-BR" 
+                    ? "Figura 1: Diagrama ilustrativo do processo ProAut"
+                    : "Figure 1: Illustrative diagram of the ProAut process"
+                  }
+                </p>
+              </div>
+            </div>
 
-          {phases.map((phase) => {
-            const Icon = phase.icon;
-            const deliverables = phaseDeliverables[phase.id] || [];
+            <div className="space-y-4 text-lg">
+              <p>
+                {language === "pt-BR" 
+                  ? "Cada atividade possui sua particularidade e funcionalidade dado às necessidades do seu desenvolvimento. Elas são baseadas em técnicas já consolidadas de entrevistas, Desk Research, geração de personas e mapa de empatias, por exemplo, montadas para o contexto do TEA."
+                  : "Each activity has its particularity and functionality given the needs of your development. They are based on already consolidated techniques such as interviews, Desk Research, persona generation and empathy maps, for example, tailored for the ASD context."}
+              </p>
+              
+              <p>
+                {language === "pt-BR" 
+                  ? "Caso já tenha feito uso do ProAut anteriormente e esteja em dúvida acerca de alguma atividade ou artefato, acesse o referido conteúdo através da Tabela de Conteúdos na barra lateral esquerda. Caso nunca tenha usado, recomendamos fortemente que prossiga pelo tutorial até se sentir confortável para explorar os artefatos e iniciar a sua jornada de prototipação!"
+                  : "If you have used ProAut before and are in doubt about any activity or artifact, access the mentioned content through the Table of Contents in the left sidebar. If you have never used it, we strongly recommend that you proceed with the tutorial until you feel comfortable exploring the artifacts and starting your prototyping journey!"}
+              </p>
+            </div>
 
-            return (
-              <React.Fragment key={phase.id}>
-                <div id={phase.id} className="scroll-m-20 space-y-6">
+            {phases.map((phase) => {
+              const Icon = phase.icon;
+              const deliverables = phaseDeliverables[phase.id] || [];
 
-                  {/* Cabeçalho da Fase (Título e Ícone) */}
-                  <div className="flex items-start gap-4 pb-2">
-                    <div className={`${phase.color} p-3 rounded-xl shadow-lg shrink-0`}>
-                      <Icon className="h-6 w-6 text-white" />
+              return (
+                <React.Fragment key={phase.id}>
+                  <div id={phase.id} className="scroll-m-20 space-y-6">
+
+                    {/* Cabeçalho da Fase */}
+                    <div className="flex items-start gap-4 pb-2">
+                      <div className={`${phase.color} p-3 rounded-xl shadow-lg shrink-0`}>
+                        <Icon className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-3xl font-bold leading-none tracking-tight pt-1">
+                          {phase.name}
+                        </h3>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="text-3xl font-bold leading-none tracking-tight pt-1">
-                        {phase.name}
-                      </h3>
+
+                    {/* Descrição da Fase */}
+                    <div className="text-base space-y-4">
+                      {phase.description}
                     </div>
                   </div>
+                </React.Fragment>
+              );
+            })}
+          </section>
+        </div>
+      </div>
 
-                  <div className="grid md:grid-cols-3 gap-6">
-                    {/* Card Principal: Descrição da Fase */}
-                    <Card className="md:col-span-2 min-h-0 flex flex-col">
-                      <CardHeader>
-                        <CardTitle>{language === "pt-BR" ? "Descrição" : "Description"}</CardTitle>
-                        <CardDescription>{language === "pt-BR"
-                          ? "Visão geral, escopo e ações primárias realizadas nesta fase."
-                          : "Overview, scope, and primary actions performed in this phase."}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="text-base">
-                        {phase.description}
-                      </CardContent>
-                    </Card>
-
-                    {/* Card: Artefatos */}
-                    <Card className="md:col-span-2 min-h 0 flex flex-col">
-                      <CardHeader>
-                        <CardTitle>{language === "pt-BR" ? "Artefatos e Deliverables" : "Artifacts and Deliverables"}</CardTitle>
-                        <CardDescription>{language === "pt-BR" ? "Documentos e saídas essenciais para a próxima fase." : "Essential documents and outputs for the next phase."}</CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        {deliverables.map((deliverable) => (
-                          <div key={deliverable.id} className="flex items-center space-x-3">
-                            <Download className="h-5 w-5 text-blue-500 shrink-0" />
-                            <p className="font-medium">
-                              {language === "pt-BR" ? deliverable.name_pt : deliverable.name_en}
-                            </p>
-                          </div>
-                        ))}
-
-                        {deliverables.length === 0 && (
-                          <p className="text-muted-foreground text-sm">
-                            {language === "pt-BR" 
-                              ? "Nenhum artefato específico para esta fase." 
-                              : "No specific artifacts for this phase."}
-                          </p>
-                        )}
-
-                        <div className="pt-4">
-                          <Button className="w-full justify-center" variant="secondary">
-                            <Download className="mr-2 h-4 w-4" />
-                            {language === "pt-BR"
-                              ? `Baixar Templates`
-                              : `Download Templates`}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </React.Fragment>
-            );
-          })}
-        </section>
-
-        {/* 3. Recursos adicionais (Rodapé da página) - Usando Card */}
-        <section className="pt-10 space-y-6">
-          <h2 className="text-3xl font-bold tracking-tight">
-            {language === "pt-BR" ? "Recursos Adicionais" : "Additional Resources"}
-          </h2>
-          <Card>
-            <CardContent className="pt-6 space-y-3">
-              <Button variant="outline" className="w-full justify-center">
-                <Download className="mr-2 h-4 w-4" />
-                {language === "pt-BR"
-                  ? "Guia Completo do ProAut (PDF)"
-                  : "Complete ProAut Guide (PDF)"}
-              </Button>
-              <Button variant="outline" className="w-full justify-center">
-                <Download className="mr-2 h-4 w-4" />
-                {language === "pt-BR"
-                  ? "Todos os Templates e Artefatos (ZIP)"
-                  : "All Templates and Artifacts (ZIP)"}
-              </Button>
-              <Button variant="outline" className="w-full justify-center">
-                <Download className="mr-2 h-4 w-4" />
-                {language === "pt-BR"
-                  ? "Exemplos de Aplicação do ProAut"
-                  : "ProAut Application Examples"}
-              </Button>
-            </CardContent>
-          </Card>
-        </section>
+      {/* Tabela de Conteúdos */}
+      <div className="w-80 flex-shrink-0 pt-6 pr-6 sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto">
+        <Card className="shadow-lg border-l-4 border-l-blue-500">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg flex items-center gap-2">
+              <FileTextIcon className="h-5 w-5 text-blue-500" />
+              {language === "pt-BR" ? "Tabela de Conteúdos" : "Table of Contents"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pb-4">
+            <nav className="space-y-2">
+              {tableOfContents.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleNavigation(item)}
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                    activeSection === item.id
+                      ? 'bg-blue-50 text-blue-700 border-l-4 border-l-blue-500 font-medium'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+                  }`}
+                >
+                  <ChevronRight 
+                    className={`h-3 w-3 transition-transform duration-200 ${
+                      activeSection === item.id ? 'text-blue-500' : 'text-gray-400'
+                    }`} 
+                  />
+                  <span className="text-sm">{item.title}</span>
+                </button>
+              ))}
+            </nav>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
