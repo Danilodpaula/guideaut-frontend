@@ -1,5 +1,5 @@
 import api from "./client";
-import { RecomendacaoRequest } from "./types/recomendacaoTypes";
+import { AvaliacaoRequest, RecomendacaoRequest } from "./types/recomendacaoTypes"; // 1. Importar
 
 /**
  * Busca a lista de recomendações (GET /recomendacoes/list-all).
@@ -16,9 +16,7 @@ export const criarRecomendacaoApi = (data: RecomendacaoRequest) => {
 };
 
 /**
- * -------------------------------------------------------------------
- * ✏️ NOVO: Atualiza uma recomendação (requer token de admin no backend).
- * -------------------------------------------------------------------
+ * Atualiza uma recomendação (PUT /recomendacoes/{id}).
  */
 export const atualizarRecomendacaoApi = (
   id: string,
@@ -28,8 +26,21 @@ export const atualizarRecomendacaoApi = (
 };
 
 /**
- * Deleta uma recomendação (requer token de admin no backend).
+ * Deleta uma recomendação (DELETE /recomendacoes/{id}).
  */
 export const deletarRecomendacaoApi = (id: string) => {
   return api.delete(`/recomendacoes/${id}`);
+};
+
+/**
+ * -------------------------------------------------------------------
+ * ⭐ NOVO: Envia uma avaliação (1-5 estrelas).
+ * -------------------------------------------------------------------
+ */
+export const avaliarRecomendacaoApi = (
+  id: string,
+  data: AvaliacaoRequest,
+) => {
+  // O token de usuário logado é injetado automaticamente pelo interceptor
+  return api.post(`/recomendacoes/${id}/avaliar`, data);
 };
