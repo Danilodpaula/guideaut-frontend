@@ -1,17 +1,17 @@
-import api from "./client";
-import { AuthRequest } from "./types/authTypes";
+                          import api from "./client";
+                          import { AuthRequest } from "./types/authTypes";
 
-/**
- * Envia credenciais para o endpoint /auth/login do backend Spring.
- */
-export const loginApi = (credentials: AuthRequest) => {
-  return api.post("/auth/login", credentials);
-};
+      /**
+       * Envia credenciais para o endpoint /auth/login do backend Spring.
+       */
+      export const loginApi = (credentials: AuthRequest) => {
+        return api.post("/auth/login", credentials);
+      };
 
-/**
- * Busca os dados do usuário logado no endpoint /me.
- * O token JWT é adicionado automaticamente pelo interceptor do 'api' client.
- */
-export const getProfileApi = () => {
-  return api.get("/me");
+      /**
+       * Busca os dados do usuário logado no endpoint /me.
+       * O token JWT é adicionado automaticamente pelo interceptor do 'api' client.
+       */
+      export const getProfileApi = () => {
+        return api.get("/me");
 };
