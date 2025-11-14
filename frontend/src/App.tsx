@@ -40,6 +40,7 @@ import Audit from "./modules/Adm+Base/pages/Audit"
 import Profile from "./modules/Adm+Base/pages/Profile"
 import NotFound from "./modules/Adm+Base/pages/NotFound"
 import { Footer } from "./components/layout/Footer"
+import Stepper from "./modules/Artifacts/pages/EmpathyAutStepper"
 
 const queryClient = new QueryClient()
 
@@ -69,6 +70,9 @@ const AppLayout = () => (
             <Route path="help" element={<Help />} />
             <Route path="me" element={<Profile />} />
             <Route path="settings/accessibility" element={<Accessibility />} />
+            <Route path="empathy-aut">
+              <Route path="create" element={<Stepper />} />
+            </Route>
 
             {/* Rotas administrativas protegidas */}
             <Route
