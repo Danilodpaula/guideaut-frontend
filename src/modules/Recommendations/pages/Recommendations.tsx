@@ -1,60 +1,49 @@
-// src/modules/Recommendations/pages/Recommendations.tsx
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/core/auth/AuthContext";
 import { useI18n } from "@/core/i18n/I18nContext";
-// REMOVIDO: import { supabase } from "@/integrations/supabase/client";
-import {
-  listarRecomendacoesApi,
-  criarRecomendacaoApi,
-} from "@/api/recomendacaoService"; // IMPORTADO
-import {
-  RecomendacaoRequest,
-  Recomendacao,
-} from "@/api/types/recomendacaoTypes"; // IMPORTADO
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import { Search, Plus, Filter } from "lucide-react";
-// REMOVIDO: ThumbsUp, ThumbsDown, Heart (backend não suporta)
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
-/**
- * 📘 Tipagem ADAPTADA para o backend Spring
- */
-interface RecommendationUi extends Recomendacao {
-  // Campos da UI que o backend não tem
-  user_vote?: string;
-  is_favorited?: boolean;
-}
+import { useRecommendations } from "../hooks/useRecommendations";
+
+import { RecommendationFilters } from "../components/RecommendationFilters";
+import { RecommendationFormDialog } from "../components/RecommendationFormDialog";
+import { RecommendationCard } from "../components/RecommendationCard";
+
+const getCategoryIcon = (category: string) =>
+  ({
+    NAVIGATION: "🧭",
+    INTERACTION: "👆",
+    VISUAL: "👁️",
+    CONTENT: "📝",
+    FEEDBACK: "💬",
+    GENERAL: "⚙️",
+  })[category] || "📌";
+
+const getCategoryLabel = (category: string) =>
+  ({
+    NAVIGATION: "Navegação",
+    INTERACTION: "Interação",
+    VISUAL: "Visual",
+    CONTENT: "Conteúdo",
+    FEEDBACK: "Feedback",
+    GENERAL: "Geral",
+  })[category] || category;
 
 export default function Recommendations() {
   const { t } = useI18n();
-  const { isAuthenticated, user, can } = useAuth();
+  const { isAuthenticated, can } = useAuth();
   const navigate = useNavigate();
 
   const [recommendations, setRecommendations] = useState<RecommendationUi[]>(
@@ -62,21 +51,25 @@ export default function Recommendations() {
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
-  // REMOVIDO: const [phaseFilter, setPhaseFilter] = useState<string>("ALL");
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Estado do formulário ADAPTADO
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    category: "",
-    referencia: "", // 'source' virou 'referencia'
-  });
-
-  useEffect(() => {
-    loadRecommendations();
-  }, []); // Só carrega 1x
+  const {
+    isLoading,
+    filteredRecommendations,
+    isFormOpen,
+    editingRec,
+    formData,
+    setFormData,
+    handleFormOpenChange,
+    handleSubmit,
+    openEditDialog,
+    isDeleteAlertOpen,
+    setIsDeleteAlertOpen,
+    openDeleteDialog,
+    handleDeleteConfirm,
+    setDeletingRecId,
+    ratingLoadingId,
+    handleAvaliar,
+  } = useRecommendations(searchTerm, categoryFilter);
 
   /**
    * 🔍 Carrega recomendações do BACKEND SPRING
@@ -200,97 +193,15 @@ export default function Recommendations() {
           </p>
         </div>
 
-        {/* Botão de nova recomendação */}
         {isAuthenticated ? (
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Nova Recomendação
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Nova Recomendação</DialogTitle>
-                <DialogDescription>
-                  Compartilhe sua recomendação com a comunidade{" "}
-                  {!can("ADMIN") && " (será enviada para aprovação)"}
-                </DialogDescription>
-              </DialogHeader>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Título</Label>
-                  <Input
-                    id="title"
-                    value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="description">Descrição</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                    rows={4}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Categoria</Label>
-                  <Select
-                    value={formData.category}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, category: value })
-                    }
-                    required
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="NAVIGATION">Navegação</SelectItem>
-                      <SelectItem value="INTERACTION">Interação</SelectItem>
-                      <SelectItem value="VISUAL">Visual</SelectItem>
-                      <SelectItem value="CONTENT">Conteúdo</SelectItem>
-                      <SelectItem value="FEEDBACK">Feedback</SelectItem>
-                      <SelectItem value="GENERAL">Geral</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Referência (opcional)</Label>
-                  <Input
-                    value={formData.referencia}
-                    onChange={(e) =>
-                      setFormData({ ...formData, referencia: e.target.value })
-                    }
-                    placeholder="Ex: Artigo científico, especialista..."
-                  />
-                </div>
-
-                <div className="flex justify-end gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsDialogOpen(false)}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button type="submit">Publicar</Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <RecommendationFormDialog
+            isOpen={isFormOpen}
+            onOpenChange={handleFormOpenChange}
+            onSubmit={handleSubmit}
+            formData={formData}
+            setFormData={setFormData}
+            editingRec={editingRec}
+          />
         ) : (
           <Button onClick={() => navigate("/login")} variant="outline">
             Fazer Login
@@ -298,38 +209,15 @@ export default function Recommendations() {
         )}
       </div>
 
-      <Card>
-        <CardContent className="pt-6">
-          <div className="grid gap-4 md:grid-cols-2">
-            {" "}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Buscar recomendações..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger>
-                <Filter className="mr-2 h-4 w-4" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">Todas as categorias</SelectItem>
-                <SelectItem value="NAVIGATION">Navegação</SelectItem>
-                <SelectItem value="INTERACTION">Interação</SelectItem>
-                <SelectItem value="VISUAL">Visual</SelectItem>
-                <SelectItem value="CONTENT">Conteúdo</SelectItem>
-                <SelectItem value="FEEDBACK">Feedback</SelectItem>
-                <SelectItem value="GENERAL">Geral</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Filtros */}
+      <RecommendationFilters
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+      />
 
+      {/* Lista de Recomendações */}
       {isLoading ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground">Carregando...</p>
@@ -345,34 +233,44 @@ export default function Recommendations() {
       ) : (
         <div className="grid gap-4">
           {filteredRecommendations.map((rec) => (
-            <Card key={rec.id} className="hover-scale">
-              <CardHeader>
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-2xl">
-                        {getCategoryIcon(rec.categoria)}
-                      </span>
-                      <Badge variant="secondary">
-                        {getCategoryLabel(rec.categoria)}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-xl">{rec.titulo}</CardTitle>
-                    <CardDescription className="text-base">
-                      {rec.descricao}
-                    </CardDescription>
-                    {rec.referencia && (
-                      <p className="text-sm text-muted-foreground">
-                        <strong>Referência:</strong> {rec.referencia}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-            </Card>
+            <RecommendationCard
+              key={rec.id}
+              rec={rec}
+              isAuthenticated={isAuthenticated}
+              ratingLoadingId={ratingLoadingId}
+              onEdit={openEditDialog}
+              onDelete={openDeleteDialog}
+              onRate={handleAvaliar}
+              getCategoryIcon={getCategoryIcon}
+              getCategoryLabel={getCategoryLabel}
+            />
           ))}
         </div>
       )}
+
+      {/* Diálogo de Confirmação de Exclusão */}
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. Isso irá deletar permanentemente
+              a recomendação.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeletingRecId(null)}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={handleDeleteConfirm}
+            >
+              Sim, deletar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
