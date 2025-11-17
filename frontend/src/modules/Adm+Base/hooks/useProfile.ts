@@ -19,24 +19,28 @@ export type ProfileData = {
   bio?: string | null;
 };
 
+const addCacheBuster = (url: string | null | undefined) => {
+  if (!url) return url;
+  const sep = url.includes("?") ? "&" : "?";
+  return `${url}${sep}t=${Date.now()}`;
+};
+
 export function useProfile() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  // carrega /me apenas para avatar (display_name/bio são opcionais até o backend expor)
+  // carrega /me (avatar +, futuramente, display_name/bio)
   const load = useCallback(async () => {
     setIsLoading(true);
     try {
       const me = await getMe();
-      setProfile((prev) => ({
-        ...prev,
+      setProfile({
         avatar_url: me.avatarUrl ?? null,
-        // display_name e bio podem vir de outro endpoint no futuro;
-        // por enquanto deixamos como estavam (ou null).
-        display_name: prev?.display_name ?? null,
-        bio: prev?.bio ?? null,
-      }));
+        // quando o back expor displayName/bio, você preenche aqui:
+        display_name: me.displayName ?? null,
+        bio: me.bio ?? null,
+      });
     } catch {
       toast.error("Não foi possível carregar seu perfil.");
       setProfile({ avatar_url: null, display_name: null, bio: null });
@@ -53,8 +57,14 @@ export function useProfile() {
     setIsSaving(true);
     try {
       const res = await uploadMyAvatar(file);
-      // atualiza URL localmente
-      setProfile((p) => ({ ...(p ?? {}), avatar_url: res.url }));
+      // quebra cache adicionando query param
+      const busted = addCacheBuster(res.url);
+
+      setProfile((p) => ({
+        ...(p ?? {}),
+        avatar_url: busted ?? res.url,
+      }));
+
       toast.success("Avatar atualizado!");
     } catch {
       toast.error("Falha ao enviar avatar.");
@@ -96,6 +106,9 @@ export function useProfile() {
     try {
       await deleteMyAvatar();
       setProfile((p) => ({ ...(p ?? {}), avatar_url: null }));
+      toast.success("Avatar removido.");
+    } catch {
+      toast.error("Não foi possível remover o avatar.");
     } finally {
       setIsSaving(false);
     }

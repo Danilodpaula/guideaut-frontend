@@ -55,6 +55,7 @@ export const translations = {
       recommendations: "Recomendações",
       patterns: "Padrões de Design",
       artifacts: "Artefatos",
+      developers: "Desenvolvedores",
     },
 
     // 🔐 Autenticação
@@ -236,6 +237,7 @@ export const translations = {
       recommendations: "Recommendations",
       patterns: "Design Patterns",
       artifacts: "Artifacts",
+      developers: "Developers",
     },
 
     // 🔐 Auth
@@ -367,12 +369,11 @@ export const translations = {
       termsAccepted: "Terms accepted",
     },
     footer: {
-  privacyPolicy: "Privacy Policy",
-  rightsReserved: "All rights reserved.",
-  institutional:
-    "Developed by the Software Engineering class at the State University of Amazonas (UEA), in the 2025/2 term, under the supervision of Professor Áurea Hiléia da Silva Melo.",
-},
-
+      privacyPolicy: "Privacy Policy",
+      rightsReserved: "All rights reserved.",
+      institutional:
+        "Developed by the Software Engineering class at the State University of Amazonas (UEA), in the 2025/2 term, under the supervision of Professor Áurea Hiléia da Silva Melo.",
+    },
   },
 } as const;
 
