@@ -20,7 +20,10 @@ export const StarRatingDisplay: React.FC<StarRatingDisplayProps> = ({
     <div className="flex items-center gap-2">
       <div className="flex">
         {[...Array(fullStars)].map((_, i) => (
-          <Star key={`full-${i}`} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+          <Star
+            key={`full-${i}`}
+            className="h-5 w-5 fill-yellow-400 text-yellow-400"
+          />
         ))}
         {halfStar && (
           <Star
@@ -44,8 +47,14 @@ export const StarRatingDisplay: React.FC<StarRatingDisplayProps> = ({
       <svg width="0" height="0" className="absolute">
         <defs>
           <linearGradient id="half_grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="50%" style={{ stopColor: "rgb(250 204 21)", stopOpacity: 1 }} />
-            <stop offset="50%" style={{ stopColor: "rgb(209 213 219)", stopOpacity: 1 }} />
+            <stop
+              offset="50%"
+              style={{ stopColor: "rgb(250 204 21)", stopOpacity: 1 }}
+            />
+            <stop
+              offset="50%"
+              style={{ stopColor: "rgb(209 213 219)", stopOpacity: 1 }}
+            />
           </linearGradient>
         </defs>
       </svg>

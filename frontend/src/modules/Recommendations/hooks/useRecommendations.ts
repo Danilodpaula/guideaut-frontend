@@ -28,8 +28,8 @@ const emptyFormData = {
 };
 
 /**
- * @param searchTerm 
- * @param categoryFilter 
+ * @param searchTerm
+ * @param categoryFilter
  */
 export const useRecommendations = (
   searchTerm: string,
@@ -72,7 +72,6 @@ export const useRecommendations = (
     }
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAuthenticated) {
@@ -105,8 +104,8 @@ export const useRecommendations = (
         );
       }
 
-      handleFormOpenChange(false); 
-      await loadRecommendations(); 
+      handleFormOpenChange(false);
+      await loadRecommendations();
     } catch (error) {
       console.error("Erro ao salvar recomendação:", error);
       toast.error(
@@ -132,7 +131,6 @@ export const useRecommendations = (
     }
   };
 
-
   const handleAvaliar = async (id: string, nota: number) => {
     if (!isAuthenticated) {
       toast.error("Você precisa estar logado para avaliar.");
@@ -141,7 +139,9 @@ export const useRecommendations = (
     }
     setRatingLoadingId(id);
     try {
-      const { data: recAtualizada } = await avaliarRecomendacaoApi(id, { nota });
+      const { data: recAtualizada } = await avaliarRecomendacaoApi(id, {
+        nota,
+      });
       toast.success("Sua avaliação foi atualizada!");
 
       setAllRecommendations((prevRecs) =>
@@ -162,7 +162,6 @@ export const useRecommendations = (
       setRatingLoadingId(null);
     }
   };
-
 
   const handleFormOpenChange = (open: boolean) => {
     if (!open) {

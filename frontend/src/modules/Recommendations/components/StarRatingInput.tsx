@@ -15,7 +15,9 @@ export const StarRatingInput: React.FC<StarRatingInputProps> = ({
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-sm font-medium text-muted-foreground">Sua avaliação:</span>
+      <span className="text-sm font-medium text-muted-foreground">
+        Sua avaliação:
+      </span>
       <div className="flex" onMouseLeave={() => setHover(0)}>
         {[...Array(5)].map((_, index) => {
           const nota = index + 1;
@@ -26,9 +28,7 @@ export const StarRatingInput: React.FC<StarRatingInputProps> = ({
               disabled={disabled}
               onClick={() => onAvaliar(nota)}
               onMouseEnter={() => setHover(nota)}
-              className={cn(
-                "disabled:pointer-events-none disabled:opacity-50",
-              )}
+              className={cn("disabled:pointer-events-none disabled:opacity-50")}
               aria-label={`Avaliar com ${nota} estrelas`}
             >
               <Star

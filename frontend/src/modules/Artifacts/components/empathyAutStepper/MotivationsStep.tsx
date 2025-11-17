@@ -9,17 +9,21 @@ const MotivationsStep = ({ register }: { register: Register }) => {
   const { theme } = useTheme();
   return (
     <div className={stepClasses(10)}>
-      <label htmlFor="reasons">
-        {motivationLabels(language)[0]}
-      </label>
-      <textarea id="reasons" className={textAreaClasses(theme)} {...register("reasons")} />
+      <label htmlFor="reasons">{motivationLabels(language)[0]}</label>
+      <textarea
+        id="reasons"
+        className={textAreaClasses(theme)}
+        {...register("reasons")}
+      />
       <div className="h-[10px]" />
-      <label htmlFor="expectations">
-        {motivationLabels(language)[1]}
-      </label>
-      <textarea id="expectations" className={textAreaClasses(theme)} {...register("expectations")} />
+      <label htmlFor="expectations">{motivationLabels(language)[1]}</label>
+      <textarea
+        id="expectations"
+        className={textAreaClasses(theme)}
+        {...register("expectations")}
+      />
     </div>
-  )
-}
+  );
+};
 
 export default MotivationsStep;

@@ -38,14 +38,9 @@ interface RecommendationFormDialogProps {
   editingRec: Recomendacao | null;
 }
 
-export const RecommendationFormDialog: React.FC<RecommendationFormDialogProps> = ({
-  isOpen,
-  onOpenChange,
-  onSubmit,
-  formData,
-  setFormData,
-  editingRec,
-}) => {
+export const RecommendationFormDialog: React.FC<
+  RecommendationFormDialogProps
+> = ({ isOpen, onOpenChange, onSubmit, formData, setFormData, editingRec }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>

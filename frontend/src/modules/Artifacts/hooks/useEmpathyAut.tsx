@@ -1,23 +1,27 @@
-import { SubmitHandler, useForm, UseFormRegister, UseFormWatch } from "react-hook-form";
+import {
+  SubmitHandler,
+  useForm,
+  UseFormRegister,
+  UseFormWatch,
+} from "react-hook-form";
 
 type InputsForm = {
-  name: string,
-  age: number,
-  gender: string,
-  reasons: string,
-  expectations: string,
-  interactionItems: string[],
-  cognitionItems: string[],
-  communicationItems: string[],
-  behaviorItems: string[]
-}
+  name: string;
+  age: number;
+  gender: string;
+  reasons: string;
+  expectations: string;
+  interactionItems: string[];
+  cognitionItems: string[];
+  communicationItems: string[];
+  behaviorItems: string[];
+};
 
-export type Register = UseFormRegister<InputsForm>
+export type Register = UseFormRegister<InputsForm>;
 
-export type Watch = UseFormWatch<InputsForm>
+export type Watch = UseFormWatch<InputsForm>;
 
 export const useEmpathyAut = () => {
-
   const {
     register,
     handleSubmit,
@@ -32,14 +36,13 @@ export const useEmpathyAut = () => {
       interactionItems: [],
       cognitionItems: [],
       communicationItems: [],
-      behaviorItems: []
-    }
+      behaviorItems: [],
+    },
   });
 
   const onSubmit: SubmitHandler<InputsForm> = (data) => {
-    console.log(data)
-  }
+    console.log(data);
+  };
 
-  return { register, watch, handleSubmit, onSubmit }
-
-}
+  return { register, watch, handleSubmit, onSubmit };
+};

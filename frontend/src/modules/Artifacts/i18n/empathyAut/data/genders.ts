@@ -23,5 +23,5 @@ export const genders = [
     id: "other",
     pt: "Outro",
     en: "Other",
-  }
-]
+  },
+];

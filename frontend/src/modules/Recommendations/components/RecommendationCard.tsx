@@ -13,7 +13,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { Recomendacao } from "@/api/types/recomendacaoTypes";
 import { StarRatingDisplay } from "./StarRatingDisplay";
 import { StarRatingInput } from "./StarRatingInput";
-import { RecommendationUi } from "../hooks/useRecommendations"; 
+import { RecommendationUi } from "../hooks/useRecommendations";
 
 interface RecommendationCardProps {
   rec: RecommendationUi;
@@ -49,48 +49,47 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
                 <span className="text-2xl">
                   {getCategoryIcon(rec.categoria)}
                 </span>
-                <div className="flex gap-6" >
+                <div className="flex gap-6">
                   <Badge variant="secondary">
                     {getCategoryLabel(rec.categoria)}
                   </Badge>
-                  <StarRatingDisplay media={media} total={rec.totalAvaliacoes} />
+                  <StarRatingDisplay
+                    media={media}
+                    total={rec.totalAvaliacoes}
+                  />
                 </div>
               </div>
-              
             </div>
             <CardTitle className="text-xl pt-2">{rec.titulo}</CardTitle>
           </div>
 
           {/* Botões de Admin (Editar/Deletar) */}
-          
-            <div className="flex flex-col sm:flex-row">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-primary"
-                onClick={() => onEdit(rec)}
-              >
-                <Pencil className="h-4 w-4" />
-                <span className="sr-only">Editar</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                onClick={() => onDelete(rec.id)}
-              >
-                <Trash2 className="h-4 w-4" />
-                <span className="sr-only">Deletar</span>
-              </Button>
-            </div>
-          
+
+          <div className="flex flex-col sm:flex-row">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-primary"
+              onClick={() => onEdit(rec)}
+            >
+              <Pencil className="h-4 w-4" />
+              <span className="sr-only">Editar</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={() => onDelete(rec.id)}
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="sr-only">Deletar</span>
+            </Button>
+          </div>
         </div>
       </CardHeader>
 
       <CardContent className="flex-1 space-y-3">
-        <CardDescription className="text-base">
-          {rec.descricao}
-        </CardDescription>
+        <CardDescription className="text-base">{rec.descricao}</CardDescription>
         <p className="text-sm text-muted-foreground pt-2">
           <strong>Justificativa:</strong> {rec.justificativa}
         </p>
