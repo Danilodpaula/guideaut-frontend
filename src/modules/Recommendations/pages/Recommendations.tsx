@@ -46,9 +46,6 @@ export default function Recommendations() {
   const { isAuthenticated, can } = useAuth();
   const navigate = useNavigate();
 
-  const [recommendations, setRecommendations] = useState<RecommendationUi[]>(
-    [],
-  );
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
 
@@ -71,115 +68,6 @@ export default function Recommendations() {
     handleAvaliar,
   } = useRecommendations(searchTerm, categoryFilter);
 
-  /**
-   * 🔍 Carrega recomendações do BACKEND SPRING
-   */
-  const loadRecommendations = async () => {
-    try {
-      setIsLoading(true);
-
-      const { data: recs } = await listarRecomendacoesApi(); // Chama GET /recomendacoes/list-all
-
-      // Mapeia os dados do backend (que são simples)
-      setRecommendations(
-        recs.map((rec: Recomendacao) => ({
-          ...rec,
-          // Adiciona campos da UI (votos, etc.) como vazios
-          // pois o backend atual não os fornece
-          agree_count: 0,
-          disagree_count: 0,
-          user_vote: undefined,
-          is_favorited: false,
-        })),
-      );
-    } catch (error) {
-      console.error("Erro ao carregar recomendações:", error);
-      toast.error("Erro ao carregar recomendações");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // REMOVIDO: handleVote (Backend não suporta)
-  // REMOVIDO: handleFavorite (Backend não suporta)
-
-  /**
-   * 📝 Submissão de nova recomendação (BACKEND SPRING)
-   */
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!isAuthenticated) {
-      toast.error("Você precisa estar logado");
-      return;
-    }
-
-    try {
-      // Monta o DTO que o backend espera (RecomendacaoRequest.java)
-      const requestData: RecomendacaoRequest = {
-        titulo: formData.title,
-        descricao: formData.description,
-        categoria: formData.category,
-        referencia: formData.referencia || null,
-      };
-
-      await criarRecomendacaoApi(requestData); // Chama POST /recomendacoes
-
-      toast.success(
-        can("ADMIN")
-          ? "Recomendação publicada com sucesso!"
-          : "Recomendação enviada para aprovação!", // O backend Spring já tem essa lógica
-      );
-
-      setFormData({
-        title: "",
-        description: "",
-        category: "",
-        referencia: "",
-      });
-      setIsDialogOpen(false);
-      await loadRecommendations(); // Recarrega a lista
-    } catch (error) {
-      console.error("Erro ao criar recomendação:", error);
-      toast.error("Erro ao criar recomendação");
-    }
-  };
-
-  /** 🎨 Ícones e rótulos (simplificado) */
-  const getCategoryIcon = (category: string) =>
-    ({
-      NAVIGATION: "🧭",
-      INTERACTION: "👆",
-      VISUAL: "👁️",
-      CONTENT: "📝",
-      FEEDBACK: "💬",
-      GENERAL: "⚙️",
-    })[category] || "📌";
-
-  const getCategoryLabel = (category: string) =>
-    ({
-      NAVIGATION: "Navegação",
-      INTERACTION: "Interação",
-      VISUAL: "Visual",
-      CONTENT: "Conteúdo",
-      FEEDBACK: "Feedback",
-      GENERAL: "Geral",
-    })[category] || category;
-
-  // REMOVIDO: getPhaseLabel
-
-  /** 🔎 Aplica filtros de busca e seleção (simplificado) */
-  const filteredRecommendations = recommendations.filter((rec) => {
-    const matchesSearch =
-      rec.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      rec.descricao.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      categoryFilter === "ALL" || rec.categoria === categoryFilter;
-    // REMOVIDO: matchesPhase
-    return matchesSearch && matchesCategory;
-  });
-
-  // === Renderização principal ===
   return (
     <div className="flex-1 space-y-6 p-6">
       {/* Cabeçalho */}
