@@ -1,32 +1,32 @@
-// Audit.tsx
-// Página de auditoria — exibe logs, filtros e exportações (mock local)
-
-import { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/core/i18n/I18nContext";
 import { toast } from "sonner";
 import { FileText, Download, FileJson } from "lucide-react";
 
-/**
- * Estrutura de um log de auditoria.
- */
-interface AuditLog {
-  id: string;
-  event: string;
-  user: string;
-  userId: string;
-  ip: string;
-  userAgent: string;
-  details: string;
-  timestamp: string;
-  severity: "info" | "warning" | "error";
-}
+import { useAuditLogs } from "../hooks/useAuditLogs";
+import { getEventLabel } from "../utils/getEventLabel";
+import { EVENT_OPTIONS } from "../constants/auditEvents";
 
 /**
  * Página de auditoria (Audit)
@@ -34,107 +34,73 @@ interface AuditLog {
  */
 export default function Audit() {
   const { t, language } = useI18n();
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [userFilter, setUserFilter] = useState("all");
+  const [userFilter, setUserFilter] = useState("all"); // filtro local (texto)
   const [eventFilter, setEventFilter] = useState("all");
 
-  // 🔹 Mock de dados de auditoria (substituir futuramente por dados do backend)
-  const auditLogs: AuditLog[] = [
-    {
-      id: "1",
-      event: "LOGIN_SUCCESS",
-      user: "Admin User",
-      userId: "1",
-      ip: "192.168.1.100",
-      userAgent: "Mozilla/5.0",
-      details: "Successful login",
-      timestamp: "2024-11-01T10:30:00",
-      severity: "info",
-    },
-    {
-      id: "2",
-      event: "USER_CREATED",
-      user: "Admin User",
-      userId: "1",
-      ip: "192.168.1.100",
-      userAgent: "Mozilla/5.0",
-      details: "Created user: João Silva",
-      timestamp: "2024-11-01T11:15:00",
-      severity: "info",
-    },
-    {
-      id: "3",
-      event: "USER_BLOCKED",
-      user: "Admin User",
-      userId: "1",
-      ip: "192.168.1.100",
-      userAgent: "Mozilla/5.0",
-      details: "Blocked user: Maria Santos",
-      timestamp: "2024-11-01T14:20:00",
-      severity: "warning",
-    },
-    {
-      id: "4",
-      event: "LOGIN_FAILED",
-      user: "Unknown",
-      userId: "0",
-      ip: "192.168.1.200",
-      userAgent: "Mozilla/5.0",
-      details: "Failed login attempt: invalid credentials",
-      timestamp: "2024-11-01T15:45:00",
-      severity: "error",
-    },
-    {
-      id: "5",
-      event: "ROLE_UPDATED",
-      user: "Admin User",
-      userId: "1",
-      ip: "192.168.1.100",
-      userAgent: "Mozilla/5.0",
-      details: "Updated role: MODERATOR",
-      timestamp: "2024-11-01T16:30:00",
-      severity: "info",
-    },
-    {
-      id: "6",
-      event: "DATA_IMPORTED",
-      user: "Admin User",
-      userId: "1",
-      ip: "192.168.1.100",
-      userAgent: "Mozilla/5.0",
-      details: "Imported 150 records from CSV",
-      timestamp: "2024-11-01T17:00:00",
-      severity: "info",
-    },
-  ];
+  const { logs, isLoading, error } = useAuditLogs({
+    startDate: startDate || undefined,
+    endDate: endDate || undefined,
+    event: eventFilter === "all" ? undefined : eventFilter,
+    // se quiser mandar usuário pro backend:
+    // userEmail: userFilter !== "all" ? userFilter : undefined,
+  });
+
+  // Toast de erro
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        language === "pt-BR"
+          ? "Erro ao carregar logs de auditoria"
+          : "Failed to load audit logs"
+      );
+    }
+  }, [error, language]);
 
   /**
-   * 🔍 Filtros aplicados aos logs.
+   * 🔍 Filtros aplicados aos logs (lado do front).
    */
-  const filteredLogs = auditLogs.filter((log) => {
-    const matchesUser = userFilter === "all" || log.userId === userFilter;
-    const matchesEvent = eventFilter === "all" || log.event === eventFilter;
-    const matchesDateRange =
-      (!startDate || log.timestamp >= startDate) &&
-      (!endDate || log.timestamp <= endDate);
-    return matchesUser && matchesEvent && matchesDateRange;
-  });
+  const filteredLogs = useMemo(() => {
+    return logs.filter((log) => {
+      const matchesUser =
+        userFilter === "all" ||
+        (log.user && log.user.toLowerCase().includes(userFilter.toLowerCase()));
+
+      const matchesEvent = eventFilter === "all" || log.event === eventFilter;
+
+      const logDate = new Date(log.timestamp);
+
+      const matchesStart =
+        !startDate || logDate >= new Date(startDate + "T00:00:00");
+
+      const matchesEnd = !endDate || logDate <= new Date(endDate + "T23:59:59");
+
+      return matchesUser && matchesEvent && matchesStart && matchesEnd;
+    });
+  }, [logs, userFilter, eventFilter, startDate, endDate]);
 
   /**
    * 📤 Exporta os logs filtrados em formato CSV.
    */
   const exportCSV = () => {
-    const headers = ["Event", "User", "IP", "Details", "Timestamp"];
+    if (filteredLogs.length === 0) return;
+
+    const headers = ["Event", "User", "Timestamp", "Severity"];
     const rows = filteredLogs.map((log) => [
-      log.event,
-      log.user,
-      log.ip,
-      log.details,
+      getEventLabel(log.event, language),
+      log.user ?? "",
       new Date(log.timestamp).toLocaleString(language),
+      log.severity,
     ]);
 
-    const csv = [headers, ...rows].map((row) => row.join(",")).join("\n");
+    const csv = [headers, ...rows]
+      .map((row) =>
+        row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+      )
+      .join("\n");
+
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -143,7 +109,9 @@ export default function Audit() {
     a.click();
 
     toast.success(
-      language === "pt-BR" ? "CSV exportado com sucesso" : "CSV exported successfully"
+      language === "pt-BR"
+        ? "CSV exportado com sucesso"
+        : "CSV exported successfully"
     );
   };
 
@@ -151,6 +119,8 @@ export default function Audit() {
    * 📦 Exporta os logs filtrados em formato JSON.
    */
   const exportJSON = () => {
+    if (filteredLogs.length === 0) return;
+
     const json = JSON.stringify(filteredLogs, null, 2);
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -160,7 +130,9 @@ export default function Audit() {
     a.click();
 
     toast.success(
-      language === "pt-BR" ? "JSON exportado com sucesso" : "JSON exported successfully"
+      language === "pt-BR"
+        ? "JSON exportado com sucesso"
+        : "JSON exported successfully"
     );
   };
 
@@ -172,12 +144,12 @@ export default function Audit() {
       info: "default",
       warning: "secondary",
       error: "destructive",
-    };
-    return (
-      <Badge variant={variants[severity as keyof typeof variants] as any}>
-        {severity}
-      </Badge>
-    );
+    } as const;
+
+    const variant =
+      variants[severity as keyof typeof variants] ?? variants.info;
+
+    return <Badge variant={variant as any}>{severity}</Badge>;
   };
 
   /**
@@ -188,7 +160,9 @@ export default function Audit() {
       {/* Cabeçalho e botões de exportação */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("audit.title")}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t("audit.title")}
+          </h1>
           <p className="text-muted-foreground mt-2">
             {language === "pt-BR"
               ? "Registros de todas as ações do sistema"
@@ -196,11 +170,19 @@ export default function Audit() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={exportCSV}>
+          <Button
+            variant="outline"
+            onClick={exportCSV}
+            disabled={isLoading || filteredLogs.length === 0}
+          >
             <Download className="mr-2 h-4 w-4" />
             {t("audit.exportCSV")}
           </Button>
-          <Button variant="outline" onClick={exportJSON}>
+          <Button
+            variant="outline"
+            onClick={exportJSON}
+            disabled={isLoading || filteredLogs.length === 0}
+          >
             <FileJson className="mr-2 h-4 w-4" />
             {t("audit.exportJSON")}
           </Button>
@@ -236,21 +218,21 @@ export default function Audit() {
               />
             </div>
 
-            {/* Filtro por usuário */}
+            {/* Filtro por usuário (texto livre) */}
             <div className="space-y-2">
               <Label htmlFor="user-filter">{t("audit.filterByUser")}</Label>
-              <Select value={userFilter} onValueChange={setUserFilter}>
-                <SelectTrigger id="user-filter">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">
-                    {language === "pt-BR" ? "Todos" : "All"}
-                  </SelectItem>
-                  <SelectItem value="1">Admin User</SelectItem>
-                  <SelectItem value="2">Regular User</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                id="user-filter"
+                placeholder={
+                  language === "pt-BR" ? "E-mail ou nome" : "E-mail or name"
+                }
+                value={userFilter === "all" ? "" : userFilter}
+                onChange={(e) =>
+                  setUserFilter(
+                    e.target.value.trim() === "" ? "all" : e.target.value
+                  )
+                }
+              />
             </div>
 
             {/* Filtro por tipo de evento */}
@@ -264,12 +246,12 @@ export default function Audit() {
                   <SelectItem value="all">
                     {language === "pt-BR" ? "Todos" : "All"}
                   </SelectItem>
-                  <SelectItem value="LOGIN_SUCCESS">Login Success</SelectItem>
-                  <SelectItem value="LOGIN_FAILED">Login Failed</SelectItem>
-                  <SelectItem value="USER_CREATED">User Created</SelectItem>
-                  <SelectItem value="USER_BLOCKED">User Blocked</SelectItem>
-                  <SelectItem value="ROLE_UPDATED">Role Updated</SelectItem>
-                  <SelectItem value="DATA_IMPORTED">Data Imported</SelectItem>
+
+                  {EVENT_OPTIONS.map((event) => (
+                    <SelectItem key={event} value={event}>
+                      {getEventLabel(event, language)}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -285,8 +267,6 @@ export default function Audit() {
               <TableRow>
                 <TableHead>{t("audit.event")}</TableHead>
                 <TableHead>{t("audit.user")}</TableHead>
-                <TableHead>IP</TableHead>
-                <TableHead>{t("audit.details")}</TableHead>
                 <TableHead>{t("audit.timestamp")}</TableHead>
                 <TableHead>
                   {language === "pt-BR" ? "Gravidade" : "Severity"}
@@ -294,38 +274,55 @@ export default function Audit() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredLogs.map((log) => (
-                <TableRow key={log.id} className="hover-scale">
-                  <TableCell className="font-medium">{log.event}</TableCell>
-                  <TableCell>{log.user}</TableCell>
-                  <TableCell className="font-mono text-sm">{log.ip}</TableCell>
-                  <TableCell className="max-w-xs truncate">
-                    {log.details}
+              {isLoading && (
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    className="py-8 text-center text-muted-foreground"
+                  >
+                    {language === "pt-BR"
+                      ? "Carregando logs..."
+                      : "Loading logs..."}
                   </TableCell>
-                  <TableCell>
-                    {new Date(log.timestamp).toLocaleString(language)}
-                  </TableCell>
-                  <TableCell>{getSeverityBadge(log.severity)}</TableCell>
                 </TableRow>
-              ))}
+              )}
+
+              {!isLoading &&
+                filteredLogs.map((log) => (
+                  <TableRow key={log.id} className="hover-scale">
+                    <TableCell className="font-medium">
+                      <div className="flex flex-col">
+                        <span>{getEventLabel(log.event, language)}</span>
+                        <span className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                          {log.event}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{log.user ?? "-"}</TableCell>
+                    <TableCell>
+                      {new Date(log.timestamp).toLocaleString(language)}
+                    </TableCell>
+                    <TableCell>{getSeverityBadge(log.severity)}</TableCell>
+                  </TableRow>
+                ))}
+
+              {!isLoading && filteredLogs.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    className="py-8 text-center text-muted-foreground"
+                  >
+                    <FileText className="h-6 w-6 mx-auto mb-2" />
+                    {language === "pt-BR"
+                      ? "Nenhum log encontrado com os filtros aplicados"
+                      : "No logs found with applied filters"}
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
-
-      {/* Estado vazio */}
-      {filteredLogs.length === 0 && (
-        <Card>
-          <CardContent className="py-12 text-center">
-            <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">
-              {language === "pt-BR"
-                ? "Nenhum log encontrado com os filtros aplicados"
-                : "No logs found with applied filters"}
-            </p>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }

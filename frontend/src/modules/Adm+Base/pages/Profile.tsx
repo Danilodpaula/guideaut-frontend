@@ -1,15 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // src/pages/Profile.tsx
 // Página de perfil do usuário no GuideAut.
 // Clique na foto => abre preview em tela cheia com opções de trocar/remover.
 
 import { useState, useRef, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR, enUS } from "date-fns/locale";
 
 import { useAuth } from "@/core/auth/AuthContext";
 import { useI18n } from "@/core/i18n/I18nContext";
-import { useActivityLogs } from "@/hooks/useActivityLogs";
 
 import {
   Card,
@@ -24,7 +22,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
@@ -39,22 +36,12 @@ import {
   Mail,
   Shield,
   Loader2,
-  Camera,
   Save,
   X,
   Trash2,
   Upload,
 } from "lucide-react";
 import { useProfile } from "../hooks/useProfile";
-
-// helper: resolve URL do avatar para absoluta quando backend retorna /files/...
-const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? "";
-const toAbsolute = (url?: string | null) => {
-  if (!url) return undefined;
-  if (/^https?:\/\//i.test(url)) return url;
-  const base = API_BASE.replace(/\/+$/, "");
-  return `${base}${url}`;
-};
 
 export default function Profile() {
   const { user, isAuthenticated } = useAuth();
@@ -66,15 +53,8 @@ export default function Profile() {
     isSaving,
     updateProfile,
     uploadAvatar,
-    deleteAvatar, // <- exposto pelo hook
+    deleteAvatar,
   } = useProfile();
-
-  const {
-    activities,
-    isLoading: activitiesLoading,
-    getActivityIcon,
-    getActivityDescription,
-  } = useActivityLogs(5);
 
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -86,9 +66,9 @@ export default function Profile() {
 
   /** 🔄 Inicializa campos quando o perfil for carregado */
   useEffect(() => {
-    if (profile) {
-      setDisplayName(profile.display_name || user?.name || "");
-      setBio(profile.bio || "");
+    if (profile || user) {
+      setDisplayName(profile?.display_name || user?.name || "");
+      setBio(profile?.bio || "");
     }
   }, [profile, user?.name]);
 
@@ -101,6 +81,7 @@ export default function Profile() {
   const getInitials = (name: string) =>
     name
       .split(" ")
+      .filter(Boolean)
       .map((n) => n[0])
       .join("")
       .toUpperCase()
@@ -131,7 +112,10 @@ export default function Profile() {
     if (!file) return;
     if (!file.type.startsWith("image/")) return;
     if (file.size > 2 * 1024 * 1024) return; // 2MB
+
     await uploadAvatar(file);
+    // reseta o input pra permitir reenviar a mesma imagem se quiser
+    e.target.value = "";
     setPreviewOpen(false); // fecha preview após trocar
   };
 
@@ -139,15 +123,6 @@ export default function Profile() {
   const handleRemoveAvatar = async () => {
     await deleteAvatar();
     setPreviewOpen(false);
-  };
-
-  /** 🕒 Data amigável */
-  const formatDate = (dateString: string) => {
-    const locale = language === "pt-BR" ? ptBR : enUS;
-    return formatDistanceToNow(new Date(dateString), {
-      addSuffix: true,
-      locale,
-    });
   };
 
   /** ⏳ Carregando perfil */
@@ -159,7 +134,7 @@ export default function Profile() {
     );
   }
 
-  const avatarSrc = toAbsolute(profile?.avatar_url);
+  const avatarSrc = profile?.avatar_url || undefined;
   const initials = displayName ? getInitials(displayName) : "U";
 
   return (
@@ -329,66 +304,11 @@ export default function Profile() {
         </Card>
       </div>
 
-      {/* Histórico de atividades */}
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            {language === "pt-BR" ? "Atividade Recente" : "Recent Activity"}
-          </CardTitle>
-          <CardDescription>
-            {language === "pt-BR"
-              ? "Suas últimas ações na plataforma"
-              : "Your recent actions on the platform"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {activitiesLoading ? (
-            <div className="flex justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-primary" />
-            </div>
-          ) : activities.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
-              {language === "pt-BR"
-                ? "Nenhuma atividade recente registrada"
-                : "No recent activity recorded"}
-            </p>
-          ) : (
-            <div className="space-y-4">
-              {activities.map((activity, index) => (
-                <div key={activity.id}>
-                  <div className="flex items-start gap-3">
-                    <div className="text-2xl">
-                      {getActivityIcon(activity.action, activity.entity_type)}
-                    </div>
-                    <div className="flex-1 space-y-1">
-                      <p className="text-sm font-medium">
-                        {getActivityDescription(
-                          activity.action,
-                          activity.entity_type,
-                          language
-                        )}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {formatDate(activity.created_at)}
-                      </p>
-                    </div>
-                  </div>
-                  {index < activities.length - 1 && (
-                    <Separator className="mt-4" />
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
       {/* =======================
           DIALOG DE PREVIEW AVATAR
          ======================= */}
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        {/* mais largo e com padding padrão */}
         <DialogContent className="sm:max-w-[90vw] md:max-w-[960px]">
           <DialogHeader>
             <DialogTitle>
@@ -396,28 +316,27 @@ export default function Profile() {
             </DialogTitle>
           </DialogHeader>
 
-          {/* Área de visualização: centralizada, sem overflow hidden */}
           <div className="w-full">
             <div
               className="
-          flex items-center justify-center
-          bg-muted/20 rounded-xl border
-          p-3
-          max-h-[80svh]  /* usa 80% da altura segura da viewport */
-        "
+                flex items-center justify-center
+                bg-muted/20 rounded-xl border
+                p-3
+                max-h-[80svh]
+              "
             >
               {avatarSrc ? (
                 <img
                   src={avatarSrc}
                   alt={displayName}
                   className="
-              block
-              h-auto w-auto            /* mantém proporção natural */
-              max-h-[78svh]            /* nunca passa da janela */
-              max-w-[86vw]             /* respeita largura do Dialog */
-              object-contain           /* garante que a imagem caiba sem cortar */
-              select-none
-            "
+                    block
+                    h-auto w-auto
+                    max-h-[78svh]
+                    max-w-[86vw]
+                    object-contain
+                    select-none
+                  "
                   draggable={false}
                 />
               ) : (

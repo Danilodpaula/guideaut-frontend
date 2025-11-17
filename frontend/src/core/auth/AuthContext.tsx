@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // src/core/auth/AuthContext.tsx
 import {
@@ -70,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         id: data.email,
         email: data.email,
         name: data.email.split("@")[0], // Simples
-        roles: ["USER"], // TODO: O backend precisa popular isso
+        roles: data.roles, // TODO: O backend precisa popular isso
       });
     } catch (error) {
       console.error("❌ Erro ao carregar dados do usuário:", error);
@@ -116,6 +117,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // ------------------------------------------------------------
   const can = (role: string): boolean => {
     if (!user) return false;
+    console.log("user", user);
+    console.log("user.roles", user.roles);
+    console.log("user.roles.includes(role)", user.roles.includes(role));
     // O backend precisa popular 'roles' no JWT para isso funcionar 100%
     return user.roles.includes(role);
   };

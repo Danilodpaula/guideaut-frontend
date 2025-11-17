@@ -1,12 +1,13 @@
 import api from "./client";
 
-
-export type MeResponse = {
+type MeResponse = {
   id: string;
   name: string;
   email: string;
   roles: string[];
-  avatarUrl?: string | null;
+  avatarUrl: string | null;
+  displayName: string | null;
+  bio: string | null;
 };
 
 export type UpdateProfileRequest = {
@@ -27,17 +28,13 @@ export async function getMe(): Promise<MeResponse> {
   return { ...data, avatarUrl: toAbsolute(data.avatarUrl) };
 }
 
-export async function uploadMyAvatar(
-  file: File
-): Promise<{ url: string }> {
+export async function uploadMyAvatar(file: File): Promise<{ url: string }> {
   const fd = new FormData();
   fd.append("file", file);
 
-  const { data } = await api.post<{ url: string }>(
-    "/users/me/avatar",
-    fd,
-    { headers: { "Content-Type": "multipart/form-data" } }
-  );
+  const { data } = await api.post<{ url: string }>("/users/me/avatar", fd, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 
   return { url: toAbsolute(data.url) ?? data.url };
 }
