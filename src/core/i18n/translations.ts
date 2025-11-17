@@ -55,6 +55,7 @@ export const translations = {
       recommendations: "Recomendações",
       patterns: "Padrões de Design",
       artifacts: "Artefatos",
+      developers: "Desenvolvedores",
     },
 
     // 🔐 Autenticação
@@ -236,6 +237,7 @@ export const translations = {
       recommendations: "Recommendations",
       patterns: "Design Patterns",
       artifacts: "Artifacts",
+      developers: "Developers",
     },
 
     // 🔐 Auth

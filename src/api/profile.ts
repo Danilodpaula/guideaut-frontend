@@ -5,7 +5,9 @@ export type MeResponse = {
   name: string;
   email: string;
   roles: string[];
-  avatarUrl?: string | null;
+  avatarUrl: string | null;
+  displayName: string | null;
+  bio: string | null;
 };
 
 export type UpdateProfileRequest = {

@@ -41,6 +41,7 @@ import Profile from "./modules/Adm+Base/pages/Profile";
 import NotFound from "./modules/Adm+Base/pages/NotFound";
 import { Footer } from "./components/layout/Footer";
 import Stepper from "./modules/Artifacts/pages/EmpathyAutStepper";
+import Developers from "./modules/Adm+Base/pages/Developers";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ const AppLayout = () => (
             <Route path="artifacts" element={<Artifacts />} />
             <Route path="design-patterns" element={<DesignPatterns />} />
             <Route path="recommendations" element={<Recommendations />} />
+            <Route path="developers" element={<Developers />} />
             <Route path="search" element={<Search />} />
             <Route path="help" element={<Help />} />
             <Route path="me" element={<Profile />} />

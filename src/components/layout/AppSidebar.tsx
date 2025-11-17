@@ -1,3 +1,4 @@
+// src/components/layout/AppSidebar.tsx
 // ============================================================
 // 🧭 COMPONENTE: AppSidebar
 // ============================================================
@@ -19,10 +20,10 @@ import {
   Lightbulb,
   Palette,
   FileText as FileTextIcon,
-} from "lucide-react"; // Ícones do Lucide
-import { NavLink } from "react-router-dom"; // Para navegação entre rotas
+  Code2, // 👈 novo ícone
+} from "lucide-react";
+import { NavLink } from "react-router-dom";
 
-// Componentes de UI da Sidebar (baseados no shadcn/ui)
 import {
   Sidebar,
   SidebarContent,
@@ -35,20 +36,16 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-import { useI18n } from "@/core/i18n/I18nContext"; // Contexto de tradução (i18n)
-import { useAuth } from "@/core/auth/AuthContext"; // Contexto de autenticação
+import { useI18n } from "@/core/i18n/I18nContext";
+import { useAuth } from "@/core/auth/AuthContext";
 
-// ------------------------------------------------------------
-// 🧩 Componente principal
-// ------------------------------------------------------------
 export function AppSidebar() {
-  const { state } = useSidebar(); // Estado de colapso/expansão da sidebar
-  const { t } = useI18n(); // Função de tradução
-  const { can, isAuthenticated } = useAuth(); // Verifica autenticação e permissões
+  const { state } = useSidebar();
+  const { t } = useI18n();
+  const { can, isAuthenticated } = useAuth();
 
-  // ------------------------------------------------------------
-  // 📂 Itens principais (visíveis a todos os usuários)
-  // ------------------------------------------------------------
+  console.log('can("ADMIN")', can("ADMIN"));
+
   const mainItems = [
     { title: t("nav.home"), url: "/", icon: Home },
     { title: t("nav.proaut"), url: "/proaut-process", icon: BookOpen },
@@ -59,13 +56,11 @@ export function AppSidebar() {
     },
     { title: t("nav.patterns"), url: "/design-patterns", icon: Palette },
     { title: t("nav.artifacts"), url: "/artifacts", icon: FileTextIcon },
+    { title: t("nav.developers"), url: "/developers", icon: Code2 }, // 👈 NOVO ITEM
     { title: t("nav.help"), url: "/help", icon: HelpCircle },
     { title: t("nav.search"), url: "/search", icon: Search },
   ];
 
-  // ------------------------------------------------------------
-  // 🔒 Itens administrativos (visíveis apenas para ADMIN)
-  // ------------------------------------------------------------
   const adminItems = [
     { title: t("nav.users"), url: "/admin/users", icon: Users },
     { title: t("nav.roles"), url: "/admin/roles", icon: Shield },
@@ -73,18 +68,13 @@ export function AppSidebar() {
     { title: t("nav.audit"), url: "/admin/audit", icon: FileText },
   ];
 
-  // ------------------------------------------------------------
-  // 🧱 Estrutura visual da Sidebar
-  // ------------------------------------------------------------
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        {/* Grupo principal: navegação geral */}
         <SidebarGroup>
           <SidebarGroupLabel>{t("nav.home")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {/* Renderiza cada item principal */}
               {mainItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
@@ -107,7 +97,6 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Grupo administrativo: apenas para usuários autenticados e com papel ADMIN */}
         {isAuthenticated && can("ADMIN") && (
           <SidebarGroup>
             <SidebarGroupLabel>{t("nav.administration")}</SidebarGroupLabel>
