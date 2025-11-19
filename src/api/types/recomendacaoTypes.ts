@@ -21,3 +21,11 @@ export interface Recomendacao {
 export interface AvaliacaoRequest {
   nota: number;
 }
+
+export interface Comentario {
+  id: string;
+  texto: string;
+  autorNome: string;
+  autorAvatar: string | null;
+  criadoEm: string;
+}
