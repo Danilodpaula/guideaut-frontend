@@ -61,13 +61,11 @@ export default function Signup() {
     setIsLoading(true);
 
     try {
-      // Cria a conta via contexto de autenticação
       await signup({ name, email, password });
-
       toast.success(t("auth.signupSuccess"));
-      navigate("/"); // Redireciona para home após sucesso
+
+      navigate("/login", { replace: true });
     } catch (error: any) {
-      // Tratamento de erros comuns
       if (error.message?.includes("already registered")) {
         toast.error(t("auth.emailAlreadyExists"));
       } else {

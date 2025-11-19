@@ -1,22 +1,5 @@
-// ============================================================
-// 🌐 TRADUÇÕES INTERNACIONAIS (i18n)
-// ============================================================
-// Este arquivo define o **dicionário de traduções** multilíngue
-// da aplicação GuideAut, atualmente suportando:
-//
-// 🇧🇷 Português (pt-BR)
-// 🇺🇸 Inglês (en-US)
-//
-// Cada seção contém textos reutilizáveis, organizados por contexto
-// (ex: auth, common, nav, users, accessibility, etc.).
-// ============================================================
-
 export const translations = {
-  // ------------------------------------------------------------
-  // 🇧🇷 Português (Brasil)
-  // ------------------------------------------------------------
   "pt-BR": {
-    // 🌍 Comum
     common: {
       loading: "Carregando...",
       save: "Salvar",
@@ -34,9 +17,10 @@ export const translations = {
       previous: "Anterior",
       close: "Fechar",
       skipToContent: "Pular para o conteúdo",
+      details: "Detalhes",
+      noData: "Sem dados",
+      error: "Erro",
     },
-
-    // 🧭 Navegação
     nav: {
       home: "Início",
       help: "Ajuda",
@@ -49,6 +33,7 @@ export const translations = {
       roles: "Papéis",
       categories: "Categorias",
       audit: "Auditoria",
+      reports: "Denúncias",
       importData: "Importar Dados",
       accessibility: "Acessibilidade",
       proaut: "Processo ProAut",
@@ -57,8 +42,6 @@ export const translations = {
       artifacts: "Artefatos",
       developers: "Desenvolvedores",
     },
-
-    // 🔐 Autenticação
     auth: {
       login: "Entrar",
       signup: "Cadastrar",
@@ -81,8 +64,6 @@ export const translations = {
       continueAsGuest: "Acessar como visitante",
       continueAsGuestMessage: "Navegando como visitante!",
     },
-
-    // ♿ Acessibilidade
     accessibility: {
       title: "Preferências de Acessibilidade",
       theme: "Tema",
@@ -95,8 +76,6 @@ export const translations = {
       reduceMotion: "Reduzir animações",
       settingsSaved: "Preferências salvas com sucesso",
     },
-
-    // 👥 Administração - Usuários
     users: {
       title: "Gerenciar Usuários",
       createUser: "Criar Usuário",
@@ -120,8 +99,6 @@ export const translations = {
       userArchived: "Usuário arquivado",
       passwordReset: "Senha resetada",
     },
-
-    // ⚙️ Administração - Papéis
     roles: {
       title: "Gerenciar Papéis",
       createRole: "Criar Papel",
@@ -131,8 +108,6 @@ export const translations = {
       roleUpdated: "Papel atualizado com sucesso",
       roleDeleted: "Papel excluído",
     },
-
-    // 🗂️ Administração - Categorias
     categories: {
       title: "Gerenciar Categorias",
       createCategory: "Criar Categoria",
@@ -142,8 +117,6 @@ export const translations = {
       categoryUpdated: "Categoria atualizada com sucesso",
       categoryArchived: "Categoria arquivada",
     },
-
-    // 🧾 Administração - Auditoria
     audit: {
       title: "Auditoria",
       event: "Evento",
@@ -158,8 +131,6 @@ export const translations = {
       startDate: "Data inicial",
       endDate: "Data final",
     },
-
-    // 📦 Administração - Importação de dados
     importData: {
       title: "Importar Dados",
       uploadFile: "Fazer upload de arquivo",
@@ -175,8 +146,6 @@ export const translations = {
       importError: "Erro na importação",
       validationErrors: "Corrija os erros antes de importar",
     },
-
-    // 📄 Páginas do sistema
     pages: {
       notFound: "Página não encontrada",
       forbidden: "Acesso negado",
@@ -192,13 +161,40 @@ export const translations = {
       institutional:
         "Desenvolvido pela turma de Engenharia de Software da Universidade do Estado do Amazonas (UEA), no período 2025/2, sob orientação da Professora Áurea Hiléia da Silva Melo.",
     },
+    reports: {
+      title: "Gerenciar Denúncias",
+      subtitle: "Visualize e modere denúncias de conteúdo ou usuários",
+      reason: "Motivo",
+      target: "Alvo",
+      reporter: "Denunciante",
+      status: "Status",
+      date: "Data",
+      type: "Tipo",
+      details: "Detalhes da Denúncia",
+      resolve: "Resolver",
+      dismiss: "Ignorar",
+      pending: "Pendente",
+      resolved: "Resolvido",
+      dismissed: "Ignorado",
+      spam: "Spam",
+      inappropriate: "Conteúdo Impróprio",
+      harassment: "Assédio",
+      other: "Outro",
+      actionSuccess: "Status da denúncia atualizado com sucesso",
+      createTitle: "Denunciar Conteúdo",
+      createDescription:
+        "Selecione o motivo e descreva o problema. Nossa equipe analisará o caso.",
+      selectReason: "Selecione um motivo",
+      descriptionPlaceholder: "Descreva detalhadamente o motivo da denúncia...",
+      submit: "Enviar Denúncia",
+      success: "Denúncia enviada com sucesso",
+      error: "Erro ao enviar denúncia",
+      typeUser: "Usuário",
+      typeRecommendation: "Recomendação",
+      typeComment: "Comentário",
+    },
   },
-
-  // ------------------------------------------------------------
-  // 🇺🇸 English (United States)
-  // ------------------------------------------------------------
   "en-US": {
-    // 🌍 Common
     common: {
       loading: "Loading...",
       save: "Save",
@@ -216,9 +212,10 @@ export const translations = {
       previous: "Previous",
       close: "Close",
       skipToContent: "Skip to content",
+      details: "Details",
+      noData: "No data",
+      error: "Error",
     },
-
-    // 🧭 Navigation
     nav: {
       home: "Home",
       help: "Help",
@@ -231,6 +228,7 @@ export const translations = {
       roles: "Roles",
       categories: "Categories",
       audit: "Audit",
+      reports: "Reports",
       importData: "Import Data",
       accessibility: "Accessibility",
       proaut: "ProAut Process",
@@ -239,8 +237,6 @@ export const translations = {
       artifacts: "Artifacts",
       developers: "Developers",
     },
-
-    // 🔐 Auth
     auth: {
       login: "Login",
       signup: "Sign Up",
@@ -263,8 +259,6 @@ export const translations = {
       continueAsGuest: "Continue as guest",
       continueAsGuestMessage: "Browsing as a guest!",
     },
-
-    // ♿ Accessibility
     accessibility: {
       title: "Accessibility Preferences",
       theme: "Theme",
@@ -277,8 +271,6 @@ export const translations = {
       reduceMotion: "Reduce motion",
       settingsSaved: "Preferences saved successfully",
     },
-
-    // 👥 Admin - Users
     users: {
       title: "Manage Users",
       createUser: "Create User",
@@ -302,8 +294,6 @@ export const translations = {
       userArchived: "User archived",
       passwordReset: "Password reset",
     },
-
-    // ⚙️ Admin - Roles
     roles: {
       title: "Manage Roles",
       createRole: "Create Role",
@@ -313,8 +303,6 @@ export const translations = {
       roleUpdated: "Role updated successfully",
       roleDeleted: "Role deleted",
     },
-
-    // 🗂️ Admin - Categories
     categories: {
       title: "Manage Categories",
       createCategory: "Create Category",
@@ -324,8 +312,6 @@ export const translations = {
       categoryUpdated: "Category updated successfully",
       categoryArchived: "Category archived",
     },
-
-    // 🧾 Admin - Audit
     audit: {
       title: "Audit",
       event: "Event",
@@ -340,8 +326,6 @@ export const translations = {
       startDate: "Start date",
       endDate: "End date",
     },
-
-    // 📦 Admin - Import
     importData: {
       title: "Import Data",
       uploadFile: "Upload file",
@@ -357,8 +341,6 @@ export const translations = {
       importError: "Import error",
       validationErrors: "Fix errors before importing",
     },
-
-    // 📄 Pages
     pages: {
       notFound: "Page not found",
       forbidden: "Access denied",
@@ -374,13 +356,40 @@ export const translations = {
       institutional:
         "Developed by the Software Engineering class at the State University of Amazonas (UEA), in the 2025/2 term, under the supervision of Professor Áurea Hiléia da Silva Melo.",
     },
+    reports: {
+      title: "Manage Reports",
+      subtitle: "View and moderate content or user reports",
+      reason: "Reason",
+      target: "Target",
+      reporter: "Reporter",
+      status: "Status",
+      date: "Date",
+      type: "Type",
+      details: "Report Details",
+      resolve: "Resolve",
+      dismiss: "Dismiss",
+      pending: "Pending",
+      resolved: "Resolved",
+      dismissed: "Dismissed",
+      spam: "Spam",
+      inappropriate: "Inappropriate Content",
+      harassment: "Harassment",
+      other: "Other",
+      actionSuccess: "Report status updated successfully",
+      createTitle: "Report Content",
+      createDescription:
+        "Select a reason and describe the issue. Our team will review it.",
+      selectReason: "Select a reason",
+      descriptionPlaceholder: "Describe the reason for the report in detail...",
+      submit: "Submit Report",
+      success: "Report submitted successfully",
+      error: "Error submitting report",
+      typeUser: "User",
+      typeRecommendation: "Recommendation",
+      typeComment: "Comment",
+    },
   },
 } as const;
 
-// ------------------------------------------------------------
-// 🔠 Tipagens auxiliares
-// ------------------------------------------------------------
-// `Language` → retorna os idiomas disponíveis
-// `TranslationKey` → retorna as chaves de tradução base (nível 1)
 export type Language = keyof typeof translations;
 export type TranslationKey = keyof (typeof translations)["pt-BR"];

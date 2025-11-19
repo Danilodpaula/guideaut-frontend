@@ -10,7 +10,7 @@ import {
   useRef,
 } from "react";
 // REMOVIDO: import { supabase } from "@/integrations/supabase/client";
-import { loginApi, getProfileApi } from "@/api/authService"; // IMPORTADO
+import { loginApi, getProfileApi, signupApi } from "@/api/authService"; // IMPORTADO
 import { AuthRequest } from "@/api/types/authTypes"; // IMPORTADO
 
 // ------------------------------------------------------------
@@ -104,12 +104,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // ------------------------------------------------------------
-  // 📝 Cadastro (Ainda não implementado no backend)
+  // 📝 Cadastro
   // ------------------------------------------------------------
   const signup = async (data: any) => {
-    // Esta função precisa ser implementada no backend (ex: POST /users/register)
-    console.warn("Signup não implementado no backend Spring.");
-    throw new Error("Signup não disponível.");
+    try {
+      // O backend espera "nome", "email" e "password".
+      // O formulário do frontend envia "name", "email" e "password".
+      // Realizamos o mapeamento aqui:
+      const payload = {
+        nome: data.name,
+        email: data.email,
+        password: data.password,
+      };
+
+      await signupApi(payload);
+
+      // Opcional: Você pode realizar o login automático aqui se desejar,
+      // chamando a função login({ email: data.email, password: data.password })
+    } catch (error) {
+      console.error("Erro no cadastro:", error);
+      throw error; // Repassa o erro para o componente exibir o Toast
+    }
   };
 
   // ------------------------------------------------------------

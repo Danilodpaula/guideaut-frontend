@@ -1,13 +1,3 @@
-// src/components/layout/AppSidebar.tsx
-// ============================================================
-// 🧭 COMPONENTE: AppSidebar
-// ============================================================
-// Este componente define a **barra lateral de navegação (Sidebar)**
-// do sistema GuideAut. Ela organiza os links principais (públicos)
-// e administrativos (restritos a usuários com papel ADMIN) usando
-// os componentes de sidebar do shadcn/ui.
-// ============================================================
-
 import {
   Home,
   HelpCircle,
@@ -20,7 +10,8 @@ import {
   Lightbulb,
   Palette,
   FileText as FileTextIcon,
-  Code2, // 👈 novo ícone
+  Code2,
+  AlertTriangle,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -44,8 +35,6 @@ export function AppSidebar() {
   const { t } = useI18n();
   const { can, isAuthenticated } = useAuth();
 
-  console.log('can("ADMIN")', can("ADMIN"));
-
   const mainItems = [
     { title: t("nav.home"), url: "/", icon: Home },
     { title: t("nav.proaut"), url: "/proaut-process", icon: BookOpen },
@@ -56,7 +45,7 @@ export function AppSidebar() {
     },
     { title: t("nav.patterns"), url: "/design-patterns", icon: Palette },
     { title: t("nav.artifacts"), url: "/artifacts", icon: FileTextIcon },
-    { title: t("nav.developers"), url: "/developers", icon: Code2 }, // 👈 NOVO ITEM
+    { title: t("nav.developers"), url: "/developers", icon: Code2 },
     { title: t("nav.help"), url: "/help", icon: HelpCircle },
     { title: t("nav.search"), url: "/search", icon: Search },
   ];
@@ -66,6 +55,7 @@ export function AppSidebar() {
     { title: t("nav.roles"), url: "/admin/roles", icon: Shield },
     { title: t("nav.categories"), url: "/admin/categories", icon: FolderTree },
     { title: t("nav.audit"), url: "/admin/audit", icon: FileText },
+    { title: t("nav.reports"), url: "/admin/reports", icon: AlertTriangle },
   ];
 
   return (

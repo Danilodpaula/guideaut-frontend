@@ -42,6 +42,7 @@ import NotFound from "./modules/Adm+Base/pages/NotFound";
 import { Footer } from "./components/layout/Footer";
 import Stepper from "./modules/Artifacts/pages/EmpathyAutStepper";
 import Developers from "./modules/Adm+Base/pages/Developers";
+import Reports from "./modules/Adm+Base/pages/Reports";
 
 const queryClient = new QueryClient();
 
@@ -106,6 +107,14 @@ const AppLayout = () => (
               element={
                 <AuthGuard requiredRole="ADMIN">
                   <Audit />
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="admin/reports"
+              element={
+                <AuthGuard requiredRole="ADMIN">
+                  <Reports />
                 </AuthGuard>
               }
             />
