@@ -15,6 +15,7 @@ import { StarRatingDisplay } from "./StarRatingDisplay";
 import { StarRatingInput } from "./StarRatingInput";
 import { RecommendationUi } from "../hooks/useRecommendations";
 import { CommentSection } from "./CommentSection";
+import { CreateReportDialog } from "@/components/reports/CreateReportDialog";
 
 interface RecommendationCardProps {
   rec: RecommendationUi;
@@ -64,9 +65,15 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
             <CardTitle className="text-xl pt-2">{rec.titulo}</CardTitle>
           </div>
 
-          {/* Botões de Admin/Edição (apenas se autenticado - lógica pode variar) */}
+          {/* Botões de Admin/Edição/Denúncia (apenas se autenticado) */}
           {isAuthenticated && (
-            <div className="flex flex-col sm:flex-row">
+            <div className="flex flex-col sm:flex-row gap-1">
+              {/* Botão de Denúncia */}
+              <CreateReportDialog
+                targetId={rec.id}
+                targetType="RECOMMENDATION"
+              />
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -113,7 +120,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
           </div>
         )}
 
-        {/* 3. Seção de Comentários Integrada */}
+        {/* Seção de Comentários Integrada */}
         <CommentSection
           recomendacaoId={rec.id}
           isAuthenticated={isAuthenticated}

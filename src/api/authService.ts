@@ -15,3 +15,11 @@ export const loginApi = (credentials: AuthRequest) => {
 export const getProfileApi = () => {
   return api.get("/me");
 };
+
+export const signupApi = (userData: {
+  nome: string;
+  email: string;
+  password: string;
+}) => {
+  return api.post("/users", userData);
+};
