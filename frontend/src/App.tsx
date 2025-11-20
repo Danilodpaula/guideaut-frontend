@@ -41,6 +41,11 @@ import Profile from "./modules/Adm+Base/pages/Profile"
 import NotFound from "./modules/Adm+Base/pages/NotFound"
 import { Footer } from "./components/layout/Footer"
 import Stepper from "./modules/Artifacts/pages/EmpathyAutStepper"
+import PersonaAutReadAll from "./modules/Artifacts/pages/PersonaAutReadAll"
+import PersonaAutReadOne from "./modules/Artifacts/pages/PersonaAutReadOne"
+import PersonaAutUpdate from "./modules/Artifacts/pages/PersonaAutUpdate"
+import PersonaAutCreate from "./modules/Artifacts/pages/PersonaAutCreate"
+import PersonaAutDelete from "./modules/Artifacts/pages/PersonaAutDelete"
 
 const queryClient = new QueryClient()
 
@@ -72,6 +77,15 @@ const AppLayout = () => (
             <Route path="settings/accessibility" element={<Accessibility />} />
             <Route path="empathy-aut">
               <Route path="create" element={<Stepper />} />
+            </Route>
+            <Route path="persona-aut">
+              <Route index element={<PersonaAutReadAll />} />
+              <Route path="create" element={<PersonaAutCreate />} />
+              <Route path=":id">
+                <Route index element={<PersonaAutReadOne />} />
+                <Route path="update" element={<PersonaAutUpdate />} />
+                <Route path="delete" element={<PersonaAutDelete />} />
+              </Route>
             </Route>
 
             {/* Rotas administrativas protegidas */}
