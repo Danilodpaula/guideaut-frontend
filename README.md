@@ -132,11 +132,11 @@ Crie um pequeno utilitário que adiciona/remove a classe `dark` no `<html>` e sa
 
 ```ts
 // src/shared/utils/theme.ts
-export function applyTheme(t: 'light' | 'dark') {
+export function applyTheme(t: "light" | "dark") {
   const root = document.documentElement;
-  if (t === 'dark') root.classList.add('dark');
-  else root.classList.remove('dark');
-  localStorage.setItem('APP:THEME', t);
+  if (t === "dark") root.classList.add("dark");
+  else root.classList.remove("dark");
+  localStorage.setItem("APP:THEME", t);
 }
 ```
 
@@ -218,24 +218,47 @@ frontend/
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format:fix": "prettier --write .",
+    "format:check": "prettier --check ."
   }
 }
 ```
 
 ---
 
+## 🌠 Formatando o Código (Prettier + Husky)
+
+O projeto está configurado para formatar o código **automaticamente** antes de cada commit.
+
+Isso usa o **Husky** (para gerenciar os _hooks_ do Git) e o **lint-staged** (para rodar o **Prettier**).
+
+### ⚙️ Como Funciona (Fluxo de Trabalho)
+
+1.  Você faz suas mudanças no código.
+2.  Você usa `git add .` para adicionar seus arquivos ao "stage".
+3.  Você roda `git commit -m "sua mensagem"`.
+4.  **Automaticamente**, o Husky vai disparar o `lint-staged`.
+5.  O `lint-staged` vai rodar `npx prettier --write` **apenas** nos arquivos que você adicionou.
+6.  O Prettier corrige a formatação, o `lint-staged` adiciona essas correções ao commit, e o commit é finalizado com sucesso.
+
+Isso garante que todo o código no repositório siga o mesmo padrão de formatação, sem que você precise rodar o Prettier manualmente.
+
+---
+
 ## 🧾 Padrão de commits (Conventional Commits)
 
 **Formato:**
+
 ```
 <tipo>(<escopo>): <descrição>
 ```
 
-**Tipos comuns:**  
-`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+**Tipos comuns:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
 
 **Exemplos:**
+
 ```
 feat(tutorial): adicionar fluxo de onboarding
 fix(recommendations): corrigir paginação na lista
@@ -243,26 +266,31 @@ docs(readme): instruções de tailwind e shadcn/ui
 chore: atualizar dependências
 ```
 
-**Escopos sugeridos:**  
-`tutorial`, `adm`, `recommendations`, `artifacts`, `shared`, `router`, `i18n`, `ui`.
+**Escopos sugeridos:** `tutorial`, `adm`, `recommendations`, `artifacts`, `shared`, `router`, `i18n`, `ui`.
 
 ---
 
 ## 🌿 Fluxo de branches e PRs
 
 **Branches principais:**
+
 - `main`: estável, versionado (**protegido – merge via PR**)
 - `develop`: integração contínua do time
 - `feature/*`: novas funcionalidades (ex.: `feature/tutorial-onboarding`)
 - `fix/*`: correções (ex.: `fix/ui-button-loading`)
 
 **Regras de PR:**
-- Título no formato Conventional Commits  
-- Descrever objetivo, passos de teste e impacto  
-- 1 review obrigatório  
+
+- Título no formato Conventional Commits
+- Descrever objetivo, passos de teste e impacto
+- 1 review obrigatório
 - Preferir **squash merge** para manter histórico limpo
 
 ---
 
 Desenvolvido pela **turma de Engenharia de Software da Universidade do Estado do Amazonas (UEA)**,  
 no período **2025/2**, sob orientação da **Professora Áurea Hiléia da Silva Melo**.
+
+```
+
+```
