@@ -45,7 +45,6 @@ import PersonaAutReadAll from "./modules/Artifacts/pages/PersonaAutReadAll"
 import PersonaAutReadOne from "./modules/Artifacts/pages/PersonaAutReadOne"
 import PersonaAutUpdate from "./modules/Artifacts/pages/PersonaAutUpdate"
 import PersonaAutCreate from "./modules/Artifacts/pages/PersonaAutCreate"
-import PersonaAutDelete from "./modules/Artifacts/pages/PersonaAutDelete"
 
 const queryClient = new QueryClient()
 
@@ -84,7 +83,6 @@ const AppLayout = () => (
               <Route path=":id">
                 <Route index element={<PersonaAutReadOne />} />
                 <Route path="update" element={<PersonaAutUpdate />} />
-                <Route path="delete" element={<PersonaAutDelete />} />
               </Route>
             </Route>
 
