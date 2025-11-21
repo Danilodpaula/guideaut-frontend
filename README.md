@@ -12,7 +12,9 @@ Repositório **frontend** do **GUIDEAUT**, um suporte tecnológico ao **ProAut**
 - **React Router 7**
 - **React Query (@tanstack/react-query)**
 - **i18n** via `react-intl` (Provider customizado)
-  
+
+> **Fonte (Montserrat)** carregada via `<link>` no `index.html`.
+
 ---
 
 ## 📦 Requisitos
