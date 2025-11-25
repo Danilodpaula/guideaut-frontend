@@ -21,7 +21,7 @@ export type Register = UseFormRegister<InputsForm>;
 
 export type Watch = UseFormWatch<InputsForm>;
 
-export const useEmpathyAut = () => {
+export const useEmpathy = () => {
   const {
     register,
     handleSubmit,

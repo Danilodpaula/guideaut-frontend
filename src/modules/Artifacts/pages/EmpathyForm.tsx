@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useEmpathyAut } from "../hooks/useEmpathy";
+import { useEmpathy } from "../hooks/useEmpathy";
 import PersonalDataStep from "../components/PersonalData";
 import MotivationsStep from "../components/EmpathyMotivations";
 import InteractionStep from "../components/Interaction";
@@ -13,7 +13,7 @@ import { stepsLabels } from "../i18n";
 const EmpathyForm = () => {
   const { language } = useI18n();
   const [step, setStep] = useState(0);
-  const { register, watch, handleSubmit, onSubmit } = useEmpathyAut();
+  const { register, watch, handleSubmit, onSubmit } = useEmpathy();
 
   const steps = [
     {

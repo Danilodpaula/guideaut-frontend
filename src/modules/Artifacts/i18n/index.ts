@@ -11,3 +11,4 @@ export * from "./language.i18n";
 export * from "./persona.i18n";
 export * from "./scripts.questions.i18n";
 export * from "./scripts.sections.i18n";
+export * from "./scripts.i18n";

@@ -274,3 +274,5 @@ const therapistQuestions: Question[] = [
 ];
 
 export { clientQuestions, caregiverQuestions, therapistQuestions };
+
+export type { Question };
