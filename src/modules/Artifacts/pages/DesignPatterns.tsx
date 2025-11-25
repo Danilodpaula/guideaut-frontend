@@ -50,7 +50,7 @@ interface Pattern {
  * Mostra padrões de interface categorizados e relacionados a atributos de qualidade,
  * com suporte a filtros por texto, categoria e tipo de qualidade.
  */
-export default function DesignPatterns() {
+const DesignPatterns = () => {
   const { language } = useI18n();
 
   // Filtros de busca
@@ -335,4 +335,6 @@ export default function DesignPatterns() {
       )}
     </div>
   );
-}
+};
+
+export default DesignPatterns;

@@ -18,34 +18,34 @@ import { Header } from "@/components/layout/Header";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 
 // Páginas principais
-import Index from "./modules/Adm+Base/pages/Index"
-import Login from "./modules/Adm+Base/pages/Login"
-import Signup from "./modules/Adm+Base/pages/Signup"
-import Forbidden from "./modules/Adm+Base/pages/Forbidden"
-import Help from "./modules/Tutorial/Help"
-import Search from "./modules/Adm+Base/pages/Search"
-import ProAutProcess from "./modules/Tutorial/pages/ProAutProcess"
-import ImersionPhase from "./modules/Tutorial/pages/ImersionPhase"
-import AnalysisPhase from "./modules/Tutorial/pages/AnalysisPhase"
-import IdeationPhase from "./modules/Tutorial/pages/IdeationPhase"
-import PrototypingPhase from "./modules/Tutorial/pages/PrototypingPhase"
-import Recommendations from "./modules/Recommendations/pages/Recommendations"
-import DesignPatterns from "./modules/Artifacts/pages/DesignPatterns"
-import Artifacts from "./modules/Artifacts/pages/Artifacts"
-import Accessibility from "./modules/Adm+Base/pages/Accessibility"
-import Users from "./modules/Adm+Base/pages/Users"
-import Roles from "./modules/Adm+Base/pages/Roles"
-import Categories from "./modules/Adm+Base/pages/Categories"
-import Audit from "./modules/Adm+Base/pages/Audit"
-import Profile from "./modules/Adm+Base/pages/Profile"
-import NotFound from "./modules/Adm+Base/pages/NotFound"
-import { Footer } from "./components/layout/Footer"
-import Stepper from "./modules/Artifacts/pages/EmpathyAutStepper"
+import Index from "./modules/Adm+Base/pages/Index";
+import Login from "./modules/Adm+Base/pages/Login";
+import Signup from "./modules/Adm+Base/pages/Signup";
+import Forbidden from "./modules/Adm+Base/pages/Forbidden";
+import Help from "./modules/Tutorial/Help";
+import Search from "./modules/Adm+Base/pages/Search";
+import ProAutProcess from "./modules/Tutorial/pages/ProAutProcess";
+import ImersionPhase from "./modules/Tutorial/pages/ImersionPhase";
+import AnalysisPhase from "./modules/Tutorial/pages/AnalysisPhase";
+import IdeationPhase from "./modules/Tutorial/pages/IdeationPhase";
+import PrototypingPhase from "./modules/Tutorial/pages/PrototypingPhase";
+import Recommendations from "./modules/Recommendations/pages/Recommendations";
+import DesignPatterns from "./modules/Artifacts/pages/DesignPatterns";
+import Artifacts from "./modules/Artifacts/pages/Artifacts";
+import Accessibility from "./modules/Adm+Base/pages/Accessibility";
+import Users from "./modules/Adm+Base/pages/Users";
+import Roles from "./modules/Adm+Base/pages/Roles";
+import Categories from "./modules/Adm+Base/pages/Categories";
+import Audit from "./modules/Adm+Base/pages/Audit";
+import Profile from "./modules/Adm+Base/pages/Profile";
+import NotFound from "./modules/Adm+Base/pages/NotFound";
+import { Footer } from "./components/layout/Footer";
+import EmpathyForm from "./modules/Artifacts/pages/EmpathyForm";
 import Developers from "./modules/Adm+Base/pages/Developers";
-import PersonaAutReadAll from "./modules/Artifacts/pages/PersonaAutReadAll"
-import PersonaAutReadOne from "./modules/Artifacts/pages/PersonaAutReadOne"
-import PersonaAutUpdate from "./modules/Artifacts/pages/PersonaAutUpdate"
-import PersonaAutCreate from "./modules/Artifacts/pages/PersonaAutCreate"
+import Persona from "./modules/Artifacts/pages/Persona";
+import PersonaForm from "./modules/Artifacts/pages/PersonaForm";
+import Canvas from "./modules/Artifacts/pages/Canvas";
+import Script from "./modules/Artifacts/pages/Script";
 
 const queryClient = new QueryClient();
 
@@ -76,15 +76,29 @@ const AppLayout = () => (
             <Route path="help" element={<Help />} />
             <Route path="me" element={<Profile />} />
             <Route path="settings/accessibility" element={<Accessibility />} />
-            <Route path="empathy-aut">
-              <Route path="create" element={<Stepper />} />
-            </Route>
-            <Route path="persona-aut">
-              <Route index element={<PersonaAutReadAll />} />
-              <Route path="create" element={<PersonaAutCreate />} />
+            <Route path="empathy">
+              <Route path="create" element={<EmpathyForm />} />
               <Route path=":id">
-                <Route index element={<PersonaAutReadOne />} />
-                <Route path="update" element={<PersonaAutUpdate />} />
+                <Route index element={<Persona />} />
+                <Route path="update" element={<EmpathyForm />} />
+              </Route>
+            </Route>
+            <Route path="persona">
+              <Route path="create" element={<PersonaForm />} />
+              <Route path=":id">
+                <Route index element={<Persona />} />
+                <Route path="update" element={<PersonaForm />} />
+              </Route>
+            </Route>
+            <Route path="script">
+              <Route path=":id">
+                <Route index element={<Script />} />
+              </Route>
+            </Route>
+            <Route path="canvas">
+              <Route index element={<Canvas />} />
+              <Route path=":id">
+                <Route index element={<Canvas />} />
               </Route>
             </Route>
 
