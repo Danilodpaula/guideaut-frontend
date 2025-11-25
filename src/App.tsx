@@ -42,6 +42,7 @@ import NotFound from "./modules/Adm+Base/pages/NotFound"
 import { Footer } from "./components/layout/Footer"
 import Stepper from "./modules/Artifacts/pages/EmpathyAutStepper"
 import Developers from "./modules/Adm+Base/pages/Developers";
+import Reports from "./modules/Adm+Base/pages/Reports";
 import PersonaAutReadAll from "./modules/Artifacts/pages/PersonaAutReadAll"
 import PersonaAutReadOne from "./modules/Artifacts/pages/PersonaAutReadOne"
 import PersonaAutUpdate from "./modules/Artifacts/pages/PersonaAutUpdate"
@@ -118,6 +119,14 @@ const AppLayout = () => (
               element={
                 <AuthGuard requiredRole="ADMIN">
                   <Audit />
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="admin/reports"
+              element={
+                <AuthGuard requiredRole="ADMIN">
+                  <Reports />
                 </AuthGuard>
               }
             />
