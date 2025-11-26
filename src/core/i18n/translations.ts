@@ -20,6 +20,7 @@ export const translations = {
       details: "Detalhes",
       noData: "Sem dados",
       error: "Erro",
+      all: "Todos",
     },
     nav: {
       home: "Início",
@@ -63,6 +64,29 @@ export const translations = {
       emailAlreadyExists: "Este e-mail já está cadastrado",
       continueAsGuest: "Acessar como visitante",
       continueAsGuestMessage: "Navegando como visitante!",
+      userNotActive:
+        "Seu usuário está bloqueado ou inativo. Entre em contato com o administrador.",
+      forgotPasswordTitle: "Esqueci minha senha",
+      forgotPasswordSubtitle:
+        "Informe seu e-mail e enviaremos um código para redefinir sua senha.",
+      forgotPasswordEmailSent:
+        "Se o e-mail existir, enviamos um código de verificação.",
+      forgotPasswordError:
+        "Erro ao solicitar redefinição de senha. Tente novamente.",
+      resetPasswordTitle: "Redefinir senha",
+      resetPasswordSubtitle:
+        "Digite o código recebido por e-mail e escolha uma nova senha.",
+      resetPasswordSuccess:
+        "Senha redefinida com sucesso! Você já pode fazer login.",
+      resetPasswordError: "Erro ao redefinir senha. Tente novamente.",
+      resetPasswordInvalidCode:
+        "Código inválido ou expirado. Solicite um novo código.",
+      resetCodeLabel: "Código de verificação",
+      resetCodePlaceholder: "Ex: 123456",
+      resetCodeRequired: "Informe o código recebido por e-mail.",
+      sendResetCode: "Enviar código",
+      resetPasswordAction: "Redefinir senha",
+      backToLogin: "Voltar para o login",
     },
     accessibility: {
       title: "Preferências de Acessibilidade",
@@ -98,6 +122,33 @@ export const translations = {
       userBlocked: "Usuário bloqueado",
       userArchived: "Usuário arquivado",
       passwordReset: "Senha resetada",
+
+      //
+      subtitle: "Gerencie usuários, status e permissões",
+      editRoles: "Editar papéis do usuário",
+      noUserSelected: "Nenhum usuário selecionado.",
+      rolesMustHaveAtLeastOne: "Selecione pelo menos um papel.",
+      fillAllFieldsAndRoles:
+        "Preencha todos os campos e selecione pelo menos um papel.",
+      createUserTitle: "Criar novo usuário",
+      createUserDescription:
+        "Preencha os dados do usuário e selecione os papéis.",
+      nameLabel: "Nome",
+      namePlaceholder: "Nome completo",
+      emailLabel: "E-mail",
+      emailPlaceholder: "email@exemplo.com",
+      passwordLabel: "Senha",
+      passwordPlaceholder: "Defina uma senha temporária",
+      rolesLabel: "Papéis",
+      pageSize: "Tamanho da página",
+      pageSize5: "5 / página",
+      pageSize10: "10 / página",
+      pageSize20: "20 / página",
+      pageSize50: "50 / página",
+      paginationInfo:
+        "Página {{page}} de {{totalPages}} • {{totalElements}} usuários",
+      created: "Usuário criado com sucesso",
+      rolesUpdated: "Papéis atualizados com sucesso.",
     },
     roles: {
       title: "Gerenciar Papéis",
@@ -193,6 +244,10 @@ export const translations = {
       typeRecommendation: "Recomendação",
       typeComment: "Comentário",
     },
+    errors: {
+      forbidden: "Acesso negado.",
+      generic: "Erro ao processar a requisição.",
+    },
   },
   "en-US": {
     common: {
@@ -215,6 +270,7 @@ export const translations = {
       details: "Details",
       noData: "No data",
       error: "Error",
+      all: "All",
     },
     nav: {
       home: "Home",
@@ -258,6 +314,27 @@ export const translations = {
       emailAlreadyExists: "This email is already registered",
       continueAsGuest: "Continue as guest",
       continueAsGuestMessage: "Browsing as a guest!",
+      userNotActive:
+        "Your account is blocked or inactive. Please contact the administrator.",
+      forgotPasswordTitle: "Forgot my password",
+      forgotPasswordSubtitle:
+        "Enter your e-mail and we will send you a code to reset your password.",
+      forgotPasswordEmailSent:
+        "If the e-mail exists, we have sent a verification code.",
+      forgotPasswordError: "Error requesting password reset. Please try again.",
+      resetPasswordTitle: "Reset password",
+      resetPasswordSubtitle:
+        "Enter the code you received by e-mail and choose a new password.",
+      resetPasswordSuccess: "Password reset successfully! You can now log in.",
+      resetPasswordError: "Error resetting password. Please try again.",
+      resetPasswordInvalidCode:
+        "Invalid or expired code. Please request a new one.",
+      resetCodeLabel: "Verification code",
+      resetCodePlaceholder: "Ex: 123456",
+      resetCodeRequired: "Enter the code you received by e-mail.",
+      sendResetCode: "Send code",
+      resetPasswordAction: "Reset password",
+      backToLogin: "Back to login",
     },
     accessibility: {
       title: "Accessibility Preferences",
@@ -293,6 +370,31 @@ export const translations = {
       userBlocked: "User blocked",
       userArchived: "User archived",
       passwordReset: "Password reset",
+
+      //
+      subtitle: "Manage users, statuses and permissions",
+      editRoles: "Edit user roles",
+      noUserSelected: "No user selected.",
+      rolesMustHaveAtLeastOne: "Select at least one role.",
+      fillAllFieldsAndRoles: "Fill in all fields and select at least one role.",
+      createUserTitle: "Create new user",
+      createUserDescription: "Fill in the user data and select the roles.",
+      nameLabel: "Name",
+      namePlaceholder: "Full name",
+      emailLabel: "Email",
+      emailPlaceholder: "email@example.com",
+      passwordLabel: "Password",
+      passwordPlaceholder: "Set a temporary password",
+      rolesLabel: "Roles",
+      pageSize: "Page size",
+      pageSize5: "5 / page",
+      pageSize10: "10 / page",
+      pageSize20: "20 / page",
+      pageSize50: "50 / page",
+      paginationInfo:
+        "Page {{page}} of {{totalPages}} • {{totalElements}} users",
+      created: "User created successfully",
+      rolesUpdated: "Roles updated successfully.",
     },
     roles: {
       title: "Manage Roles",
@@ -387,6 +489,10 @@ export const translations = {
       typeUser: "User",
       typeRecommendation: "Recommendation",
       typeComment: "Comment",
+    },
+    errors: {
+      forbidden: "Access denied.",
+      generic: "Error while processing the request.",
     },
   },
 } as const;
