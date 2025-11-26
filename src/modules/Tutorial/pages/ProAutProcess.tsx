@@ -116,6 +116,11 @@ export default function ProAutProcess() {
     },
   ];
 
+  // Rola para o topo assim que a página carrega
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Efeito para detectar a seção ativa durante o scroll
   useEffect(() => {
     const handleScroll = () => {

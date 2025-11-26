@@ -177,8 +177,8 @@ export default function AnalysisPhase() {
                 <img
                   src={
                     language === "pt-BR"
-                      ? "src/modules/Tutorial/assets/imersion-phase/FluxoAnalise-pt-br.png"
-                      : "src/modules/Tutorial/assets/imersion-phase/FluxoAnalise-en-us.png"
+                      ? "src/modules/Tutorial/assets/analysis-phase/FluxoAnalise-pt-br.png"
+                      : "src/modules/Tutorial/assets/analysis-phase/FluxoAnalise-en-us.png"
                   }
                   alt={
                     language === "pt-BR"

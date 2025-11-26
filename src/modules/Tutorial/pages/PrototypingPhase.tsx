@@ -160,9 +160,6 @@ export default function PrototypingPhase() {
           className="scroll-m-20 space-y-6"
         >
           <div className="flex items-center gap-2 border-b pb-2">
-            <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">
-              Fase 4
-            </span>
             <h2 className="text-2xl font-bold tracking-tight">
               {language === "pt-BR" ? "Visão Geral" : "Overview"}
             </h2>
@@ -185,8 +182,8 @@ export default function PrototypingPhase() {
                 <img
                   src={
                     language === "pt-BR"
-                      ? "src/modules/Tutorial/assets/imersion-phase/FluxoPrototipacao-pt-br.png"
-                      : "src/modules/Tutorial/assets/imersion-phase/FluxoPrototipacao-en-us.png"
+                      ? "src/modules/Tutorial/assets/prototyping-phase/FluxoPrototipacao-pt-br.png"
+                      : "src/modules/Tutorial/assets/prototyping-phase/FluxoPrototipacao-en-us.png"
                   }
                   alt={
                     language === "pt-BR"
