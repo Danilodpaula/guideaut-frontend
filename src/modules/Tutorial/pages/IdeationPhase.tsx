@@ -50,28 +50,15 @@ export default function IdeationPhase() {
   // Estrutura da tabela de conteúdos
   const tableOfContents = [
     {
-      id: "visao-geral",
-      title: language === "pt-BR" ? "Visão geral" : "Overview",
+      id: "proaut-phases",
+      title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
       type: "scroll",
     },
     {
-      id: "aprender-contexto",
-      title:
-        language === "pt-BR"
-          ? "Aprender sobre o contexto"
-          : "Learn about the context",
-      type: "scroll",
-    },
-    {
-      id: "extrair-requisitos",
-      title:
-        language === "pt-BR" ? "Extrair requisitos" : "Extract requirements",
-      type: "scroll",
-    },
-    {
-      id: "consolidar-dados",
-      title: language === "pt-BR" ? "Consolidar dados" : "Consolidate data",
-      type: "scroll",
+      id: "imersao",
+      title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
+      type: "navigate",
+      path: "/imersion-phase",
     },
     {
       id: "analise",
@@ -92,6 +79,11 @@ export default function IdeationPhase() {
       path: "/prototyping-phase",
     },
   ];
+
+  // Rola para o topo assim que a página carrega
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Efeito para detectar a seção ativa durante o scroll
   useEffect(() => {
@@ -979,7 +971,7 @@ export default function IdeationPhase() {
       </div>
 
       {/* Tabela de Conteúdos */}
-      <div className="w-80 flex-shrink-0 pt-6 pr-6 sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto">
+      <div className="w-80 flex-shrink-0 pt-6 pr-6 sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto hidden xl:block">
         <Card className="shadow-lg border-l-4 border-l-blue-500">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -1004,7 +996,7 @@ export default function IdeationPhase() {
                   <ChevronRight
                     className={`h-3 w-3 transition-transform duration-200 ${
                       activeSection === item.id
-                        ? "text-blue-500"
+                        ? "text-blue-500 rotate-90"
                         : "text-gray-400"
                     }`}
                   />

@@ -50,8 +50,14 @@ export default function ImersionPhase() {
   // Estrutura da tabela de conteúdos
   const tableOfContents = [
     {
+      id: "proaut-phases",
+      title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
+      type: "navigate",
+      path: "/proaut-process",
+    },
+    {
       id: "visao-geral",
-      title: language === "pt-BR" ? "Visão geral" : "Overview",
+      title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
       type: "scroll",
     },
     {
@@ -92,6 +98,11 @@ export default function ImersionPhase() {
       path: "/prototyping-phase",
     },
   ];
+
+  // Rola para o topo assim que a página carrega
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Efeito para detectar a seção ativa durante o scroll
   useEffect(() => {
@@ -145,6 +156,11 @@ export default function ImersionPhase() {
           <h1 className="text-3xl font-bold tracking-tight">
             {language === "pt-BR" ? "Fase de Imersão" : "Immersion Phase"}
           </h1>
+          <p className="text-lg text-muted-foreground">
+            {language === "pt-BR"
+              ? "Mergulhando no contexto para compreender as verdadeiras dores do usuário."
+              : "Diving into context to understand the user's real pain points."}
+          </p>
         </div>
 
         {/* Visão Geral */}
@@ -979,7 +995,7 @@ export default function ImersionPhase() {
       </div>
 
       {/* Tabela de Conteúdos */}
-      <div className="w-80 flex-shrink-0 pt-6 pr-6 sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto">
+      <div className="w-80 flex-shrink-0 pt-6 pr-6 sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto hidden xl:block">
         <Card className="shadow-lg border-l-4 border-l-blue-500">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -1004,7 +1020,7 @@ export default function ImersionPhase() {
                   <ChevronRight
                     className={`h-3 w-3 transition-transform duration-200 ${
                       activeSection === item.id
-                        ? "text-blue-500"
+                        ? "text-blue-500 rotate-90"
                         : "text-gray-400"
                     }`}
                   />
