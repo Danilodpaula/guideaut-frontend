@@ -52,22 +52,40 @@ export default function Login() {
    * - Exibe feedback via toast
    * - Redireciona para Home em caso de sucesso
    */
-  // Em Login.tsx
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
-      toast.error(t("auth.invalidCredentials")); // Mostra o erro
-      return; // Para a execução da função aqui
+      toast.error(t("auth.invalidCredentials"));
+      return;
     }
-    // ==========================================================
 
+    setIsLoadingLogin(true);
     try {
       await login({ email, password });
       toast.success(t("auth.loginSuccess"));
       navigate("/", { replace: true });
-    } catch {
-      toast.error(t("auth.invalidCredentials"));
+    } catch (err: any) {
+      const status = err?.response?.status;
+
+      if (status === 403) {
+        // Usuário bloqueado / arquivado / pendente
+        toast.error(
+          t("auth.userNotActive") ||
+            "Seu usuário está bloqueado ou inativo. Entre em contato com o administrador.",
+        );
+      } else if (status === 401) {
+        // Credenciais inválidas
+        toast.error(
+          t("auth.invalidCredentials") || "E-mail ou senha inválidos.",
+        );
+      } else {
+        // Erro genérico (rede, servidor, etc.)
+        toast.error(
+          t("errors.generic") ||
+            "Erro ao fazer login. Tente novamente em instantes.",
+        );
+      }
     } finally {
       setIsLoadingLogin(false);
     }

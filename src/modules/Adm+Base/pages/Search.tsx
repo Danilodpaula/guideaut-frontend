@@ -64,20 +64,6 @@ export default function Search() {
     },
     {
       id: "2",
-      title:
-        language === "pt-BR"
-          ? "Configurações de Acessibilidade"
-          : "Accessibility Settings",
-      description:
-        language === "pt-BR"
-          ? "Personalize tema, tamanho de fonte e animações"
-          : "Customize theme, font size, and animations",
-      type: "page",
-      url: "/settings/accessibility",
-      requiresAuth: true,
-    },
-    {
-      id: "3",
       title: language === "pt-BR" ? "Ajuda e FAQ" : "Help & FAQ",
       description:
         language === "pt-BR"
@@ -87,7 +73,7 @@ export default function Search() {
       url: "/help",
     },
     {
-      id: "4",
+      id: "3",
       title: language === "pt-BR" ? "Categorias" : "Categories",
       description:
         language === "pt-BR"
@@ -99,7 +85,7 @@ export default function Search() {
       requiresRole: "ADMIN",
     },
     {
-      id: "5",
+      id: "4",
       title: language === "pt-BR" ? "Log de Auditoria" : "Audit Log",
       description:
         language === "pt-BR"
@@ -107,31 +93,6 @@ export default function Search() {
           : "View all actions performed in the system",
       type: "page",
       url: "/admin/audit",
-      requiresAuth: true,
-      requiresRole: "ADMIN",
-    },
-    {
-      id: "6",
-      title: language === "pt-BR" ? "Importar Dados" : "Import Data",
-      description:
-        language === "pt-BR"
-          ? "Importe dados em lote via CSV ou XLSX"
-          : "Import bulk data via CSV or XLSX",
-      type: "page",
-      url: "/admin/import",
-      requiresAuth: true,
-      requiresRole: "ADMIN",
-    },
-    {
-      id: "7",
-      title:
-        language === "pt-BR" ? "Papéis e Permissões" : "Roles & Permissions",
-      description:
-        language === "pt-BR"
-          ? "Configure papéis e permissões de usuários"
-          : "Configure user roles and permissions",
-      type: "page",
-      url: "/admin/roles",
       requiresAuth: true,
       requiresRole: "ADMIN",
     },

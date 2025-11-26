@@ -52,7 +52,6 @@ export function AppSidebar() {
 
   const adminItems = [
     { title: t("nav.users"), url: "/admin/users", icon: Users },
-    { title: t("nav.roles"), url: "/admin/roles", icon: Shield },
     { title: t("nav.categories"), url: "/admin/categories", icon: FolderTree },
     { title: t("nav.audit"), url: "/admin/audit", icon: FileText },
     { title: t("nav.reports"), url: "/admin/reports", icon: AlertTriangle },

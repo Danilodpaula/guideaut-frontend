@@ -23,3 +23,21 @@ export const signupApi = (userData: {
 }) => {
   return api.post("/users", userData);
 };
+
+/**
+ * Esqueci minha senha — dispara envio do código por e-mail.
+ */
+export const forgotPasswordApi = (payload: { email: string }) => {
+  return api.post("/auth/forgot-password", payload);
+};
+
+/**
+ * Redefinir senha usando código enviado por e-mail.
+ */
+export const resetPasswordWithCodeApi = (payload: {
+  email: string;
+  code: string;
+  newPassword: string;
+}) => {
+  return api.post("/auth/reset-password", payload);
+};
