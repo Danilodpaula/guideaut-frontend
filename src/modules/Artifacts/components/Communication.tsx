@@ -1,37 +1,43 @@
-import { Controller } from "react-hook-form";
+import { Control, Controller, FieldPath } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PersonaAutStepProps } from "../types/persona.step.props.type";
-import { communicationOptions, Language } from "../i18n";
+import { communicationOptions } from "../i18n";
+import { FormBase } from "../types/form-base";
+import useDefault from "../hooks/useDefault";
 
-const CommunicationStep = ({ language, control }: PersonaAutStepProps) => {
+const CommunicationStep = <T extends FormBase>({
+  control,
+}: {
+  control: Control<T, any, T>;
+}) => {
+  const { exibirTexto } = useDefault();
   return (
     <div>
       <h2 className="flex-1 mb-[10px] font-bold">
-        {" "}
-        {language === Language.Portuguese ? "Comunicação" : "Communication"}
+        {" " + exibirTexto("Comunicação", "Communication")}
       </h2>
       <Controller
-        name="communication"
+        name={"communication" as FieldPath<T>}
         control={control}
         render={({ field: { value, onChange } }) => (
           <div className="flex flex-col gap-[10px]">
             {communicationOptions.map((option) => {
-              const checked = value.includes(option.id);
+              const checked = (value as string[]).includes(option.id);
               return (
                 <Label key={option.id}>
                   <Checkbox
                     checked={checked}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        onChange([...value, option.id]);
+                        onChange([...(value as string[]), option.id]);
                       } else {
-                        onChange(value.filter((v) => v !== option.id));
+                        onChange(
+                          (value as string[]).filter((v) => v !== option.id),
+                        );
                       }
                     }}
                   />
-                  {" " +
-                    (language === Language.Portuguese ? option.pt : option.en)}
+                  {" " + exibirTexto(option.pt, option.en)}
                 </Label>
               );
             })}

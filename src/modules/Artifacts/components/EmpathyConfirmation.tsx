@@ -15,16 +15,16 @@ const ConfirmationStep = ({ watch }: { watch: Watch }) => {
   const { language } = useI18n();
   const gender = genders.find((gender) => gender.id === watch("gender"));
   const interactionList = interactionOptions.filter((option) =>
-    watch("interactionItems")?.includes(option.id),
+    watch("interaction")?.includes(option.id),
   );
   const cognitionList = cognitionOptions.filter((option) =>
-    watch("cognitionItems")?.includes(option.id),
+    watch("cognition")?.includes(option.id),
   );
   const communicationList = communicationOptions.filter((option) =>
-    watch("communicationItems")?.includes(option.id),
+    watch("communication")?.includes(option.id),
   );
   const behaviorList = behaviorOptions.filter((option) =>
-    watch("behaviorItems")?.includes(option.id),
+    watch("behavior")?.includes(option.id),
   );
 
   return (

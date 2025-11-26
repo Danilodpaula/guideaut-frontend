@@ -1,17 +1,20 @@
-import { Controller } from "react-hook-form";
+import { Control, Controller } from "react-hook-form";
 import { Language } from "../i18n/language.i18n";
 import AddOptionAlertDialog from "./AddOptionAlertDialog";
 import RemoveOptionAlertDialog from "./RemoveOptionAlertDialog";
-import { PersonaAutStepProps } from "../types/persona.step.props.type";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { defaultStereotypes } from "../i18n/persona.i18n";
+import { InputsForm } from "../hooks/usePersona";
 
 const PersonaAutStereotypesHabits = ({
   language,
   control,
-}: PersonaAutStepProps) => {
+}: {
+  language: string;
+  control: Control<InputsForm, any, InputsForm>;
+}) => {
   const [newStereotype, setNewStereotype] = useState("");
 
   return (

@@ -9,14 +9,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Language } from "../i18n";
+import useDefault from "../hooks/useDefault";
 
 type Props = {
-  language: string;
   onClick: () => void;
 };
 
-const AddOptionAlertDialog = ({ language, onClick }: Props) => {
+const AddOptionAlertDialog = ({ onClick }: Props) => {
+  const { exibirTexto } = useDefault();
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -26,20 +26,14 @@ const AddOptionAlertDialog = ({ language, onClick }: Props) => {
         <AlertDialogOverlay></AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogTitle>
-            {language === Language.Portuguese
-              ? "Adicionar essa opção?"
-              : "Add this option?"}
+            {exibirTexto("Adicionar essa opção?", "Add this option?")}
           </AlertDialogTitle>
           <AlertDialogDescription></AlertDialogDescription>
           <AlertDialogCancel asChild>
-            <button>
-              {language === Language.Portuguese ? "Cancelar" : "Cancel"}
-            </button>
+            <button>{exibirTexto("Cancelar", "Cancel")}</button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
-            <button onClick={onClick}>
-              {language === Language.Portuguese ? "Adicionar" : "Add"}
-            </button>
+            <button onClick={onClick}>{exibirTexto("Adicionar", "Add")}</button>
           </AlertDialogAction>
         </AlertDialogContent>
       </AlertDialogPortal>

@@ -1,17 +1,20 @@
-import { Controller } from "react-hook-form";
+import { Control, Controller } from "react-hook-form";
 import { Language } from "../i18n/language.i18n";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { PersonaAutStepProps } from "../types/persona.step.props.type";
 import { defaultStressfulActivities } from "../i18n";
 import AddOptionAlertDialog from "./AddOptionAlertDialog";
 import RemoveOptionAlertDialog from "./RemoveOptionAlertDialog";
+import { InputsForm } from "../hooks/usePersona";
 
 const PersonaAutStressfulActivities = ({
   language,
   control,
-}: PersonaAutStepProps) => {
+}: {
+  language: string;
+  control: Control<InputsForm, any, InputsForm>;
+}) => {
   const [newActivity, setNewActivity] = useState("");
 
   return (

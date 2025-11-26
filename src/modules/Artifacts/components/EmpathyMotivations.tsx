@@ -1,18 +1,47 @@
-import { useI18n } from "@/core/i18n/I18nContext";
-import { useTheme } from "@/core/theme/ThemeContext";
-import { Register } from "../hooks/useEmpathy";
+import { InputsForm } from "../hooks/useEmpathy";
 import { motivationLabels } from "../i18n";
+import { Control, Controller } from "react-hook-form";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
-const MotivationsStep = ({ register }: { register: Register }) => {
-  const { language } = useI18n();
-  const { theme } = useTheme();
+const MotivationsStep = ({
+  language,
+  control,
+}: {
+  language: string;
+  control: Control<InputsForm, any, InputsForm>;
+}) => {
   return (
     <div>
-      <label htmlFor="reasons">{motivationLabels(language)[0]}</label>
-      <textarea id="reasons" {...register("reasons")} />
+      <Label htmlFor="reasons">{motivationLabels(language)[0]}</Label>
+      <Controller
+        name={"reasons"}
+        control={control}
+        render={({ field: { value, onChange } }) => {
+          return (
+            <Textarea
+              className="resize-none h-[200px] w-[700px]"
+              value={value}
+              onChange={onChange}
+            />
+          );
+        }}
+      />
       <div className="h-[10px]" />
-      <label htmlFor="expectations">{motivationLabels(language)[1]}</label>
-      <textarea id="expectations" {...register("expectations")} />
+      <Label htmlFor="expectations">{motivationLabels(language)[1]}</Label>
+      <Controller
+        name={"expectations"}
+        control={control}
+        render={({ field: { value, onChange } }) => {
+          return (
+            <Textarea
+              className="resize-none h-[200px] w-[700px]"
+              value={value}
+              onChange={onChange}
+            />
+          );
+        }}
+      />
     </div>
   );
 };

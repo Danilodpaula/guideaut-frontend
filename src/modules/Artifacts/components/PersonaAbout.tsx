@@ -1,9 +1,15 @@
 import { Textarea } from "@/components/ui/textarea";
 import { Language } from "../i18n/language.i18n";
-import { Controller } from "react-hook-form";
-import { PersonaAutStepProps } from "../types/persona.step.props.type";
+import { Control, Controller } from "react-hook-form";
+import { InputsForm } from "../hooks/usePersona";
 
-const PersonaAutAbout = ({ language, control }: PersonaAutStepProps) => {
+const PersonaAutAbout = ({
+  language,
+  control,
+}: {
+  language: string;
+  control: Control<InputsForm, any, InputsForm>;
+}) => {
   return (
     <div className="flex flex-col gap-[20px]">
       <h2 className="flex-1 ml-[20px] font-bold">

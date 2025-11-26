@@ -1,10 +1,16 @@
-import { Controller } from "react-hook-form";
+import { Control, Controller, FieldPath } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PersonaAutStepProps } from "../types/persona.step.props.type";
 import { interactionOptions, Language } from "../i18n";
+import { FormBase } from "../types/form-base";
 
-const InteractionStep = ({ language, control }: PersonaAutStepProps) => {
+const InteractionStep = <T extends FormBase>({
+  language,
+  control,
+}: {
+  language: string;
+  control: Control<T, any, T>;
+}) => {
   return (
     <div>
       <h2 className="flex-1 mb-[10px] font-bold">
@@ -14,21 +20,23 @@ const InteractionStep = ({ language, control }: PersonaAutStepProps) => {
           : "Social Interaction"}
       </h2>
       <Controller
-        name="interaction"
+        name={"interaction" as FieldPath<T>}
         control={control}
         render={({ field: { value, onChange } }) => (
           <div className="flex flex-col gap-[10px]">
             {interactionOptions.map((option) => {
-              const checked = value.includes(option.id);
+              const checked = (value as string[]).includes(option.id);
               return (
                 <Label key={option.id}>
                   <Checkbox
                     checked={checked}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        onChange([...value, option.id]);
+                        onChange([...(value as string[]), option.id]);
                       } else {
-                        onChange(value.filter((v) => v !== option.id));
+                        onChange(
+                          (value as string[]).filter((v) => v !== option.id),
+                        );
                       }
                     }}
                   />

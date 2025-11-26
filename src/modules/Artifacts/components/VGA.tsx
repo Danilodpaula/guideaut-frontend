@@ -10,15 +10,28 @@ import {
 } from "recharts";
 import { useVGA } from "../hooks/useVGA";
 import { Language } from "../i18n/language.i18n";
-import { Watch } from "../hooks/usePersona";
 
-type Props = {
-  watch: Watch;
+interface Props {
   language: string;
-};
+  interactionList: string[];
+  cognitionList: string[];
+  communicationList: string[];
+  behaviorList: string[];
+}
 
-const VGA = ({ watch, language }: Props) => {
-  const { dataVGA } = useVGA(watch);
+const VGA = ({
+  interactionList,
+  cognitionList,
+  communicationList,
+  behaviorList,
+  language,
+}: Props) => {
+  const { dataVGA } = useVGA({
+    interactionList,
+    cognitionList,
+    communicationList,
+    behaviorList,
+  });
 
   return (
     <div>

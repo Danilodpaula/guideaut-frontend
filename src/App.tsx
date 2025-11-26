@@ -30,8 +30,6 @@ import AnalysisPhase from "./modules/Tutorial/pages/AnalysisPhase";
 import IdeationPhase from "./modules/Tutorial/pages/IdeationPhase";
 import PrototypingPhase from "./modules/Tutorial/pages/PrototypingPhase";
 import Recommendations from "./modules/Recommendations/pages/Recommendations";
-import DesignPatterns from "./modules/Artifacts/pages/DesignPatterns";
-import Artifacts from "./modules/Artifacts/pages/Artifacts";
 import Accessibility from "./modules/Adm+Base/pages/Accessibility";
 import Users from "./modules/Adm+Base/pages/Users";
 import Roles from "./modules/Adm+Base/pages/Roles";
@@ -40,12 +38,19 @@ import Audit from "./modules/Adm+Base/pages/Audit";
 import Profile from "./modules/Adm+Base/pages/Profile";
 import NotFound from "./modules/Adm+Base/pages/NotFound";
 import { Footer } from "./components/layout/Footer";
-import EmpathyForm from "./modules/Artifacts/pages/EmpathyForm";
 import Developers from "./modules/Adm+Base/pages/Developers";
+import DesignPatterns from "./modules/Artifacts/pages/DesignPatterns";
+import Artifacts from "./modules/Artifacts/pages/Artifacts";
 import Persona from "./modules/Artifacts/pages/Persona";
-import PersonaForm from "./modules/Artifacts/pages/PersonaForm";
 import Canvas from "./modules/Artifacts/pages/Canvas";
 import Script from "./modules/Artifacts/pages/Script";
+import Empathy from "./modules/Artifacts/pages/Empathy";
+import ScriptCreateForm from "./modules/Artifacts/pages/ScriptCreateForm";
+import ScriptsMyScripts from "./modules/Artifacts/pages/ScriptsMyScripts";
+import EmpathyCreateForm from "./modules/Artifacts/pages/EmpathyCreateForm";
+import EmpathyEditForm from "./modules/Artifacts/pages/EmpathyEditForm";
+import PersonaCreateForm from "./modules/Artifacts/pages/PersonaCreateForm";
+import PersonaEditForm from "./modules/Artifacts/pages/PersonaEditForm";
 
 const queryClient = new QueryClient();
 
@@ -77,26 +82,27 @@ const AppLayout = () => (
             <Route path="me" element={<Profile />} />
             <Route path="settings/accessibility" element={<Accessibility />} />
             <Route path="empathy">
-              <Route path="create" element={<EmpathyForm />} />
+              <Route path="create" element={<EmpathyCreateForm />} />
               <Route path=":id">
-                <Route index element={<Persona />} />
-                <Route path="update" element={<EmpathyForm />} />
+                <Route index element={<Empathy />} />
+                <Route path="update" element={<EmpathyEditForm />} />
               </Route>
             </Route>
             <Route path="persona">
-              <Route path="create" element={<PersonaForm />} />
+              <Route path="create" element={<PersonaCreateForm />} />
               <Route path=":id">
                 <Route index element={<Persona />} />
-                <Route path="update" element={<PersonaForm />} />
+                <Route path="update" element={<PersonaEditForm />} />
               </Route>
             </Route>
             <Route path="script">
+              <Route path="my-scripts" element={<ScriptsMyScripts />} />
+              <Route path="create" element={<ScriptCreateForm />} />
               <Route path=":id">
-                <Route index element={<Script />} />
+                <Route path="edit" element={<Script />} />
               </Route>
             </Route>
             <Route path="canvas">
-              <Route index element={<Canvas />} />
               <Route path=":id">
                 <Route index element={<Canvas />} />
               </Route>

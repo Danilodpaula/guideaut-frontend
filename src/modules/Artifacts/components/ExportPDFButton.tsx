@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
 import html2pdf from "html2pdf.js";
-import { Language } from "../i18n";
 import { MutableRefObject } from "react";
 import { Download } from "lucide-react";
+import useDefault from "../hooks/useDefault";
 
 interface Props {
-  language: string;
   pageRef: MutableRefObject<any>;
   filename: string;
 }
@@ -20,7 +19,8 @@ const options = (filename: string) => {
     pagebreak: { mode: ["avoid-all"] },
   } as const;
 };
-const ExportPDFButton = ({ language, pageRef, filename }: Props) => {
+const ExportPDFButton = ({ pageRef, filename }: Props) => {
+  const { exibirTexto } = useDefault();
   return (
     <Button
       variant="outline"
@@ -29,7 +29,7 @@ const ExportPDFButton = ({ language, pageRef, filename }: Props) => {
       }}
     >
       <Download className="w-4 h-4" />
-      {language === Language.Portuguese ? "Exportar para PDF" : "Export to PDF"}
+      {exibirTexto("Exportar para PDF", "Export to PDF")}
     </Button>
   );
 };

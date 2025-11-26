@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Controller } from "react-hook-form";
+import { Control, Controller } from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Language, languages } from "../i18n";
-import { PersonaAutStepProps } from "../types/persona.step.props.type";
+import { InputsForm } from "../hooks/usePersona";
 
 const autismLevels = ["1", "2", "3"];
 
@@ -94,7 +94,13 @@ const LanguageDialog = ({ language }: { language: string }) => {
   );
 };
 
-const GeneralCharacteristics = ({ language, control }: PersonaAutStepProps) => {
+const GeneralCharacteristics = ({
+  language,
+  control,
+}: {
+  language: string;
+  control: Control<InputsForm, any, InputsForm>;
+}) => {
   return (
     <div className="flex flex-col gap-[10px]">
       <Label htmlFor="language">

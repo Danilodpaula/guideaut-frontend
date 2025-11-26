@@ -1,13 +1,15 @@
 import { Watch } from "../hooks/usePersona";
 import { genders, languages } from "../i18n";
 import { Language } from "../i18n/language.i18n";
-import { PersonaAutStepProps } from "../types/persona.step.props.type";
 import VGA from "./VGA";
 
 const PersonaAutConfirmation = ({
   language,
   watch,
-}: PersonaAutStepProps & { watch: Watch }) => {
+}: {
+  language: string;
+  watch: Watch;
+}) => {
   const gender = genders.find((gender) => gender.id === watch("gender"));
   const lang = languages.find((l) => l.id === watch("language"));
 
@@ -103,7 +105,13 @@ const PersonaAutConfirmation = ({
           : "Overview of the Autistic Person"}
         :
       </h2>
-      <VGA watch={watch} language={language} />
+      <VGA
+        language={watch("language")}
+        interactionList={watch("interaction")}
+        cognitionList={watch("cognition")}
+        communicationList={watch("communication")}
+        behaviorList={watch("behavior")}
+      />
       <p>
         <strong>
           {language === Language.Portuguese ? "Linguagem" : "Language"}:
