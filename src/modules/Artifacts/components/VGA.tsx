@@ -9,7 +9,8 @@ import {
   YAxis,
 } from "recharts";
 import { useVGA } from "../hooks/useVGA";
-import { Language } from "../i18n/language.i18n";
+import { Language } from "../i18n/language";
+import useDefault from "../hooks/useDefault";
 
 interface Props {
   language: string;
@@ -32,6 +33,8 @@ const VGA = ({
     communicationList,
     behaviorList,
   });
+
+  const { exibirTexto } = useDefault();
 
   return (
     <div>

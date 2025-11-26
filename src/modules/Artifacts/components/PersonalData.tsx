@@ -8,16 +8,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { genders, Language } from "../i18n";
 import { FormBase } from "../types/form-base";
+import { Language } from "../i18n/language";
+import { genders } from "../i18n/genders";
+import useDefault from "../hooks/useDefault";
 
-const PersonalDataStep = <T extends FormBase>({
-  language,
+const PersonalData = <T extends FormBase>({
   control,
 }: {
-  language: string;
   control: Control<T, any, T>;
 }) => {
+  const { exibirTexto } = useDefault();
   return (
     <div className="flex flex-col gap-[10px]">
       <h2 className="flex-1 mb-[10px] font-bold">
@@ -75,4 +76,4 @@ const PersonalDataStep = <T extends FormBase>({
   );
 };
 
-export default PersonalDataStep;
+export default PersonalData;

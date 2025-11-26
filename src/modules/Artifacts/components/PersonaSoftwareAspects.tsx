@@ -1,21 +1,21 @@
 import { Control, Controller } from "react-hook-form";
-import { Language } from "../i18n/language.i18n";
 import AddOptionAlertDialog from "./AddOptionAlertDialog";
 import RemoveOptionAlertDialog from "./RemoveOptionAlertDialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { defaultSoftwareAspects } from "../i18n/persona.i18n";
 import { InputsForm } from "../hooks/usePersona";
+import { Language } from "../i18n/language";
+import { defaultSoftwareAspects } from "../i18n/persona";
+import useDefault from "../hooks/useDefault";
 
-const PersonaAutSoftwareAspects = ({
-  language,
+const PersonaSoftwareAspects = ({
   control,
 }: {
-  language: string;
   control: Control<InputsForm, any, InputsForm>;
 }) => {
   const [newAspect, setNewAspect] = useState("");
+  const { exibirTexto } = useDefault();
 
   return (
     <div className="flex flex-col gap-[10px]">
@@ -135,4 +135,4 @@ const PersonaAutSoftwareAspects = ({
   );
 };
 
-export default PersonaAutSoftwareAspects;
+export default PersonaSoftwareAspects;

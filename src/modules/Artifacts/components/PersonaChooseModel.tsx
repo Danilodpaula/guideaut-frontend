@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Language } from "../i18n/language.i18n";
 import {
   Select,
   SelectItem,
@@ -18,9 +17,9 @@ import {
 } from "@/components/ui/select";
 import { Control, Controller } from "react-hook-form";
 import { InputsForm } from "../hooks/usePersona";
+import useDefault from "../hooks/useDefault";
 
 type Props = {
-  language: string;
   control: Control<InputsForm, any, InputsForm>;
   setModel: (value: string) => void;
   model: string;
@@ -207,12 +206,9 @@ const Model2Modal = ({ language }: ModalProps) => {
   );
 };
 
-const PersonaAutChooseModel = ({
-  language,
-  control,
-  setModel,
-  model,
-}: Props) => {
+const PersonaChooseModel = ({ control, setModel, model }: Props) => {
+  const { exibirTexto } = useDefault();
+
   return (
     <div className="flex flex-col gap-[20px]">
       <h2 className="flex-1 ml-[20px] font-bold">
@@ -259,4 +255,4 @@ const PersonaAutChooseModel = ({
   );
 };
 
-export default PersonaAutChooseModel;
+export default PersonaChooseModel;

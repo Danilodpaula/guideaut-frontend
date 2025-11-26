@@ -1,6 +1,4 @@
-import { I18nString } from "../types/i18n-string";
-
-export const languages: I18nString[] = [
+export const languages = [
   {
     id: "nonverbal",
     pt: "Não verbal",

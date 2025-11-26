@@ -1,18 +1,10 @@
 import { useI18n } from "@/core/i18n/I18nContext";
 import { Watch } from "../hooks/useEmpathy";
-import {
-  behaviorOptions,
-  cognitionOptions,
-  communicationOptions,
-  genders,
-  interactionOptions,
-  motivationLabels,
-  personalDataLabels,
-  stepsLabels,
-} from "../i18n";
+import useDefault from "../hooks/useDefault";
 
-const ConfirmationStep = ({ watch }: { watch: Watch }) => {
+const EmpathyConfirmation = ({ watch }: { watch: Watch }) => {
   const { language } = useI18n();
+  const { exibirTexto } = useDefault();
   const gender = genders.find((gender) => gender.id === watch("gender"));
   const interactionList = interactionOptions.filter((option) =>
     watch("interaction")?.includes(option.id),
@@ -61,4 +53,4 @@ const ConfirmationStep = ({ watch }: { watch: Watch }) => {
   );
 };
 
-export default ConfirmationStep;
+export default EmpathyConfirmation;

@@ -1,14 +1,15 @@
 import { Control, Controller } from "react-hook-form";
-import { Language } from "../i18n/language.i18n";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { defaultCalmingActivities } from "../i18n";
 import AddOptionAlertDialog from "./AddOptionAlertDialog";
 import RemoveOptionAlertDialog from "./RemoveOptionAlertDialog";
 import { InputsForm } from "../hooks/usePersona";
+import { Language } from "../i18n/language";
+import { defaultCalmingActivities } from "../i18n/persona";
+import useDefault from "../hooks/useDefault";
 
-const PersonaAutCalmingActivities = ({
+const PersonaCalmingActivities = ({
   language,
   control,
 }: {
@@ -16,6 +17,7 @@ const PersonaAutCalmingActivities = ({
   control: Control<InputsForm, any, InputsForm>;
 }) => {
   const [newActivity, setNewActivity] = useState("");
+  const { exibirTexto } = useDefault();
 
   return (
     <div className="flex flex-col gap-[10px]">
@@ -76,7 +78,6 @@ const PersonaAutCalmingActivities = ({
                               : activity.en}
                           </button>
                           <AddOptionAlertDialog
-                            language={language}
                             onClick={() => {
                               if (
                                 language === Language.Portuguese &&
@@ -135,4 +136,4 @@ const PersonaAutCalmingActivities = ({
   );
 };
 
-export default PersonaAutCalmingActivities;
+export default PersonaCalmingActivities;

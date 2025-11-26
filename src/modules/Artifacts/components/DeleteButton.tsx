@@ -9,7 +9,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Language } from "../i18n";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import useDefault from "../hooks/useDefault";

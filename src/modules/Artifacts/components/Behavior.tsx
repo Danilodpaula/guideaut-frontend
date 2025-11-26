@@ -1,11 +1,11 @@
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Control, Controller, FieldPath } from "react-hook-form";
-import { behaviorOptions } from "../i18n";
 import { FormBase } from "../types/form-base";
 import useDefault from "../hooks/useDefault";
+import { behaviorOptions } from "../i18n/behavior-options";
 
-const BehaviorStep = <T extends FormBase>({
+const Behavior = <T extends FormBase>({
   control,
 }: {
   control: Control<T, any, T>;
@@ -48,4 +48,4 @@ const BehaviorStep = <T extends FormBase>({
   );
 };
 
-export default BehaviorStep;
+export default Behavior;

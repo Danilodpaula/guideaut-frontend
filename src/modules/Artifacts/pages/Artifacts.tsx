@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { artifacts } from "../i18n/artifacts.i18n";
 import { Button } from "@/components/ui/button";
 import useDefault from "../hooks/useDefault";
 import useAuthGuard from "../hooks/useAuthGuard";
+import { artifacts } from "../i18n/artifacts";
 
 const Artifacts = () => {
   useAuthGuard();

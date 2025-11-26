@@ -1,29 +1,25 @@
 import { Control, Controller } from "react-hook-form";
-import { Language } from "../i18n/language.i18n";
 import AddOptionAlertDialog from "./AddOptionAlertDialog";
 import RemoveOptionAlertDialog from "./RemoveOptionAlertDialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { defaultStereotypes } from "../i18n/persona.i18n";
 import { InputsForm } from "../hooks/usePersona";
+import { defaultStereotypes } from "../i18n/persona";
+import useDefault from "../hooks/useDefault";
 
-const PersonaAutStereotypesHabits = ({
-  language,
+const PersonaStereotypesHabits = ({
   control,
 }: {
-  language: string;
   control: Control<InputsForm, any, InputsForm>;
 }) => {
+  const { exibirTexto } = useDefault();
   const [newStereotype, setNewStereotype] = useState("");
 
   return (
     <div className="flex flex-col gap-[10px]">
       <h2 className="flex-1 font-bold">
-        {" "}
-        {language === Language.Portuguese
-          ? "Estereótipos ou Manias"
-          : "Stereotypes or Quirks"}
+        {" " + exibirTexto("Estereótipos ou Manias", "Stereotypes or Quirks")}
       </h2>
       <h2 className="flex-1">
         {" "}
@@ -141,4 +137,4 @@ const PersonaAutStereotypesHabits = ({
   );
 };
 
-export default PersonaAutStereotypesHabits;
+export default PersonaStereotypesHabits;

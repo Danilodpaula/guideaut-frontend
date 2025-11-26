@@ -5,7 +5,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FileText, FolderOpen, Heart, Users } from "lucide-react";
-import { Language } from "../i18n";
 import useAuthGuard from "../hooks/useAuthGuard";
 import useDefault from "../hooks/useDefault";
 

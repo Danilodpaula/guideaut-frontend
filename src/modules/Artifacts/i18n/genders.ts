@@ -1,6 +1,4 @@
-import { I18nString } from "../types/i18n-string";
-
-export const genders: I18nString[] = [
+export const genders = [
   {
     id: "male",
     pt: "Masculino",

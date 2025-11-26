@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import useDefault from "../hooks/useDefault";
 
 const SubmitButton = ({
   language,
@@ -7,6 +8,8 @@ const SubmitButton = ({
   language: string;
   saving: boolean;
 }) => {
+  const { exibirTexto } = useDefault();
+
   return (
     <Button type="submit" disabled={saving}>
       {language === "pt-BR" ? "Confirmar" : "Submit"}

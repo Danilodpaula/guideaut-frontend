@@ -1,10 +1,13 @@
-import { Language, welcome } from "../i18n";
+import useDefault from "../hooks/useDefault";
+import { Language } from "../i18n/language";
+import { welcome } from "../i18n/persona";
 
 type Props = {
   language: string;
 };
 
-const PersonaAutCreateWelcome = ({ language }: Props) => {
+const PersonaCreateWelcome = () => {
+  const { exibirTexto } = useDefault();
   return (
     <div>
       <p>{language === Language.Portuguese ? welcome[0].pt : welcome[0].en}</p>
@@ -15,4 +18,4 @@ const PersonaAutCreateWelcome = ({ language }: Props) => {
   );
 };
 
-export default PersonaAutCreateWelcome;
+export default PersonaCreateWelcome;

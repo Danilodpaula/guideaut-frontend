@@ -1,11 +1,11 @@
 import { Control, Controller, FieldPath } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { communicationOptions } from "../i18n";
 import { FormBase } from "../types/form-base";
 import useDefault from "../hooks/useDefault";
+import { communicationOptions } from "../i18n/communication-options";
 
-const CommunicationStep = <T extends FormBase>({
+const Communication = <T extends FormBase>({
   control,
 }: {
   control: Control<T, any, T>;
@@ -48,4 +48,4 @@ const CommunicationStep = <T extends FormBase>({
   );
 };
 
-export default CommunicationStep;
+export default Communication;

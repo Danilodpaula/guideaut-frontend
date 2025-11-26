@@ -1,6 +1,7 @@
-import { I18nString } from "../types/i18n-string";
-
-interface Question extends I18nString {
+interface Question {
+  id: string;
+  pt: string;
+  en: string;
   section: string;
   isFixed: boolean;
 }

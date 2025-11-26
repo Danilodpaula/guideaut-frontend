@@ -1,14 +1,15 @@
 import { Control, Controller } from "react-hook-form";
-import { Language } from "../i18n/language.i18n";
 import AddOptionAlertDialog from "./AddOptionAlertDialog";
 import RemoveOptionAlertDialog from "./RemoveOptionAlertDialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { defaultSocialAspects } from "../i18n/persona.i18n";
 import { InputsForm } from "../hooks/usePersona";
+import { Language } from "../i18n/language";
+import { defaultSocialAspects } from "../i18n/persona";
+import useDefault from "../hooks/useDefault";
 
-const PersonaAutSocialAspects = ({
+const PersonaSocialAspects = ({
   language,
   control,
 }: {
@@ -16,6 +17,7 @@ const PersonaAutSocialAspects = ({
   control: Control<InputsForm, any, InputsForm>;
 }) => {
   const [newAspect, setNewAspect] = useState("");
+  const { exibirTexto } = useDefault();
 
   return (
     <div className="flex flex-col gap-[10px]">
@@ -76,7 +78,6 @@ const PersonaAutSocialAspects = ({
                               : aspect.en}
                           </button>
                           <AddOptionAlertDialog
-                            language={language}
                             onClick={() => {
                               if (
                                 language === Language.Portuguese &&
@@ -135,4 +136,4 @@ const PersonaAutSocialAspects = ({
   );
 };
 
-export default PersonaAutSocialAspects;
+export default PersonaSocialAspects;

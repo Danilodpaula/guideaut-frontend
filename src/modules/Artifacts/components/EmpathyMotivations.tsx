@@ -1,16 +1,18 @@
 import { InputsForm } from "../hooks/useEmpathy";
-import { motivationLabels } from "../i18n";
 import { Control, Controller } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { motivationLabels } from "../i18n/empathy";
+import useDefault from "../hooks/useDefault";
 
-const MotivationsStep = ({
+const EmpathyMotivations = ({
   language,
   control,
 }: {
   language: string;
   control: Control<InputsForm, any, InputsForm>;
 }) => {
+  const { exibirTexto } = useDefault();
   return (
     <div>
       <Label htmlFor="reasons">{motivationLabels(language)[0]}</Label>
@@ -46,4 +48,4 @@ const MotivationsStep = ({
   );
 };
 
-export default MotivationsStep;
+export default EmpathyMotivations;

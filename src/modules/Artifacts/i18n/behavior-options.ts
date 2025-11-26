@@ -1,6 +1,4 @@
-import { I18nString } from "../types/i18n-string";
-
-export const behaviorOptions: I18nString[] = [
+export const behaviorOptions = [
   {
     id: "1",
     pt: "Tendência para alinhar ou classificar objetos de acordo com critérios que fazem sentido, principalmente, para ele próprio, ou colocar objetos em fila/fileira seguindo características como cores, tamanho, formas, textura, etc;",

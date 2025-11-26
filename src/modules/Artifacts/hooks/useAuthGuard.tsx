@@ -3,7 +3,7 @@ import { useI18n } from "@/core/i18n/I18nContext";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Language } from "../i18n";
+import { Language } from "../i18n/language";
 
 const useAuthGuard = () => {
   const navigate = useNavigate();

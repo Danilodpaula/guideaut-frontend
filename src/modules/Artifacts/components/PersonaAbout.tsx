@@ -1,15 +1,15 @@
 import { Textarea } from "@/components/ui/textarea";
-import { Language } from "../i18n/language.i18n";
 import { Control, Controller } from "react-hook-form";
 import { InputsForm } from "../hooks/usePersona";
+import { Language } from "../i18n/language";
+import useDefault from "../hooks/useDefault";
 
-const PersonaAutAbout = ({
-  language,
+const PersonaAbout = ({
   control,
 }: {
-  language: string;
   control: Control<InputsForm, any, InputsForm>;
 }) => {
+  const { exibirTexto } = useDefault();
   return (
     <div className="flex flex-col gap-[20px]">
       <h2 className="flex-1 ml-[20px] font-bold">
@@ -35,4 +35,4 @@ const PersonaAutAbout = ({
   );
 };
 
-export default PersonaAutAbout;
+export default PersonaAbout;

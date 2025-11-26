@@ -1,6 +1,4 @@
-import { I18nString } from "../types/i18n-string";
-
-const clientSections: I18nString[] = [
+const clientSections = [
   {
     id: "1",
     pt: "Perfil da criança",
@@ -43,7 +41,7 @@ const clientSections: I18nString[] = [
   },
 ];
 
-const caregiverSections: I18nString[] = [
+const caregiverSections = [
   {
     id: "9",
     pt: "Perfil",
@@ -81,7 +79,7 @@ const caregiverSections: I18nString[] = [
   },
 ];
 
-const therapistSections: I18nString[] = [
+const therapistSections = [
   {
     id: "16",
     pt: "Perfil",

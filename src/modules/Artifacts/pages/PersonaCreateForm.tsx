@@ -11,7 +11,6 @@ import PersonalDataStep from "../components/PersonalData";
 import GeneralCharacteristics from "../components/PersonaGeneralCharacteristics";
 import PersonaAutAbout from "../components/PersonaAbout";
 import PersonaAutConfirmation from "../components/PersonaConfirmation";
-import { Language } from "../i18n/language.i18n";
 import PersonaAutStressfulActivities from "../components/PersonaStressfulActivities";
 import PersonaAutCalmingActivities from "../components/PersonaCalmingActivities";
 import PersonaAutStereotypesHabits from "../components/PersonaStereotypesHabits";
@@ -27,27 +26,18 @@ const PersonaCreateForm = () => {
     usePersona({});
 
   const baseSteps = [
-    {
-      content: <PersonaAutCreateWelcome language={language} />,
-    },
-    {
-      content: (
-        <PersonaAutChooseModel
-          language={language}
-          model={model}
-          control={control}
-          setModel={setModel}
-        />
-      ),
-    },
-    { content: <BehaviorStep language={language} control={control} /> },
-    { content: <CognitionStep language={language} control={control} /> },
-    { content: <CommunicationStep language={language} control={control} /> },
-    { content: <InteractionStep language={language} control={control} /> },
-    { content: <PersonalDataStep language={language} control={control} /> },
-    {
-      content: <GeneralCharacteristics language={language} control={control} />,
-    },
+    <PersonaAutCreateWelcome />,
+    <PersonaAutChooseModel
+      model={model}
+      control={control}
+      setModel={setModel}
+    />,
+    <BehaviorStep control={control} />,
+    <CognitionStep control={control} />,
+    <CommunicationStep control={control} />,
+    <InteractionStep control={control} />,
+    <PersonalDataStep control={control} />,
+    <GeneralCharacteristics control={control} />,
   ];
 
   const model1Steps = [

@@ -1,6 +1,4 @@
-import { I18nString } from "../types/i18n-string";
-
-export const titles: I18nString[] = [
+export const titles = [
   {
     id: "1",
     pt: "Roteiro de Entrevista do Cliente",

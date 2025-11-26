@@ -3,7 +3,6 @@ import { FormBase } from "../types/form-base";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { EmpathyService } from "../services/crud-service";
 import { toast } from "sonner";
-import { Language } from "../i18n";
 import { EmpathyUpdateDto } from "../types/dto/empathy-update";
 import useDefault from "./useDefault";
 

@@ -9,7 +9,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Language } from "../i18n";
+import { Language } from "../i18n/language";
+import useDefault from "../hooks/useDefault";
 
 type Props = {
   language: string;
@@ -17,6 +18,8 @@ type Props = {
 };
 
 const RemoveOptionAlertDialog = ({ language, onClick }: Props) => {
+  const { exibirTexto } = useDefault();
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

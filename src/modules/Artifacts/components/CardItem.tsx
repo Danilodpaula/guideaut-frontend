@@ -1,9 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { genders } from "../i18n";
 import { Button } from "@/components/ui/button";
 import { Eye, Pencil, User } from "lucide-react";
 import DeleteButton from "./DeleteButton";
 import useDefault from "../hooks/useDefault";
+import { genders } from "../i18n/genders";
 
 interface ActionsProps {
   viewAction: () => void;

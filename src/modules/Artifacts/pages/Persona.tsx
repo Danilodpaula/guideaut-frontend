@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { PersonaService } from "../services/crud-service";
-import { genders, Language, languages } from "../i18n";
 import VGA from "../components/VGA";
 import { useRef } from "react";
 import ExportPDFButton from "../components/ExportPDFButton";
@@ -10,6 +9,9 @@ import { useI18n } from "@/core/i18n/I18nContext";
 import { useAuth } from "@/core/auth/AuthContext";
 import { toast } from "sonner";
 import useAuthGuard from "../hooks/useAuthGuard";
+import { genders } from "../i18n/genders";
+import { languages } from "../i18n/autistic-languages";
+import { Language } from "../i18n/language";
 
 const Persona = () => {
   useAuthGuard();
@@ -165,7 +167,6 @@ const Persona = () => {
         </Card>
         <div className="mt-[25px]">
           <ExportPDFButton
-            language={language}
             filename={`persona_${data.name}_${Date.now()}`}
             pageRef={contentRef}
           />

@@ -1,15 +1,9 @@
-import { Language } from "../i18n";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Eye, FolderOpen, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { ScriptService } from "../services/crud-service";
-import { useI18n } from "@/core/i18n/I18nContext";
-import { useNavigate } from "react-router-dom";
-import { I18nString } from "../types/i18n-string";
-import { useAuth } from "@/core/auth/AuthContext";
-import { toast } from "sonner";
 import useAuthGuard from "../hooks/useAuthGuard";
 
 const titles = [
@@ -32,19 +26,10 @@ const titles = [
 
 const ScriptsMyScripts = () => {
   useAuthGuard();
-  const { language } = useI18n();
   const { isFetching, data, isError } = useQuery({
     queryKey: ["script-list"],
     queryFn: ScriptService.findAll,
   });
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-  if (!isAuthenticated) {
-    toast.error("Deu erro!");
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
-  }
 
   if (isFetching) {
     return (

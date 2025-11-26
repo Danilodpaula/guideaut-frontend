@@ -17,8 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Language, languages } from "../i18n";
 import { InputsForm } from "../hooks/usePersona";
+import { Language } from "../i18n/language";
+import useDefault from "../hooks/useDefault";
 
 const autismLevels = ["1", "2", "3"];
 
@@ -94,13 +95,13 @@ const LanguageDialog = ({ language }: { language: string }) => {
   );
 };
 
-const GeneralCharacteristics = ({
-  language,
+const PersonaGeneralCharacteristics = ({
   control,
 }: {
-  language: string;
   control: Control<InputsForm, any, InputsForm>;
 }) => {
+  const { exibirTexto } = useDefault();
+
   return (
     <div className="flex flex-col gap-[10px]">
       <Label htmlFor="language">
@@ -159,4 +160,4 @@ const GeneralCharacteristics = ({
   );
 };
 
-export default GeneralCharacteristics;
+export default PersonaGeneralCharacteristics;

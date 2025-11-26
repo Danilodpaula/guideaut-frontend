@@ -1,9 +1,8 @@
+import useDefault from "../hooks/useDefault";
 import { Watch } from "../hooks/usePersona";
-import { genders, languages } from "../i18n";
-import { Language } from "../i18n/language.i18n";
 import VGA from "./VGA";
 
-const PersonaAutConfirmation = ({
+const PersonaConfirmation = ({
   language,
   watch,
 }: {
@@ -78,6 +77,8 @@ const PersonaAutConfirmation = ({
     );
   };
 
+  const { exibirTexto } = useDefault();
+
   return (
     <div className="flex flex-col gap-[20px]">
       <h2 className="flex-1 font-bold text-[30px]">
@@ -133,4 +134,4 @@ const PersonaAutConfirmation = ({
   );
 };
 
-export default PersonaAutConfirmation;
+export default PersonaConfirmation;

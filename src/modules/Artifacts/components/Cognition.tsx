@@ -1,11 +1,11 @@
 import { Control, Controller, FieldPath } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { cognitionOptions } from "../i18n";
 import { FormBase } from "../types/form-base";
 import useDefault from "../hooks/useDefault";
+import { cognitionOptions } from "../i18n/cognition-options";
 
-const CognitionStep = <T extends FormBase>({
+const Cognition = <T extends FormBase>({
   control,
 }: {
   control: Control<T, any, T>;
@@ -48,4 +48,4 @@ const CognitionStep = <T extends FormBase>({
   );
 };
 
-export default CognitionStep;
+export default Cognition;

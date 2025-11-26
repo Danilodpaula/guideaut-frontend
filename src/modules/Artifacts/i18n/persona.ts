@@ -1,6 +1,4 @@
-import { I18nString } from "../types/i18n-string";
-
-export const welcome: I18nString[] = [
+export const welcome = [
   {
     id: "1",
     pt: `Para a criação da persona, primeiramente você escolherá qual o modelo

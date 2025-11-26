@@ -1,16 +1,4 @@
 import { Button } from "@/components/ui/button";
-import {
-  caregiverQuestions,
-  caregiverSections,
-  clientQuestions,
-  clientSections,
-  Language,
-  Question,
-  therapistQuestions,
-  therapistSections,
-} from "../i18n";
-import { I18nString } from "../types/i18n-string";
-import { FormType } from "../types/script";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Plus, Save, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -40,50 +28,38 @@ import ExportPDFButton from "../components/ExportPDFButton";
 import { useI18n } from "@/core/i18n/I18nContext";
 import { useAuth } from "@/core/auth/AuthContext";
 import useAuthGuard from "../hooks/useAuthGuard";
+import {
+  caregiverSections,
+  clientSections,
+  therapistSections,
+} from "../i18n/scripts-sections";
+import {
+  caregiverQuestions,
+  clientQuestions,
+  therapistQuestions,
+} from "../i18n/scripts-questions";
 
-const questions: Record<FormType, Question[]> = {
-  client: clientQuestions,
-  caregiver: caregiverQuestions,
-  therapist: therapistQuestions,
-  custom: [],
-  "": [],
-};
+const questions = [clientQuestions, caregiverQuestions, therapistQuestions];
 
-const sections: Record<FormType, I18nString[]> = {
-  client: clientSections,
-  caregiver: caregiverSections,
-  therapist: therapistSections,
-  custom: [],
-  "": [],
-};
+const sections = [clientSections, caregiverSections, therapistSections];
 
-const titles: Record<FormType, I18nString> = {
-  client: {
+const titles = [
+  {
     id: "1",
     pt: "Roteiro de Entrevista do Cliente",
     en: "Client Interview Script",
   },
-  caregiver: {
+  {
     id: "2",
     pt: "Roteiro de Entrevista do Cuidador",
     en: "Caregiver Interview Script",
   },
-  therapist: {
+  {
     id: "3",
     pt: "Roteiro de Entrevista do Terapeuta",
     en: "Therapist Interview Script",
   },
-  custom: {
-    id: "",
-    pt: "",
-    en: "",
-  },
-  "": {
-    id: "",
-    pt: "",
-    en: "",
-  },
-};
+];
 
 const Section = ({
   language,
@@ -123,7 +99,6 @@ const ScriptCreateForm = () => {
   const [allQuestions, setAllQuestions] = useState([...fixedQuestions]);
   const [customQuestions, setCustomQuestions] = useState([]);
   const title = titles[formType];
-  const contentRef = useRef(null);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [roteiroName, setRoteiroName] = useState("");
   const [newQuestionText, setNewQuestionText] = useState("");
