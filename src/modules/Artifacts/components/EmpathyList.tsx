@@ -1,21 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
-import { EmpathyService } from "../services/crud-service";
 import CardItem from "./CardItem";
 import { toast } from "sonner";
-import { useEmpathy } from "../hooks/useEmpathy";
 import useDefault from "../hooks/useDefault";
+import useEmpathyApi from "../hooks/useEmpathyApi";
+import { useEffect } from "react";
 
 const EmpathyList = () => {
   const { navigate, exibirTexto } = useDefault();
-  const { deletionAction } = useEmpathy({});
-  const { isFetching, data, isError } = useQuery({
-    queryKey: ["empathy-list"],
-    queryFn: EmpathyService.findAll,
-  });
+  const { findAllEmpathy, removeEmpathy } = useEmpathyApi({});
+  const { isFetching, data, isError, refetch } = findAllEmpathy;
 
-  if (isError) {
-    toast.error(exibirTexto("Algo deu errado!", "Something went wrong!"));
-  }
+  useEffect(() => {
+    if (isError) {
+      toast.error(exibirTexto("Algo deu errado!", "Something went wrong!"));
+    }
+  }, [isError, exibirTexto]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
   return (
     <div className="p-4 border rounded mb-4 flex flex-col gap-5">
       {isFetching && <div>{exibirTexto("Carregando...", "Loading...")}</div>}
@@ -30,8 +33,8 @@ const EmpathyList = () => {
               gender={empathy.gender}
               viewAction={() => navigate(`/empathy/${empathy.id}`)}
               editAction={() => navigate(`/empathy/${empathy.id}/edit`)}
-              deleteAction={() => {
-                deletionAction(empathy.id);
+              deleteAction={async () => {
+                await removeEmpathy.mutateAsync(empathy.id);
               }}
             />
           );

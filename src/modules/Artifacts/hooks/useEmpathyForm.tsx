@@ -73,4 +73,4 @@ const useEmpathyForm = ({ params, id }: Props) => {
 
 export { useEmpathyForm };
 
-export type { EmpathyWatch };
+export type { Inputs as EmpathyInput, EmpathyWatch };

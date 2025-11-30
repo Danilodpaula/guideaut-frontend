@@ -9,15 +9,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Language } from "../i18n/language";
 import useDefault from "../hooks/useDefault";
 
 type Props = {
-  language: string;
   onClick: () => void;
 };
 
-const RemoveOptionAlertDialog = ({ language, onClick }: Props) => {
+const RemoveOptionAlertDialog = ({ onClick }: Props) => {
   const { exibirTexto } = useDefault();
 
   return (
@@ -29,19 +27,15 @@ const RemoveOptionAlertDialog = ({ language, onClick }: Props) => {
         <AlertDialogOverlay></AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogTitle>
-            {language === Language.Portuguese
-              ? "Remover essa opção?"
-              : "Remove this option?"}
+            {exibirTexto("Remover essa opção?", "Remove this option?")}
           </AlertDialogTitle>
           <AlertDialogDescription></AlertDialogDescription>
           <AlertDialogCancel asChild>
-            <button>
-              {language === Language.Portuguese ? "Cancelar" : "Cancel"}
-            </button>
+            <button>{exibirTexto("Cancelar", "Cancel")}</button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
             <button onClick={onClick}>
-              {language === Language.Portuguese ? "Remover" : "Remove"}
+              {exibirTexto("Remover", "Remove")}
             </button>
           </AlertDialogAction>
         </AlertDialogContent>

@@ -16,27 +16,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Control, Controller } from "react-hook-form";
-import { InputsForm } from "../hooks/usePersona";
 import useDefault from "../hooks/useDefault";
+import { PersonaInput } from "../hooks/usePersonaForm";
 
 type Props = {
-  control: Control<InputsForm, any, InputsForm>;
+  control: Control<PersonaInput, any, PersonaInput>;
   setModel: (value: string) => void;
   model: string;
 };
 
-type ModalProps = {
-  language: string;
-};
-
-const Model1Modal = ({ language }: ModalProps) => {
+const Model1Modal = () => {
+  const { exibirTexto } = useDefault();
   return (
     <Dialog>
       <DialogTrigger asChild>
         <i className="cursor-pointer">
-          {language === Language.Portuguese
-            ? "Como o modelo 1 funciona?"
-            : "How does Model 1 work?"}
+          {exibirTexto("Como o modelo 1 funciona?", "How does Model 1 work?")}
         </i>
       </DialogTrigger>
 
@@ -44,19 +39,18 @@ const Model1Modal = ({ language }: ModalProps) => {
         <DialogOverlay />
 
         <DialogContent>
-          <DialogTitle>
-            {language === Language.Portuguese ? "Modelo 1" : "Model 1"}
-          </DialogTitle>
+          <DialogTitle>{exibirTexto("Modelo 1", "Model 1")}</DialogTitle>
 
           <DialogDescription>
-            {language === Language.Portuguese
-              ? `O modelo 1 do PersonAut representa a persona com informações de
+            {exibirTexto(
+              `O modelo 1 do PersonAut representa a persona com informações de
                         maneira resumida, por meio de tópicos. Os tópicos que serão
-                        respondidos são:`
-              : `Model 1 of PersonAut represents the persona with summarized information, 
-                    presented through bullet points. The topics that will be filled out are:`}
+                        respondidos são:`,
+              `Model 1 of PersonAut represents the persona with summarized information, 
+                    presented through bullet points. The topics that will be filled out are:`,
+            )}
           </DialogDescription>
-          {language === Language.Portuguese ? (
+          {/* {language === Language.Portuguese ? (
             <div className="flex flex-col">
               <p>
                 <strong>- Características demográficas:</strong> usado nos
@@ -122,7 +116,7 @@ const Model1Modal = ({ language }: ModalProps) => {
                 habits and stereotyped behaviors of the autistic person.
               </p>
             </div>
-          )}
+          )} */}
 
           <DialogClose asChild>
             <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white">
@@ -135,14 +129,13 @@ const Model1Modal = ({ language }: ModalProps) => {
   );
 };
 
-const Model2Modal = ({ language }: ModalProps) => {
+const Model2Modal = () => {
+  const { exibirTexto } = useDefault();
   return (
     <Dialog>
       <DialogTrigger asChild>
         <i className="cursor-pointer">
-          {language === Language.Portuguese
-            ? "Como o modelo 2 funciona?"
-            : "How does Model 2 work?"}
+          {exibirTexto("Como o modelo 2 funciona?", "How does Model 2 work?")}
         </i>
       </DialogTrigger>
 
@@ -150,20 +143,19 @@ const Model2Modal = ({ language }: ModalProps) => {
         <DialogOverlay />
 
         <DialogContent>
-          <DialogTitle>
-            {language === Language.Portuguese ? "Modelo 2" : "Model 2"}
-          </DialogTitle>
+          <DialogTitle>{exibirTexto("Modelo 2", "Model 2")}</DialogTitle>
 
           <DialogDescription>
-            {language === Language.Portuguese
-              ? `O modelo 2 do PersonAut representa a persona com informações gerais,
+            {exibirTexto(
+              `O modelo 2 do PersonAut representa a persona com informações gerais,
                         porém dá a liberdade de apresentar informações por meio de textos
-                        descritivos. Os tópicos que serão respondidos são:`
-              : `Model 2 of PersonAut represents the persona with general information, 
+                        descritivos. Os tópicos que serão respondidos são:`,
+              `Model 2 of PersonAut represents the persona with general information, 
                         but allows the freedom to present details through descriptive text. 
-                        The topics that will be filled out are:`}
+                        The topics that will be filled out are:`,
+            )}
           </DialogDescription>
-          {language === Language.Portuguese ? (
+          {/* {language === Language.Portuguese ? (
             <div className="flex flex-col">
               <p>
                 <strong>- Características demográficas:</strong> usado nos
@@ -194,7 +186,7 @@ const Model2Modal = ({ language }: ModalProps) => {
                 information in a more flexible, story-like format.
               </p>
             </div>
-          )}
+          )} */}
           <DialogClose asChild>
             <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white">
               OK
@@ -212,10 +204,11 @@ const PersonaChooseModel = ({ control, setModel, model }: Props) => {
   return (
     <div className="flex flex-col gap-[20px]">
       <h2 className="flex-1 ml-[20px] font-bold">
-        {" "}
-        {language === Language.Portuguese
-          ? "Escolha o modelo adequado para sua persona."
-          : "Choose the appropriate model for your persona."}
+        {" " +
+          exibirTexto(
+            "Escolha o modelo adequado para sua persona.",
+            "Choose the appropriate model for your persona.",
+          )}
       </h2>
       <Controller
         name="model"
@@ -230,27 +223,26 @@ const PersonaChooseModel = ({ control, setModel, model }: Props) => {
             <Select onValueChange={changeFunction} value={value}>
               <SelectTrigger>
                 <SelectValue
-                  placeholder={
-                    language === Language.Portuguese
-                      ? "Escolha o modelo"
-                      : "Choose the model"
-                  }
+                  placeholder={exibirTexto(
+                    "Escolha o modelo",
+                    "Choose the model",
+                  )}
                 />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="1">
-                  {language === Language.Portuguese ? "Modelo 1" : "Model 1"}
+                  {exibirTexto("Modelo 1", "Model 1")}
                 </SelectItem>
                 <SelectItem value="2">
-                  {language === Language.Portuguese ? "Modelo 2" : "Model 2"}
+                  {exibirTexto("Modelo 2", "Model 2")}
                 </SelectItem>
               </SelectContent>
             </Select>
           );
         }}
       />
-      {model === "1" && <Model1Modal language={language} />}
-      {model === "2" && <Model2Modal language={language} />}
+      {model === "1" && <Model1Modal />}
+      {model === "2" && <Model2Modal />}
     </div>
   );
 };

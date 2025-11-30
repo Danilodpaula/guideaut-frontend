@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { useScript } from "../hooks/useScript";
 import { ScriptCreateDto } from "../types/dto/script-create";
 import { useLocation, useNavigate } from "react-router-dom";
 import ExportPDFButton from "../components/ExportPDFButton";

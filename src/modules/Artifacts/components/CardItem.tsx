@@ -4,11 +4,12 @@ import { Eye, Pencil, User } from "lucide-react";
 import DeleteButton from "./DeleteButton";
 import useDefault from "../hooks/useDefault";
 import { genders } from "../i18n/genders";
+import { PersonaDto } from "../types/dto/persona";
 
 interface ActionsProps {
   viewAction: () => void;
   editAction: () => void;
-  deleteAction: () => void;
+  deleteAction: () => Promise<void>;
 }
 
 const CardItem = ({

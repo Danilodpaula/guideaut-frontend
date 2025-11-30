@@ -4,34 +4,32 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import AddOptionAlertDialog from "./AddOptionAlertDialog";
 import RemoveOptionAlertDialog from "./RemoveOptionAlertDialog";
-import { InputsForm } from "../hooks/usePersona";
 import { Language } from "../i18n/language";
 import { defaultCalmingActivities } from "../i18n/persona";
 import useDefault from "../hooks/useDefault";
+import { PersonaInput } from "../hooks/usePersonaForm";
+import { useI18n } from "@/core/i18n/I18nContext";
 
 const PersonaCalmingActivities = ({
-  language,
   control,
 }: {
-  language: string;
-  control: Control<InputsForm, any, InputsForm>;
+  control: Control<PersonaInput, any, PersonaInput>;
 }) => {
   const [newActivity, setNewActivity] = useState("");
   const { exibirTexto } = useDefault();
+  const { language } = useI18n();
 
   return (
     <div className="flex flex-col gap-[10px]">
       <h2 className="flex-1 font-bold">
-        {" "}
-        {language === Language.Portuguese
-          ? "Atividades que acalmam"
-          : "Calming Activities"}
+        {" " + exibirTexto("Atividades que acalmam", "Calming Activities")}
       </h2>
       <h2 className="flex-1">
-        {" "}
-        {language === Language.Portuguese
-          ? "Informe as atividades que acalmam a persona"
-          : "Report the activities that calm the persona"}
+        {" " +
+          exibirTexto(
+            "Informe as atividades que acalmam a persona",
+            "Report the activities that calm the persona",
+          )}
       </h2>
       <Controller
         name="calmingActivities"
@@ -43,11 +41,10 @@ const PersonaCalmingActivities = ({
                 <Input
                   value={newActivity}
                   onChange={(e) => setNewActivity(e.target.value)}
-                  placeholder={
-                    language === Language.Portuguese
-                      ? "Escreva uma atividade que acalma"
-                      : "Write a calming activity"
-                  }
+                  placeholder={exibirTexto(
+                    "Escreva uma atividade que acalma",
+                    "Write a calming activity",
+                  )}
                 />
                 <Button
                   onClick={() => {
@@ -57,25 +54,24 @@ const PersonaCalmingActivities = ({
                     }
                   }}
                 >
-                  {language === Language.Portuguese ? "Adicione" : "Add"}
+                  {exibirTexto("Adicione", "Add")}
                 </Button>
               </div>
               <div className="flex flex-row justify-evenly mt-[20px]">
                 <div>
                   <h2 className="flex-1 font-bold mb-[15px] ml-[15px]">
-                    {" "}
-                    {language === Language.Portuguese
-                      ? "Atividades do GuideAut"
-                      : "Activities from GuideAut"}
+                    {" " +
+                      exibirTexto(
+                        "Atividades do GuideAut",
+                        "Activities from GuideAut",
+                      )}
                   </h2>
                   <div className="flex flex-col p-4 border rounded mb-4 gap-[20px] w-[300px] h-[280px]">
                     {defaultCalmingActivities.map((activity) => {
                       return (
                         <div key={activity.en} className="flex justify-between">
                           <button>
-                            {language === Language.Portuguese
-                              ? activity.pt
-                              : activity.en}
+                            {exibirTexto(activity.pt, activity.en)}
                           </button>
                           <AddOptionAlertDialog
                             onClick={() => {
@@ -101,10 +97,11 @@ const PersonaCalmingActivities = ({
                 </div>
                 <div>
                   <h2 className="flex-1 font-bold mb-[15px] ml-[15px]">
-                    {" "}
-                    {language === Language.Portuguese
-                      ? "Atividades Selecionadas"
-                      : "Selected Activities"}
+                    {" " +
+                      exibirTexto(
+                        "Atividades Selecionadas",
+                        "Selected Activities",
+                      )}
                   </h2>
                   <div className="flex flex-col p-4 border rounded mb-4 gap-[20px] w-[300px]">
                     {values.map((value) => {
@@ -114,7 +111,6 @@ const PersonaCalmingActivities = ({
                             {value}
                           </button>
                           <RemoveOptionAlertDialog
-                            language={language}
                             onClick={() => {
                               const filtered = values.filter(
                                 (val) => val !== value,

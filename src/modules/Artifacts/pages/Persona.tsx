@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
-import { PersonaService } from "../services/crud-service";
 import VGA from "../components/VGA";
 import { useRef } from "react";
 import ExportPDFButton from "../components/ExportPDFButton";

@@ -3,7 +3,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Eye, FolderOpen, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
-import { ScriptService } from "../services/crud-service";
 import useAuthGuard from "../hooks/useAuthGuard";
 
 const titles = [

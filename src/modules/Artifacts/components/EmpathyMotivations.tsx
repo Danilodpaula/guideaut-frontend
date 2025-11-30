@@ -1,21 +1,23 @@
-import { InputsForm } from "../hooks/useEmpathy";
 import { Control, Controller } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { motivationLabels } from "../i18n/empathy";
 import useDefault from "../hooks/useDefault";
+import { EmpathyInput } from "../hooks/useEmpathyForm";
 
 const EmpathyMotivations = ({
-  language,
   control,
 }: {
-  language: string;
-  control: Control<InputsForm, any, InputsForm>;
+  control: Control<EmpathyInput, any, EmpathyInput>;
 }) => {
   const { exibirTexto } = useDefault();
   return (
     <div>
-      <Label htmlFor="reasons">{motivationLabels(language)[0]}</Label>
+      <Label htmlFor="reasons">
+        {exibirTexto(
+          "Por quais motivos esta aplicação se torna necessária?",
+          "For what reasons does this application become necessary?",
+        )}
+      </Label>
       <Controller
         name={"reasons"}
         control={control}
@@ -30,7 +32,12 @@ const EmpathyMotivations = ({
         }}
       />
       <div className="h-[10px]" />
-      <Label htmlFor="expectations">{motivationLabels(language)[1]}</Label>
+      <Label htmlFor="expectations">
+        {exibirTexto(
+          "O que o usuário espera obter a partir desta aplicação?",
+          "What does the user expect to obtain from this application?",
+        )}
+      </Label>
       <Controller
         name={"expectations"}
         control={control}

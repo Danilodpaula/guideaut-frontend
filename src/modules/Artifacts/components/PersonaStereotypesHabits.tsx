@@ -4,16 +4,19 @@ import RemoveOptionAlertDialog from "./RemoveOptionAlertDialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { InputsForm } from "../hooks/usePersona";
 import { defaultStereotypes } from "../i18n/persona";
 import useDefault from "../hooks/useDefault";
+import { PersonaInput } from "../hooks/usePersonaForm";
+import { Language } from "../i18n/language";
+import { useI18n } from "@/core/i18n/I18nContext";
 
 const PersonaStereotypesHabits = ({
   control,
 }: {
-  control: Control<InputsForm, any, InputsForm>;
+  control: Control<PersonaInput, any, PersonaInput>;
 }) => {
   const { exibirTexto } = useDefault();
+  const { language } = useI18n();
   const [newStereotype, setNewStereotype] = useState("");
 
   return (
@@ -22,10 +25,11 @@ const PersonaStereotypesHabits = ({
         {" " + exibirTexto("Estereótipos ou Manias", "Stereotypes or Quirks")}
       </h2>
       <h2 className="flex-1">
-        {" "}
-        {language === Language.Portuguese
-          ? "Informe os estereótipos ou manias da persona"
-          : "List the persona’s stereotypes or quirks"}
+        {" " +
+          exibirTexto(
+            "Informe os estereótipos ou manias da persona",
+            "List the persona’s stereotypes or quirks",
+          )}
       </h2>
       <Controller
         name="stereotypes"
@@ -37,11 +41,10 @@ const PersonaStereotypesHabits = ({
                 <Input
                   value={newStereotype}
                   onChange={(e) => setNewStereotype(e.target.value)}
-                  placeholder={
-                    language === Language.Portuguese
-                      ? "Escreva um estereótipo ou mania"
-                      : "Write a stereotype or quirk"
-                  }
+                  placeholder={exibirTexto(
+                    "Escreva um estereótipo ou mania",
+                    "Write a stereotype or quirk",
+                  )}
                 />
                 <Button
                   onClick={() => {
@@ -54,16 +57,17 @@ const PersonaStereotypesHabits = ({
                     }
                   }}
                 >
-                  {language === Language.Portuguese ? "Adicione" : "Add"}
+                  {exibirTexto("Adicione", "Add")}
                 </Button>
               </div>
               <div className="flex flex-row justify-evenly mt-[20px]">
                 <div>
                   <h2 className="flex-1 font-bold mb-[15px] ml-[15px]">
-                    {" "}
-                    {language === Language.Portuguese
-                      ? "Estereótipos/Manias do GuideAut"
-                      : "Stereotypes/Quirks from GuideAut"}
+                    {" " +
+                      exibirTexto(
+                        "Estereótipos/Manias do GuideAut",
+                        "Stereotypes/Quirks from GuideAut",
+                      )}
                   </h2>
                   <div className="flex flex-col p-4 border rounded mb-4 gap-[20px] w-[300px] h-[280px]">
                     {defaultStereotypes.map((stereotype) => {
@@ -73,12 +77,9 @@ const PersonaStereotypesHabits = ({
                           className="flex justify-between"
                         >
                           <button>
-                            {language === Language.Portuguese
-                              ? stereotype.pt
-                              : stereotype.en}
+                            {exibirTexto(stereotype.pt, stereotype.en)}
                           </button>
                           <AddOptionAlertDialog
-                            language={language}
                             onClick={() => {
                               if (
                                 language === Language.Portuguese &&
@@ -102,10 +103,11 @@ const PersonaStereotypesHabits = ({
                 </div>
                 <div>
                   <h2 className="flex-1 font-bold mb-[15px] ml-[15px]">
-                    {" "}
-                    {language === Language.Portuguese
-                      ? "Estereótipos/Manias Selecionados"
-                      : "Selected Stereotypes/Quirks"}
+                    {" " +
+                      exibirTexto(
+                        "Estereótipos/Manias Selecionados",
+                        "Selected Stereotypes/Quirks",
+                      )}
                   </h2>
                   <div className="flex flex-col p-4 border rounded mb-4 gap-[20px] w-[300px]">
                     {values.map((value) => {
@@ -115,7 +117,6 @@ const PersonaStereotypesHabits = ({
                             {value}
                           </button>
                           <RemoveOptionAlertDialog
-                            language={language}
                             onClick={() => {
                               const filtered = values.filter(
                                 (val) => val !== value,

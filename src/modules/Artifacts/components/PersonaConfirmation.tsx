@@ -1,14 +1,11 @@
 import useDefault from "../hooks/useDefault";
-import { Watch } from "../hooks/usePersona";
+import { PersonaWatch } from "../hooks/usePersonaForm";
+import { languages } from "../i18n/autistic-languages";
+import { genders } from "../i18n/genders";
 import VGA from "./VGA";
 
-const PersonaConfirmation = ({
-  language,
-  watch,
-}: {
-  language: string;
-  watch: Watch;
-}) => {
+const PersonaConfirmation = ({ watch }: { watch: PersonaWatch }) => {
+  const { exibirTexto } = useDefault();
   const gender = genders.find((gender) => gender.id === watch("gender"));
   const lang = languages.find((l) => l.id === watch("language"));
 
@@ -76,8 +73,6 @@ const PersonaConfirmation = ({
       </div>
     );
   };
-
-  const { exibirTexto } = useDefault();
 
   return (
     <div className="flex flex-col gap-[20px]">

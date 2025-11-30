@@ -17,20 +17,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { InputsForm } from "../hooks/usePersona";
-import { Language } from "../i18n/language";
 import useDefault from "../hooks/useDefault";
+import { languages } from "../i18n/autistic-languages";
+import { PersonaInput } from "../hooks/usePersonaForm";
 
 const autismLevels = ["1", "2", "3"];
 
-const LanguageDialog = ({ language }: { language: string }) => {
+const LanguageDialog = () => {
+  const { exibirTexto } = useDefault();
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <i className="cursor-pointer">
-          {language === Language.Portuguese
-            ? "Dúvidas sobre linguagem da persona?"
-            : "Questions about the persona’s language?"}
+          {exibirTexto(
+            "Dúvidas sobre linguagem da persona?",
+            "Questions about the persona’s language?",
+          )}
         </i>
       </DialogTrigger>
 
@@ -39,12 +42,13 @@ const LanguageDialog = ({ language }: { language: string }) => {
 
         <DialogContent>
           <DialogTitle>
-            {language === Language.Portuguese
-              ? "Os tipos de linguagem da persona são:"
-              : "The persona’s types of language are:"}
+            {exibirTexto(
+              "Os tipos de linguagem da persona são:",
+              "The persona’s types of language are:",
+            )}
           </DialogTitle>
           <DialogDescription />
-          {language === Language.Portuguese ? (
+          {/* {language === Language.Portuguese ? (
             <div className="flex flex-col">
               <p>
                 <strong>- Não verbal:</strong> dificuldade em expressar-se
@@ -83,7 +87,7 @@ const LanguageDialog = ({ language }: { language: string }) => {
                 etc.), either in or out of the context of a conversation.
               </p>
             </div>
-          )}
+          )} */}
           <DialogClose asChild>
             <button className="mt-4 rounded bg-blue-500 px-4 py-2 text-white">
               OK
@@ -98,16 +102,14 @@ const LanguageDialog = ({ language }: { language: string }) => {
 const PersonaGeneralCharacteristics = ({
   control,
 }: {
-  control: Control<InputsForm, any, InputsForm>;
+  control: Control<PersonaInput, any, PersonaInput>;
 }) => {
   const { exibirTexto } = useDefault();
 
   return (
     <div className="flex flex-col gap-[10px]">
       <Label htmlFor="language">
-        {language === Language.Portuguese
-          ? "Linguagem da Persona"
-          : "Persona's language"}
+        {exibirTexto("Linguagem da Persona", "Persona's language")}
       </Label>
       <Controller
         name="language"
@@ -121,7 +123,7 @@ const PersonaGeneralCharacteristics = ({
               {languages.map((lang) => {
                 return (
                   <SelectItem key={lang.id} value={lang.id}>
-                    {language === Language.Portuguese ? lang.pt : lang.en}
+                    {exibirTexto(lang.pt, lang.en)}
                   </SelectItem>
                 );
               })}
@@ -129,12 +131,10 @@ const PersonaGeneralCharacteristics = ({
           </Select>
         )}
       />
-      <LanguageDialog language={language} />
+      <LanguageDialog />
       <div className="h-[10px]" />
       <Label htmlFor="autismLevel">
-        {language === Language.Portuguese
-          ? "Nível de Suporte"
-          : "Support Level"}
+        {exibirTexto("Nível de Suporte", "Support Level")}
       </Label>
       <Controller
         name="supportLevel"

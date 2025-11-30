@@ -101,4 +101,4 @@ const usePersonaForm = ({ params, id }: Props) => {
 
 export { usePersonaForm };
 
-export type { PersonaWatch };
+export type { Inputs as PersonaInput, PersonaWatch };

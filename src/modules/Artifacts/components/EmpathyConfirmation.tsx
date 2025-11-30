@@ -1,9 +1,12 @@
-import { useI18n } from "@/core/i18n/I18nContext";
-import { Watch } from "../hooks/useEmpathy";
 import useDefault from "../hooks/useDefault";
+import { EmpathyWatch } from "../hooks/useEmpathyForm";
+import { genders } from "../i18n/genders";
+import { interactionOptions } from "../i18n/interaction-options";
+import { cognitionOptions } from "../i18n/cognition-options";
+import { communicationOptions } from "../i18n/communication-options";
+import { behaviorOptions } from "../i18n/behavior-options";
 
-const EmpathyConfirmation = ({ watch }: { watch: Watch }) => {
-  const { language } = useI18n();
+const EmpathyConfirmation = ({ watch }: { watch: EmpathyWatch }) => {
   const { exibirTexto } = useDefault();
   const gender = genders.find((gender) => gender.id === watch("gender"));
   const interactionList = interactionOptions.filter((option) =>

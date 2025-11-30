@@ -90,11 +90,13 @@ const useEmpathyApi = ({ id }: { id?: string }) => {
   const findAllEmpathy = useQuery({
     queryKey: ["empathy-list"],
     queryFn: EmpathyService.findAll,
+    enabled: false,
   });
 
   const findOneEmpathy = useQuery({
     queryKey: ["empathy", id],
     queryFn: () => EmpathyService.findOne(id),
+    enabled: false,
   });
 
   return {

@@ -90,11 +90,13 @@ const usePersonaApi = ({ id }: { id?: string }) => {
   const findAllPersona = useQuery({
     queryKey: ["persona-list"],
     queryFn: PersonaService.findAll,
+    enabled: false,
   });
 
   const findOnePersona = useQuery({
     queryKey: ["persona", id],
     queryFn: () => PersonaService.findOne(id),
+    enabled: false,
   });
 
   return {

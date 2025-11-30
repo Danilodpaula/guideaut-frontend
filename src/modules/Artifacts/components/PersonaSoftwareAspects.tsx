@@ -4,32 +4,32 @@ import RemoveOptionAlertDialog from "./RemoveOptionAlertDialog";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { InputsForm } from "../hooks/usePersona";
 import { Language } from "../i18n/language";
 import { defaultSoftwareAspects } from "../i18n/persona";
 import useDefault from "../hooks/useDefault";
+import { PersonaInput } from "../hooks/usePersonaForm";
+import { useI18n } from "@/core/i18n/I18nContext";
 
 const PersonaSoftwareAspects = ({
   control,
 }: {
-  control: Control<InputsForm, any, InputsForm>;
+  control: Control<PersonaInput, any, PersonaInput>;
 }) => {
   const [newAspect, setNewAspect] = useState("");
   const { exibirTexto } = useDefault();
+  const { language } = useI18n();
 
   return (
     <div className="flex flex-col gap-[10px]">
       <h2 className="flex-1 font-bold">
-        {" "}
-        {language === Language.Portuguese
-          ? "Aspectos de Software"
-          : "Software Aspects"}
+        {" " + exibirTexto("Aspectos de Software", "Software Aspects")}
       </h2>
       <h2 className="flex-1">
-        {" "}
-        {language === Language.Portuguese
-          ? "Informe os aspectos de software da persona"
-          : "Report the persona's software aspects"}
+        {" " +
+          exibirTexto(
+            "Informe os aspectos de software da persona",
+            "Report the persona's software aspects",
+          )}
       </h2>
       <Controller
         name="softwareAspects"
@@ -41,11 +41,10 @@ const PersonaSoftwareAspects = ({
                 <Input
                   value={newAspect}
                   onChange={(e) => setNewAspect(e.target.value)}
-                  placeholder={
-                    language === Language.Portuguese
-                      ? "Escreva um aspecto tecnológico ou de software"
-                      : "Describe a technological or software-related aspect"
-                  }
+                  placeholder={exibirTexto(
+                    "Escreva um aspecto tecnológico ou de software",
+                    "Describe a technological or software-related aspect",
+                  )}
                 />
                 <Button
                   onClick={() => {
@@ -55,28 +54,26 @@ const PersonaSoftwareAspects = ({
                     }
                   }}
                 >
-                  {language === Language.Portuguese ? "Adicione" : "Add"}
+                  {exibirTexto("Adicione", "Add")}
                 </Button>
               </div>
               <div className="flex flex-row justify-evenly mt-[20px]">
                 <div>
                   <h2 className="flex-1 font-bold mb-[15px] ml-[15px]">
-                    {" "}
-                    {language === Language.Portuguese
-                      ? "Aspectos tecnológicos de software do GuideAut"
-                      : "Technological software aspects from GuideAut"}
+                    {" " +
+                      exibirTexto(
+                        "Aspectos tecnológicos de software do GuideAut",
+                        "Technological software aspects from GuideAut",
+                      )}
                   </h2>
                   <div className="flex flex-col p-4 border rounded mb-4 gap-[20px] w-[300px]">
                     {defaultSoftwareAspects.map((aspect) => {
                       return (
                         <div key={aspect.en} className="flex justify-between">
                           <p className="text-left">
-                            {language === Language.Portuguese
-                              ? aspect.pt
-                              : aspect.en}
+                            {exibirTexto(aspect.pt, aspect.en)}
                           </p>
                           <AddOptionAlertDialog
-                            language={language}
                             onClick={() => {
                               if (
                                 language === Language.Portuguese &&
@@ -100,10 +97,8 @@ const PersonaSoftwareAspects = ({
                 </div>
                 <div>
                   <h2 className="flex-1 font-bold mb-[15px] ml-[15px]">
-                    {" "}
-                    {language === Language.Portuguese
-                      ? "Aspectos Selecionados"
-                      : "Selected Aspects"}
+                    {" " +
+                      exibirTexto("Aspectos Selecionados", "Selected Aspects")}
                   </h2>
                   <div className="flex flex-col p-4 border rounded mb-4 gap-[20px] w-[300px]">
                     {values.map((value) => {
@@ -113,7 +108,6 @@ const PersonaSoftwareAspects = ({
                             {value}
                           </button>
                           <RemoveOptionAlertDialog
-                            language={language}
                             onClick={() => {
                               const filtered = values.filter(
                                 (val) => val !== value,
