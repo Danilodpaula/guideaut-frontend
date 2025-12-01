@@ -9,11 +9,9 @@ import {
   YAxis,
 } from "recharts";
 import { useVGA } from "../hooks/useVGA";
-import { Language } from "../i18n/language";
 import useDefault from "../hooks/useDefault";
 
 interface Props {
-  language: string;
   interactionList: string[];
   cognitionList: string[];
   communicationList: string[];
@@ -25,7 +23,6 @@ const VGA = ({
   cognitionList,
   communicationList,
   behaviorList,
-  language,
 }: Props) => {
   const { dataVGA } = useVGA({
     interactionList,
@@ -49,7 +46,7 @@ const VGA = ({
           }}
         >
           <CartesianGrid strokeDasharray={"3 3"} />
-          <XAxis dataKey={language === Language.Portuguese ? "pt" : "en"} />
+          <XAxis dataKey={exibirTexto("pt", "en")} />
           <YAxis unit={"%"} />
           <Tooltip formatter={(value) => `${value}%`} />
           <Legend />
@@ -57,11 +54,10 @@ const VGA = ({
             type={"linear"}
             dataKey={"percentage"}
             stroke={"#20B4F8"}
-            name={
-              language === Language.Portuguese
-                ? "Nível de Comprometimento"
-                : "Level of Impairment"
-            }
+            name={exibirTexto(
+              "Nível de Comprometimento",
+              "Level of Impairment",
+            )}
           />
         </LineChart>
       </ResponsiveContainer>
