@@ -2,18 +2,18 @@
 // Página informativa do GuideAut que descreve a Fase de Prototipação do processo ProAut.
 // Detalha a criação, validação e refinamento do protótipo com base na TRR Completa.
 
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useI18n } from "@/core/i18n/I18nContext";
 import {
+  ChevronRight,
   FileText as FileTextIcon,
   Info,
-  ChevronRight,
   PenTool,
-  Users,
   Repeat,
+  Users,
 } from "lucide-react";
-import { useI18n } from "@/core/i18n/I18nContext";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 🧩 Componente principal da página "Fase de Prototipação".
@@ -42,55 +42,59 @@ export default function PrototypingPhase() {
   const [activeSection, setActiveSection] = useState("");
 
   // Estrutura da tabela de conteúdos
-  const tableOfContents = [
-    {
-      id: "proaut-phases",
-      title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
-      type: "scroll",
-    },
-    {
-      id: "imersao",
-      title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
-      type: "navigate",
-      path: "/imersion-phase",
-    },
-    {
-      id: "analise",
-      title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
-      type: "navigate",
-      path: "/analysis-phase",
-    },
-    {
-      id: "ideacao",
-      title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
-      type: "navigate",
-      path: "/ideation-phase",
-    },
-    {
-      id: "visao-geral-prototipacao",
-      title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
-      type: "scroll",
-    },
-    {
-      id: "criar-prototipo",
-      title: language === "pt-BR" ? "Criar Protótipo" : "Create Prototype",
-      type: "scroll",
-    },
-    {
-      id: "validar-prototipo",
-      title: language === "pt-BR" ? "Validar Protótipo" : "Validate Prototype",
-      type: "scroll",
-    },
-    {
-      id: "refinar-prototipo",
-      title: language === "pt-BR" ? "Refinar Protótipo" : "Refine Prototype",
-      type: "scroll",
-    },
-  ];
+  const tableOfContents = useMemo(
+    () => [
+      {
+        id: "proaut-phases",
+        title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
+        type: "scroll",
+      },
+      {
+        id: "imersao",
+        title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
+        type: "navigate",
+        path: "/imersion-phase",
+      },
+      {
+        id: "analise",
+        title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
+        type: "navigate",
+        path: "/analysis-phase",
+      },
+      {
+        id: "ideacao",
+        title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
+        type: "navigate",
+        path: "/ideation-phase",
+      },
+      {
+        id: "visao-geral",
+        title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
+        type: "scroll",
+      },
+      {
+        id: "criar-prototipo",
+        title: language === "pt-BR" ? "Criar Protótipo" : "Create Prototype",
+        type: "scroll",
+      },
+      {
+        id: "validar-prototipo",
+        title:
+          language === "pt-BR" ? "Validar Protótipo" : "Validate Prototype",
+        type: "scroll",
+      },
+      {
+        id: "refinar-prototipo",
+        title: language === "pt-BR" ? "Refinar Protótipo" : "Refine Prototype",
+        type: "scroll",
+      },
+    ],
+    [language],
+  );
 
   // Rola para o topo assim que a página carrega
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   // Efeito para detectar a seção ativa durante o scroll
@@ -116,7 +120,7 @@ export default function PrototypingPhase() {
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [language]);
+  }, [language, tableOfContents]);
 
   const handleNavigation = (item: (typeof tableOfContents)[0]) => {
     if (item.type === "navigate" && item.path) {
@@ -155,10 +159,7 @@ export default function PrototypingPhase() {
         </div>
 
         {/* --- VISÃO GERAL --- */}
-        <section
-          id="visao-geral-prototipacao"
-          className="scroll-m-20 space-y-6"
-        >
+        <section id="visao-geral" className="scroll-m-20 space-y-6">
           <div className="flex items-center gap-2 border-b pb-2">
             <h2 className="text-2xl font-bold tracking-tight">
               {language === "pt-BR" ? "Visão Geral" : "Overview"}
@@ -178,7 +179,7 @@ export default function PrototypingPhase() {
             </p>
 
             <div className="my-8 p-4 bg-card rounded-lg border">
-              <div className="max-w-3xl mx-auto">
+              <div className="max-w-6xl mx-auto">
                 <img
                   src={
                     language === "pt-BR"
@@ -200,7 +201,7 @@ export default function PrototypingPhase() {
               </div>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-lg border mt-4">
+            <div className="p-4 mt-4">
               <ul className="space-y-2 list-none">
                 <li className="flex gap-2">
                   <span className="font-bold min-w-[120px]">
@@ -418,7 +419,7 @@ export default function PrototypingPhase() {
       </div>
 
       {/* Tabela de Conteúdos */}
-      <div className="w-80 flex-shrink-0 pt-6 pr-6 sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto hidden xl:block">
+      <div className="w-full lg:w-80 flex-shrink-0 p-6 lg:pt-6 lg:pr-6 lg:sticky lg:top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto order-first lg:order-none">
         <Card className="shadow-lg border-l-4 border-l-blue-500">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -434,7 +435,7 @@ export default function PrototypingPhase() {
                 <button
                   key={item.id}
                   onClick={() => handleNavigation(item)}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-white${
                     activeSection === item.id
                       ? "bg-blue-50 text-blue-700 border-l-4 border-l-blue-500 font-medium"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"

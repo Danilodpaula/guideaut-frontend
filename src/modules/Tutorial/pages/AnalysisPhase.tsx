@@ -2,16 +2,19 @@
 // Página informativa do GuideAut que descreve as Fases de Análise, Ideação e Prototipação do processo ProAut.
 // Detalha a triangulação de dados, geração de personas, ideação de interface e prototipagem.
 
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FileText as FileTextIcon,
-  Info,
-  ChevronRight,
-  CheckCircle2,
-} from "lucide-react";
 import { useI18n } from "@/core/i18n/I18nContext";
+import {
+  CheckCircle2,
+  ChevronRight,
+  FileText as FileTextIcon,
+  Heart,
+  Info,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 🧩 Componente principal da página "Fase de Análise".
@@ -41,56 +44,59 @@ export default function AnalysisPhase() {
   const [activeSection, setActiveSection] = useState("");
 
   // Estrutura da tabela de conteúdos
-  const tableOfContents = [
-    {
-      id: "proaut-phases",
-      title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
-      type: "navigate",
-      path: "/proaut-process",
-    },
-    {
-      id: "imersao",
-      title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
-      type: "navigate",
-      path: "/imersion-phase",
-    },
-    {
-      id: "visao-geral-analise",
-      title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
-      type: "scroll",
-    },
-    {
-      id: "triangular-dados",
-      title: language === "pt-BR" ? "Triangular Dados" : "Triangulate Data",
-      type: "scroll",
-    },
-    {
-      id: "gerar-personas",
-      title: language === "pt-BR" ? "Gerar Personas" : "Generate Personas",
-      type: "scroll",
-    },
-    {
-      id: "mapa-empatia",
-      title: language === "pt-BR" ? "Mapa de Empatia" : "Empathy Map",
-      type: "scroll",
-    },
-    {
-      id: "ideacao",
-      title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
-      type: "navigate",
-      path: "/ideation-phase",
-    },
-    {
-      id: "prototipacao",
-      title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
-      type: "navigate",
-      path: "/prototyping-phase",
-    },
-  ];
+  const tableOfContents = useMemo(
+    () => [
+      {
+        id: "proaut-phases",
+        title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
+        type: "navigate",
+        path: "/proaut-process",
+      },
+      {
+        id: "imersao",
+        title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
+        type: "navigate",
+        path: "/imersion-phase",
+      },
+      {
+        id: "visao-geral",
+        title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
+        type: "scroll",
+      },
+      {
+        id: "triangular-dados",
+        title: language === "pt-BR" ? "Triangular Dados" : "Triangulate Data",
+        type: "scroll",
+      },
+      {
+        id: "gerar-personas",
+        title: language === "pt-BR" ? "Gerar Personas" : "Generate Personas",
+        type: "scroll",
+      },
+      {
+        id: "mapa-empatia",
+        title: language === "pt-BR" ? "Mapa de Empatia" : "Empathy Map",
+        type: "scroll",
+      },
+      {
+        id: "ideacao",
+        title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
+        type: "navigate",
+        path: "/ideation-phase",
+      },
+      {
+        id: "prototipacao",
+        title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
+        type: "navigate",
+        path: "/prototyping-phase",
+      },
+    ],
+    [language],
+  );
 
   // Rola para o topo assim que a página carrega
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   // Efeito para detectar a seção ativa durante o scroll
@@ -116,7 +122,7 @@ export default function AnalysisPhase() {
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [language]);
+  }, [language, tableOfContents]);
 
   const handleNavigation = (item: (typeof tableOfContents)[0]) => {
     if (item.type === "navigate" && item.path) {
@@ -151,12 +157,11 @@ export default function AnalysisPhase() {
               : "Transforming data into empathy and requirements into solutions."}
           </p>
         </div>
-        <section id="visao-geral-analise" className="scroll-m-20 space-y-6">
+
+        <section id="visao-geral" className="scroll-m-20 space-y-6">
           <div className="flex items-center gap-2 border-b pb-2">
             <h2 className="text-2xl font-bold tracking-tight">
-              {language === "pt-BR"
-                ? "Análise: Visão Geral"
-                : "Analysis: Overview"}
+              {language === "pt-BR" ? "Visão Geral" : "Overview"}
             </h2>
           </div>
 
@@ -195,7 +200,7 @@ export default function AnalysisPhase() {
               </div>
             </div>
 
-            <ul className="space-y-3 list-disc list-inside mb-4 ml-4 bg-slate-50 p-4 rounded-lg border">
+            <ul className="space-y-3 list-disc list-inside mb-4 ml-4 p-4">
               <li>
                 <strong>
                   {language === "pt-BR" ? "Entrada da fase:" : "Phase Input:"}
@@ -236,11 +241,16 @@ export default function AnalysisPhase() {
 
         {/* Triangular Dados */}
         <section id="triangular-dados" className="scroll-m-20 space-y-6 mt-12">
-          <h2 className="text-2xl font-bold tracking-tight border-b pb-2">
-            {language === "pt-BR"
-              ? "1. Triangular Dados"
-              : "1. Triangulate Data"}
-          </h2>
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-100 p-2 rounded-full">
+              <TrendingUp className="h-6 w-6 text-blue-600" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {language === "pt-BR"
+                ? "Atividade: Triangular Dados"
+                : "Activity: Triangulate Data"}
+            </h2>
+          </div>
 
           <div className="space-y-4">
             <p>
@@ -249,14 +259,14 @@ export default function AnalysisPhase() {
                 : "In this activity, you must use the multiple data sources (the different Canvases) generated in the previous phase to create an Initial List of Requirements and Constraints."}
             </p>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <div className="flex items-start space-x-3">
-                <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Info className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-blue-800 font-medium">
+                  <p className="text-blue-yellow font-medium">
                     {language === "pt-BR"
-                      ? "O termo 'Lista Inicial' é usado porque, nesta etapa, você vai definir apenas a identificação e a descrição do requisito. O detalhamento visual ocorrerá na próxima fase."
-                      : "The term 'Initial List' is used because, at this stage, you will define only the identification and description of the requirement. Visual detailing will occur in the next phase."}
+                      ? "INFO: O termo 'Lista Inicial' é usado porque, nesta etapa, você vai definir apenas a identificação e a descrição do requisito. O detalhamento visual ocorrerá na próxima fase."
+                      : "INFO: The term 'Initial List' is used because, at this stage, you will define only the identification and description of the requirement. Visual detailing will occur in the next phase."}
                   </p>
                 </div>
               </div>
@@ -290,8 +300,49 @@ export default function AnalysisPhase() {
               </li>
             </ul>
 
+            {/* Sugestão de Procedimento para Triangulação */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mt-6">
+              <h4 className="font-semibold text-blue-800 mb-3">
+                {language === "pt-BR"
+                  ? "Sugestão de Procedimento para Triangulação:"
+                  : "Suggested Procedure for Triangulation:"}
+              </h4>
+              <ol className="text-blue-700 list-decimal list-inside space-y-2 ml-4">
+                <li>
+                  {language === "pt-BR"
+                    ? "Reúna todos os Canvas preenchidos (CSS, CCA, CTA) e o FCA;"
+                    : "Gather all completed Canvases (RSC, ACC, ATC) and the ACF;"}
+                </li>
+                <li>
+                  {language === "pt-BR"
+                    ? "Crie uma tabela ou planilha para organizar os requisitos identificados;"
+                    : "Create a table or spreadsheet to organize identified requirements;"}
+                </li>
+                <li>
+                  {language === "pt-BR"
+                    ? "Compare informações semelhantes entre os diferentes Canvas;"
+                    : "Compare similar information between the different Canvases;"}
+                </li>
+                <li>
+                  {language === "pt-BR"
+                    ? "Identifique conflitos e decida qual informação prevalecerá;"
+                    : "Identify conflicts and decide which information will prevail;"}
+                </li>
+                <li>
+                  {language === "pt-BR"
+                    ? "Classifique cada item como Requisito Funcional, Requisito Não-Funcional ou Restrição;"
+                    : "Classify each item as Functional Requirement, Non-Functional Requirement or Constraint;"}
+                </li>
+                <li>
+                  {language === "pt-BR"
+                    ? "Numere e descreva cada item de forma clara e concisa."
+                    : "Number and describe each item clearly and concisely."}
+                </li>
+              </ol>
+            </div>
+
             {/* Exemplo Visual de Lista Inicial */}
-            <div className="mt-6 border rounded-lg overflow-hidden">
+            <div className="mt-6 border rounded-lg text-black overflow-hidden">
               <div className="bg-slate-100 p-3 border-b font-semibold text-center">
                 {language === "pt-BR"
                   ? "Exemplo: Lista Inicial (Formato Simplificado)"
@@ -350,11 +401,17 @@ export default function AnalysisPhase() {
 
         {/* Gerar Personas */}
         <section id="gerar-personas" className="scroll-m-20 space-y-6 mt-12">
-          <h2 className="text-2xl font-bold tracking-tight border-b pb-2">
-            {language === "pt-BR"
-              ? "2. Gerar Personas (PersonAut)"
-              : "2. Generate Personas (PersonAut)"}
-          </h2>
+          <div className="flex items-center gap-3">
+            <div className="bg-purple-100 p-2 rounded-full">
+              <Users className="h-6 w-6 text-purple-600" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {language === "pt-BR"
+                ? "Atividade: Gerar Personas (PersonAut)"
+                : "Activity: Generate Personas (PersonAut)"}
+            </h2>
+          </div>
+
           <p>
             {language === "pt-BR"
               ? "A atividade de gerar Personas serve para criar objetos de empatia. Cada persona deve corresponder a um FCA preenchido."
@@ -426,15 +483,66 @@ export default function AnalysisPhase() {
               </p>
             </div>
           </div>
+
+          {/* Sugestão de Procedimento para Personas */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mt-6">
+            <h4 className="font-semibold text-blue-800 mb-3">
+              {language === "pt-BR"
+                ? "Sugestão de Procedimento para criação de Personas:"
+                : "Suggested Procedure for Personas creation:"}
+            </h4>
+            <ol className="text-blue-700 list-decimal list-inside space-y-2 ml-4">
+              <li>
+                {language === "pt-BR"
+                  ? "Para cada FCA preenchido, crie uma persona correspondente;"
+                  : "For each completed ACF, create a corresponding persona;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Use o nome da criança (ou um nome fictício) e sua idade real;"
+                  : "Use the child's name (or a fictional name) and their real age;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Inclua o gráfico VGA como parte visual da persona;"
+                  : "Include the AOG graph as a visual part of the persona;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Descreva características comportamentais baseadas nas entrevistas;"
+                  : "Describe behavioral characteristics based on interviews;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Inclua preferências sensoriais (cores, sons, texturas);"
+                  : "Include sensory preferences (colors, sounds, textures);"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Documente habilidades e dificuldades específicas;"
+                  : "Document specific abilities and difficulties;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Mencione tecnologias que a criança já utiliza com sucesso."
+                  : "Mention technologies the child already uses successfully."}
+              </li>
+            </ol>
+          </div>
         </section>
 
         {/* Mapa de Empatia */}
         <section id="mapa-empatia" className="scroll-m-20 space-y-6 mt-12">
-          <h2 className="text-2xl font-bold tracking-tight border-b pb-2">
-            {language === "pt-BR"
-              ? "Gerar Mapa de Empatia"
-              : "Generate Empathy Map"}
-          </h2>
+          <div className="flex items-center gap-3">
+            <div className="bg-orange-100 p-2 rounded-full">
+              <Heart className="h-6 w-6 text-orange-600" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {language === "pt-BR"
+                ? "Atividade: Gerar Mapa de Empatia"
+                : "Activity: Generate Empathy Map"}
+            </h2>
+          </div>
 
           <p>
             {language === "pt-BR"
@@ -485,7 +593,52 @@ export default function AnalysisPhase() {
             </div>
           </div>
 
-          {/* INFO Block */}
+          {/* Sugestão de Procedimento para Mapa de Empatia */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mt-6">
+            <h4 className="font-semibold text-blue-800 mb-3">
+              {language === "pt-BR"
+                ? "Sugestão de Procedimento para Mapa de Empatia:"
+                : "Suggested Procedure for Empathy Map:"}
+            </h4>
+            <ol className="text-blue-700 list-decimal list-inside space-y-2 ml-4">
+              <li>
+                {language === "pt-BR"
+                  ? "Use os dados do FCA para preencher as áreas de limitação;"
+                  : "Use ACF data to fill the limitation areas;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Analise cada uma das 4 áreas (Interação, Comunicação, Comportamento, Cognição);"
+                  : "Analyze each of the 4 areas (Interaction, Communication, Behavior, Cognition);"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Identifique os principais desafios em cada área;"
+                  : "Identify main challenges in each area;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Documente como esses desafios afetam o dia a dia;"
+                  : "Document how these challenges affect daily life;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Relacione com os objetivos do aplicativo definidos no CSS;"
+                  : "Relate to the application objectives defined in the RSC;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Considere as estratégias de enfrentamento mencionadas pelos cuidadores;"
+                  : "Consider coping strategies mentioned by caregivers;"}
+              </li>
+              <li>
+                {language === "pt-BR"
+                  ? "Valide o mapa com especialistas quando possível."
+                  : "Validate the map with specialists when possible."}
+              </li>
+            </ol>
+          </div>
+
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <div className="flex items-start gap-3">
               <Info className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
@@ -502,7 +655,7 @@ export default function AnalysisPhase() {
         </section>
 
         {/* Artefatos Gerados (Resumo Final) */}
-        <div className="mt-12 bg-slate-50 p-6 rounded-lg border">
+        <div className="mt-12 bg-slate-50 p-6 rounded-lg border text-black">
           <h3 className="text-xl font-semibold mb-4">
             {language === "pt-BR"
               ? "Resumo dos Artefatos Gerados"
@@ -525,7 +678,7 @@ export default function AnalysisPhase() {
       </div>
 
       {/* Tabela de Conteúdos */}
-      <div className="w-80 flex-shrink-0 pt-6 pr-6 sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto hidden xl:block">
+      <div className="w-full lg:w-80 flex-shrink-0 p-6 lg:pt-6 lg:pr-6 lg:sticky lg:top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto order-first lg:order-none">
         <Card className="shadow-lg border-l-4 border-l-blue-500">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -541,7 +694,7 @@ export default function AnalysisPhase() {
                 <button
                   key={item.id}
                   onClick={() => handleNavigation(item)}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-white/90${
                     activeSection === item.id
                       ? "bg-blue-50 text-blue-700 border-l-4 border-l-blue-500 font-medium"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"

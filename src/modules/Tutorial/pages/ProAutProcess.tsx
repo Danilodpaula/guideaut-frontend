@@ -3,19 +3,19 @@
 // Apresenta as 4 fases do método baseado em Design Thinking, atividades,
 // artefatos gerados e recursos adicionais para equipes de desenvolvimento.
 
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText as FileTextIcon } from "lucide-react";
 import { useI18n } from "@/core/i18n/I18nContext";
 import {
-  Lightbulb,
-  Users,
-  Palette,
   Boxes,
-  Info,
   ChevronRight,
+  FileText as FileTextIcon,
+  Info,
+  Lightbulb,
+  Palette,
+  Users,
 } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 🧩 Componente principal da página "Processo ProAut".
@@ -33,7 +33,7 @@ export default function ProAutProcess() {
       {
         id: "fca",
         name_pt: "Ficha de Caracterização do Autista (FCA)",
-        name_en: "Autistic Characterization Sheet (ACS)",
+        name_en: "Autistic Characterization Form (ACF)",
       },
       {
         id: "mc",
@@ -84,37 +84,40 @@ export default function ProAutProcess() {
   const [activeSection, setActiveSection] = useState("");
 
   // Estrutura da tabela de conteúdos com paths de navegação
-  const tableOfContents = [
-    {
-      id: "proaut-phases",
-      title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
-      type: "scroll",
-    },
-    {
-      id: "imersao",
-      title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
-      type: "navigate",
-      path: "/imersion-phase",
-    },
-    {
-      id: "analise",
-      title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
-      type: "navigate",
-      path: "/analysis-phase",
-    },
-    {
-      id: "ideacao",
-      title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
-      type: "navigate",
-      path: "/ideation-phase",
-    },
-    {
-      id: "prototipacao",
-      title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
-      type: "navigate",
-      path: "/prototyping-phase",
-    },
-  ];
+  const tableOfContents = useMemo(
+    () => [
+      {
+        id: "proaut-phases",
+        title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
+        type: "scroll",
+      },
+      {
+        id: "imersao",
+        title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
+        type: "navigate",
+        path: "/imersion-phase",
+      },
+      {
+        id: "analise",
+        title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
+        type: "navigate",
+        path: "/analysis-phase",
+      },
+      {
+        id: "ideacao",
+        title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
+        type: "navigate",
+        path: "/ideation-phase",
+      },
+      {
+        id: "prototipacao",
+        title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
+        type: "navigate",
+        path: "/prototyping-phase",
+      },
+    ],
+    [language],
+  );
 
   // Rola para o topo assim que a página carrega
   useEffect(() => {
@@ -144,7 +147,7 @@ export default function ProAutProcess() {
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [language]);
+  }, [language, tableOfContents]);
 
   const handleNavigation = (item: (typeof tableOfContents)[0]) => {
     if (item.type === "navigate" && item.path) {
@@ -232,7 +235,7 @@ export default function ProAutProcess() {
               <li>
                 <strong>Phase output:</strong> ACC (Autistic Caregivers Canvas);
                 ATC (Autistic Therapists Canvas); RSC (Software Requester
-                Canvas); Autistic Characterization Form; and AOG (Autistic
+                Canvas); Autistic Characterization Form (ACF); and AOG (Autistic
                 Overview Graph).
               </li>
               <li>
@@ -253,9 +256,73 @@ export default function ProAutProcess() {
       icon: Lightbulb,
       color: "bg-yellow-500",
       description:
-        language === "pt-BR"
-          ? "Fase de síntese e organização dos dados coletados. O objetivo é identificar padrões, insights e oportunidades de design através da análise sistemática das informações obtidas na fase de imersão."
-          : "Phase of synthesis and organization of collected data. The goal is to identify patterns, insights and design opportunities through systematic analysis of information obtained in the immersion phase.",
+        language === "pt-BR" ? (
+          <>
+            <p className="mb-4">
+              A fase de Análise é o momento de aproximação do problema. Agora
+              que a equipe coletou diversos dados na imersão, é preciso
+              mergulhar nessas informações e avaliar as implicações do desafio
+              sob o ponto de vista de todos os envolvidos (stakeholders).
+            </p>
+            <p className="mb-4">
+              A fase de Análise tem como objetivo aprofundar as informações
+              obtidas na fase de Imersão e iniciar as principais propostas de
+              solução.
+            </p>
+            <ul className="space-y-3 text-lg list-disc list-inside mb-4">
+              <li>
+                <strong>Entrada da fase:</strong> Canvas preenchidos
+                (Solicitante, Cuidadores, Terapeutas), ACF respondido e Gráfico
+                VGA.
+              </li>
+              <li>
+                <strong>Envolvidos:</strong> Time de desenvolvimento,
+                cuidador(es) e/ou terapeuta(s).
+              </li>
+              <li>
+                <strong>Atividades da Fase:</strong> Triangular dos Dados, Gerar
+                Mapa de Empatia e Gerar de Personas.
+              </li>
+              <li>
+                <strong>Saída da fase:</strong> Lista Inicial de
+                Requisitos/Restrições, Personas e Mapa de Empatia.
+              </li>
+            </ul>
+          </>
+        ) : (
+          <>
+            <p className="mb-4">
+              The Analysis phase is the moment to approach the problem. Now that
+              the team has collected various data during immersion, it is
+              necessary to dive into this information and evaluate the
+              implications of the challenge from the point of view of all
+              stakeholders involved.
+            </p>
+            <p className="mb-4">
+              The Analysis phase aims to delve deeper into the information
+              obtained in the Immersion phase and initiate the main proposed
+              solutions.
+            </p>
+            <ul className="space-y-3 text-lg list-disc list-inside mb-4">
+              <li>
+                <strong>Phase Input:</strong> Filled Canvases (Requester,
+                Caregivers, Therapists), answered ACF and AOG Graph.
+              </li>
+              <li>
+                <strong>Involved:</strong> Development team, caregiver(s) and/or
+                therapist(s).
+              </li>
+              <li>
+                <strong>Phase Activities:</strong> Triangular Data Analysis,
+                Generate Empathy Map, and Generate Personas.
+              </li>
+              <li>
+                <strong>Phase Output:</strong> Initial Requirements/Constraints
+                Table (RCT), Personas and Empathy Map.
+              </li>
+            </ul>
+          </>
+        ),
     },
     {
       id: "ideacao",
@@ -263,9 +330,69 @@ export default function ProAutProcess() {
       icon: Palette,
       color: "bg-green-500",
       description:
-        language === "pt-BR"
-          ? "Fase criativa de geração e seleção de ideias. O objetivo é explorar diversas possibilidades de solução, convergindo para conceitos viáveis que atendam às necessidades identificadas nas fases anteriores."
-          : "Creative phase of idea generation and selection. The goal is to explore various solution possibilities, converging to viable concepts that meet the needs identified in previous phases.",
+        language === "pt-BR" ? (
+          <>
+            <p className="mb-4">
+              A fase de ideação tem como objetivo gerar ideias por meio de
+              estímulos de criatividade em conjunto com a equipe de
+              desenvolvimento e design da aplicação, em conformidade com o
+              contexto e expectativas do usuário do software/app. Ela segue a
+              criação dos artefatos de personas, mapas de empatia e a versão
+              inicial da Tabela de Requisitos/Restrições.
+            </p>
+            <ul className="space-y-3 text-lg list-disc list-inside mb-4">
+              <li>
+                <strong>Entrada da fase:</strong> a Lista Inicial de
+                Requisitos/Restrições da Interface (TRR), o Mapa de Empatia e as
+                Personas.
+              </li>
+              <li>
+                <strong>Saída da fase:</strong> Lista Atualizada da Tabela de
+                Requisitos/Restrições da Interface (TRR) completa.
+              </li>
+              <li>
+                <strong>Envolvidos:</strong> Pais, especialistas, solicitantes
+                de software, designers/desenvolvedores.
+              </li>
+              <li>
+                <strong>Atividades da Fase:</strong> Definir Itens de
+                Requisitos/Restrições, Especificar Itens Requisitos e
+                Gerar/Refinar Ideias de Interface.
+              </li>
+            </ul>
+          </>
+        ) : (
+          <>
+            <p className="mb-4">
+              The ideation phase aims to generate ideas through creativity
+              stimuli together with the application development and design team,
+              in accordance with the software/app user's context and
+              expectations. It follows the creation of persona artifacts,
+              empathy maps and the initial version of the
+              Requirements/Constraints Table.
+            </p>
+            <ul className="space-y-3 text-lg list-disc list-inside mb-4">
+              <li>
+                <strong>Phase input:</strong> the Initial Interface
+                Requirements/Constraints List (RCT), the Empathy Map and the
+                Personas.
+              </li>
+              <li>
+                <strong>Phase output:</strong> Updated Complete Interface
+                Requirements/Constraints Table (RCT) List.
+              </li>
+              <li>
+                <strong>Involved:</strong> Parents, specialists, software
+                requesters, designers/developers.
+              </li>
+              <li>
+                <strong>Phase Activities:</strong> Define
+                Requirements/Constraints Items, Specify Requirements Items and
+                Generate/Refine Interface Ideas.
+              </li>
+            </ul>
+          </>
+        ),
     },
     {
       id: "prototipacao",
@@ -273,9 +400,75 @@ export default function ProAutProcess() {
       icon: Boxes,
       color: "bg-purple-500",
       description:
-        language === "pt-BR"
-          ? "Fase de materialização e validação das ideias. O objetivo é transformar conceitos em protótipos tangíveis, testando e refinando iterativamente com os stakeholders para garantir a adequação e acessibilidade da solução."
-          : "Phase of materialization and validation of ideas. The goal is to transform concepts into tangible prototypes, testing and refining iteratively with stakeholders to ensure solution suitability and accessibility.",
+        language === "pt-BR" ? (
+          <>
+            <p className="mb-4">
+              A Prototipação é um processo no qual se busca transferir ideias do
+              âmbito conceitual para o concreto. Consiste em todo e qualquer
+              objeto, seja físico ou virtual, que simula uma interação para
+              validar uma ideia, de forma que se produza uma versão inicial da
+              interface idealizada.
+            </p>
+            <p className="mb-4">
+              Com o protótipo em mãos, é possível avaliá-lo junto ao usuário, e
+              dependendo do resultado, refiná-lo até transformá-lo em uma
+              solução que realmente esteja alinhada às necessidades levantadas
+              no processo.
+            </p>
+            <ul className="space-y-3 text-lg list-disc list-inside mb-4">
+              <li>
+                <strong>Entrada da fase:</strong> Lista Atualizada da Tabela de
+                Requisitos/Restrições da Interface (TRR) completa.
+              </li>
+              <li>
+                <strong>Saída da fase:</strong> Protótipos de baixa, média e
+                alta fidelidade.
+              </li>
+              <li>
+                <strong>Envolvidos:</strong> Designers/desenvolvedores,
+                usuários, cuidadores e especialistas.
+              </li>
+              <li>
+                <strong>Atividades da Fase:</strong> Desenvolver protótipos,
+                Validar com usuários e Refinar iterativamente.
+              </li>
+            </ul>
+          </>
+        ) : (
+          <>
+            <p className="mb-4">
+              Prototyping is a process in which ideas are transferred from the
+              conceptual domain to a tangible form. It consists of creating any
+              object, whether physical or virtual, that simulates an interaction
+              to validate an idea, resulting in an initial version of the
+              idealized interface.
+            </p>
+            <p className="mb-4">
+              With the prototype in hand, it is possible to evaluate it with the
+              user and, depending on the results, refine it until it becomes a
+              solution that is truly aligned with the needs identified during
+              the process.
+            </p>
+            <ul className="space-y-3 text-lg list-disc list-inside mb-4">
+              <li>
+                <strong>Phase Input:</strong> Updated Complete Interface
+                Requirements/Constraints Table (RCT) List.
+              </li>
+              <li>
+                <strong>Phase Output:</strong> Low, medium and high fidelity
+                prototypes.
+              </li>
+              <li>
+                <strong>Involved:</strong> Designers/developers, users,
+                caregivers and specialists.
+              </li>
+              <li>
+                <strong>Phase Activities:</strong> Develop prototypes, Validate
+                with users and Refine iteratively.
+              </li>
+            </ul>
+          </>
+        ),
     },
   ];
 
@@ -290,7 +483,7 @@ export default function ProAutProcess() {
           </h1>
 
           {/* Introdução ao ProAut */}
-          <div className="space-y-4 text-lg text-muted-foreground">
+          <div className="space-y-4 text-lg">
             <p>
               {language === "pt-BR"
                 ? "Muitas tecnologias atuais são, geralmente, inacessíveis, pois as pessoas que criam as tecnologias convencionais não incorporam, regularmente, design acessível e como desenvolvedores, sabemos que cada etapa do desenvolvimento de uma aplicação precisa ser meticulosamente idealizada e analisada antes de ser propriamente implementada."
@@ -309,11 +502,11 @@ export default function ProAutProcess() {
           </div>
 
           {/* Informação sobre as fases */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <div className="flex items-start space-x-3">
-              <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <Info className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-blue-800 font-medium">
+                <p className="text-yellow-800 font-medium">
                   {language === "pt-BR"
                     ? "INFO: O ProAut é indicado, principalmente, para construção de protótipos de baixa fidelidade."
                     : "INFO: ProAut is mainly recommended for building low-fidelity prototypes."}
@@ -389,9 +582,13 @@ export default function ProAutProcess() {
                   ? "Cada fase possui atividades que devem ser realizadas com artefatos disponibilizados na aba"
                   : "Each phase has activities that must be performed with artifacts provided in the"}
                 <FileTextIcon className="h-5 w-5 mx-1" />
+                <strong>
+                  {language == "pt-BR" ? "Artefatos" : "Artifacts"}
+                </strong>
+                {""}
                 {language === "pt-BR"
-                  ? "Artefatos da barra lateral esquerda da página atual."
-                  : "Artifacts tab on the left of the current page."}
+                  ? "da barra lateral esquerda da página atual."
+                  : "tab on the left of the current page."}
               </p>
             </div>
 
@@ -411,7 +608,7 @@ export default function ProAutProcess() {
                   }
                   className="w-full h-auto rounded-md shadow-sm"
                 />
-                <p className="text-sm text-muted-foreground text-center mt-2">
+                <p className="text-sm text-center mt-2">
                   {language === "pt-BR"
                     ? "Figura 1: Diagrama ilustrativo do processo ProAut"
                     : "Figure 1: Illustrative diagram of the ProAut process"}
@@ -439,26 +636,26 @@ export default function ProAutProcess() {
 
               return (
                 <React.Fragment key={phase.id}>
-                  <div id={phase.id} className="scroll-m-20 space-y-6">
-                    {/* Cabeçalho da Fase */}
-                    <div className="flex items-start gap-4 pb-2">
-                      <div
-                        className={`${phase.color} p-3 rounded-xl shadow-lg shrink-0`}
-                      >
-                        <Icon className="h-6 w-6 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-3xl font-bold leading-none tracking-tight pt-1">
-                          {phase.name}
-                        </h3>
-                      </div>
+                  <div
+                    className={`rounded-lg flex items-start gap-4 p-4
+                                  ${phase.id === "imersao" ? "bg-blue-50 border-l-8 border-blue-400" : ""}
+                                  ${phase.id === "analise" ? "bg-yellow-50 border-l-8 border-yellow-400" : ""}
+                                  ${phase.id === "ideacao" ? "bg-green-50 border-l-8 border-green-400" : ""}
+                                  ${phase.id === "prototipacao" ? "bg-purple-50 border-l-8 border-purple-400" : ""}
+                  `}
+                  >
+                    <div className={`${phase.color} p-3 rounded-xl shrink-0`}>
+                      <Icon className="h-6 w-6 text-white/90" />
                     </div>
-
-                    {/* Descrição da Fase */}
-                    <div className="text-base space-y-4">
-                      {phase.description}
+                    <div className="flex-1">
+                      <h3 className="text-3xl font-bold leading-none tracking-tight pt-1 text-black">
+                        {phase.name}
+                      </h3>
                     </div>
                   </div>
+
+                  {/* Descrição da Fase */}
+                  <div className="text-base space-y-4">{phase.description}</div>
                 </React.Fragment>
               );
             })}
@@ -467,7 +664,7 @@ export default function ProAutProcess() {
       </div>
 
       {/* Tabela de Conteúdos */}
-      <div className="w-80 flex-shrink-0 pt-6 pr-6 sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto">
+      <div className="w-full lg:w-80 flex-shrink-0 p-6 lg:pt-6 lg:pr-6 lg:sticky lg:top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto order-first lg:order-none">
         <Card className="shadow-lg border-l-4 border-l-blue-500">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -483,7 +680,7 @@ export default function ProAutProcess() {
                 <button
                   key={item.id}
                   onClick={() => handleNavigation(item)}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-white/90${
                     activeSection === item.id
                       ? "bg-blue-50 text-blue-700 border-l-4 border-l-blue-500 font-medium"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
@@ -492,7 +689,7 @@ export default function ProAutProcess() {
                   <ChevronRight
                     className={`h-3 w-3 transition-transform duration-200 ${
                       activeSection === item.id
-                        ? "text-blue-500"
+                        ? "text-blue-500 rotate-90"
                         : "text-gray-400"
                     }`}
                   />
