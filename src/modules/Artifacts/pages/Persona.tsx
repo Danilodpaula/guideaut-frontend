@@ -38,35 +38,37 @@ const Persona = () => {
   const FirstModel = () => {
     return (
       <div>
-        <strong>
+        <h2 className="font-bold">
           {exibirTexto("Atividades que Estressam", "Stressful Activities")}:
-        </strong>
+        </h2>
         {data.stressfulActivities.map((activity) => {
           return <p key={activity}>- {activity}</p>;
         })}
         <div className="h-[20px]" />
-        <strong>
+        <h2 className="font-bold">
           {exibirTexto("Atividades que Acalmam", "Calming Activities")}:
-        </strong>
+        </h2>
         {data.calmingActivities.map((activity) => {
           return <p key={activity}>- {activity}</p>;
         })}
         <div className="h-[20px]" />
-        <strong>
+        <h2 className="font-bold">
           {exibirTexto("Estereótipos ou Manias", "Stereotypes or Quirks")}:
-        </strong>
+        </h2>
         {data.stereotypes.map((stereotype) => {
           return <p key={stereotype}>- {stereotype}</p>;
         })}
         <div className="h-[20px]" />
-        <strong>{exibirTexto("Aspectos Sociais", "Social Aspects")}:</strong>
+        <h2 className="font-bold">
+          {exibirTexto("Aspectos Sociais", "Social Aspects")}:
+        </h2>
         {data.socialAspects.map((aspect) => {
           return <p key={aspect}>- {aspect}</p>;
         })}
         <div className="h-[20px]" />
-        <strong>
+        <h2 className="font-bold">
           {exibirTexto("Aspectos de Software", "Software Aspects")}:
-        </strong>
+        </h2>
         {data.softwareAspects.map((aspect) => {
           return <p key={aspect}>- {aspect}</p>;
         })}
@@ -77,14 +79,14 @@ const Persona = () => {
   const SecondModel = () => {
     return (
       <div className="flex flex-col">
-        <strong>{exibirTexto("Sobre", "About")}:</strong>
+        <h2 className="font-bold">{exibirTexto("Sobre", "About")}:</h2>
         <p>{data.about}</p>
       </div>
     );
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-[30px]">
+    <div className="max-w-3xl mx-auto mt-[30px] mb-[30px]">
       <Card className="flex flex-col" ref={contentRef}>
         <CardHeader>
           <div className="flex items-baseline ">
@@ -92,20 +94,15 @@ const Persona = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <p>
-            <strong>{exibirTexto("Idade", "Age")}</strong> {data.age}
-          </p>
-          <p>
-            <strong>{exibirTexto("Gênero", "Gender")}:</strong>{" "}
-            {exibirTexto(gender.pt, gender.en)}
-          </p>
+          <h2 className="font-bold">{exibirTexto("Idade: ", "Age: ")}</h2>
+          <p>{data.age}</p>
+          <h2 className="font-bold">{exibirTexto("Gênero: ", "Gender: ")}</h2>
+          <p>{exibirTexto(gender.pt, gender.en)}</p>
           <h2 className="flex-1 font-bold">
-            {" " +
-              exibirTexto(
-                "Visão Geral do Autista",
-                "Overview of the Autistic Person",
-              )}
-            :
+            {exibirTexto(
+              "Visão Geral do Autista: ",
+              "Overview of the Autistic Person: ",
+            )}
           </h2>
           <VGA
             interactionList={data.interaction}
@@ -113,14 +110,14 @@ const Persona = () => {
             communicationList={data.communication}
             behaviorList={data.behavior}
           />
-          <p>
-            <strong>{exibirTexto("Linguagem", "Language")}</strong>{" "}
-            {exibirTexto(lang.pt, lang.en)}
-          </p>
-          <p>
-            <strong>{exibirTexto("Nível de Suporte", "Support Level")}:</strong>{" "}
-            {data.supportLevel}
-          </p>
+          <h2 className="font-bold">
+            {exibirTexto("Linguagem: ", "Language: ")}
+          </h2>
+          <p>{exibirTexto(lang.pt, lang.en)}</p>
+          <h2 className="font-bold">
+            {exibirTexto("Nível de Suporte: ", "Support Level: ")}
+          </h2>
+          <p>{data.supportLevel}</p>
           {data && data.model === "1" && <FirstModel />}
           {data && data.model === "2" && <SecondModel />}
         </CardContent>
