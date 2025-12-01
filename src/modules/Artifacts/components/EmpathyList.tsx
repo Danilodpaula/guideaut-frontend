@@ -32,9 +32,10 @@ const EmpathyList = () => {
               age={empathy.age}
               gender={empathy.gender}
               viewAction={() => navigate(`/empathy/${empathy.id}`)}
-              editAction={() => navigate(`/empathy/${empathy.id}/edit`)}
+              editAction={() => navigate(`/empathy/${empathy.id}/update`)}
               deleteAction={async () => {
                 await removeEmpathy.mutateAsync(empathy.id);
+                refetch();
               }}
             />
           );

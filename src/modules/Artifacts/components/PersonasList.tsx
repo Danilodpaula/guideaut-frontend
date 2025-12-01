@@ -32,9 +32,10 @@ const PersonasList = () => {
               age={persona.age}
               gender={persona.gender}
               viewAction={() => navigate(`/persona/${persona.id}`)}
-              editAction={() => navigate(`/persona/${persona.id}/edit`)}
+              editAction={() => navigate(`/persona/${persona.id}/update`)}
               deleteAction={async () => {
                 await removePersona.mutateAsync(persona.id);
+                refetch();
               }}
             />
           );

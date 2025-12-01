@@ -19,6 +19,7 @@ import PersonaStereotypesHabits from "../components/PersonaStereotypesHabits";
 import PersonaSocialAspects from "../components/PersonaSocialAspects";
 import PersonaSoftwareAspects from "../components/PersonaSoftwareAspects";
 import PersonaConfirmation from "../components/PersonaConfirmation";
+import BackToArtifactsPageButton from "../components/BackToArtifactsPageButton";
 
 const PersonaCreateForm = () => {
   useAuthGuard();
@@ -83,6 +84,7 @@ const PersonaCreateForm = () => {
 
   return (
     <div className="mx-auto p-4 max-w-[1000px]">
+      <BackToArtifactsPageButton value="1" />
       <form onSubmit={create} className="mx-auto p-4">
         <h2 className="font-bold text-[30px] text-[#20B4F8] pb-[25px]">
           {exibirTexto("Criar Persona", "Create Persona")}

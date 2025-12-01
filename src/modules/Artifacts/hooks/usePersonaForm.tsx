@@ -16,35 +16,32 @@ interface Inputs extends FormBase {
 
 interface Props {
   id?: string;
-  params?: Inputs;
 }
 
 type PersonaWatch = UseFormWatch<Inputs>;
 
-const usePersonaForm = ({ params, id }: Props) => {
+const usePersonaForm = ({ id }: Props) => {
   const { createPersona, updatePersona } = usePersonaApi({ id: id });
 
-  const { handleSubmit, watch, control } = useForm<Inputs>({
-    defaultValues: params
-      ? params
-      : {
-          name: "",
-          age: 0,
-          gender: "",
-          language: "",
-          supportLevel: "",
-          model: "",
-          stressfulActivities: [],
-          calmingActivities: [],
-          stereotypes: [],
-          softwareAspects: [],
-          socialAspects: [],
-          about: "",
-          interaction: [],
-          cognition: [],
-          communication: [],
-          behavior: [],
-        },
+  const { handleSubmit, watch, control, reset } = useForm<Inputs>({
+    defaultValues: {
+      name: "",
+      age: 0,
+      gender: "",
+      language: "",
+      supportLevel: "",
+      model: "",
+      stressfulActivities: [],
+      calmingActivities: [],
+      stereotypes: [],
+      softwareAspects: [],
+      socialAspects: [],
+      about: "",
+      interaction: [],
+      cognition: [],
+      communication: [],
+      behavior: [],
+    },
   });
 
   const onCreateSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -94,6 +91,7 @@ const usePersonaForm = ({ params, id }: Props) => {
   return {
     control,
     watch,
+    reset,
     create: handleSubmit(onCreateSubmit),
     update: handleSubmit(onUpdateSubmit),
   };

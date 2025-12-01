@@ -90,11 +90,13 @@ const useScriptApi = ({ id }: { id?: string }) => {
   const findAllScript = useQuery({
     queryKey: ["script-list"],
     queryFn: ScriptService.findAll,
+    enabled: false,
   });
 
   const findOneScript = useQuery({
     queryKey: ["script", id],
     queryFn: () => ScriptService.findOne(id),
+    enabled: false,
   });
 
   return {

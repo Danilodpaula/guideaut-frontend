@@ -7,6 +7,7 @@ import { languages } from "../i18n/autistic-languages";
 import useDefault from "../hooks/useDefault";
 import usePersonaApi from "../hooks/usePersonaApi";
 import { useEffect } from "react";
+import BackToArtifactsPageButton from "../components/BackToArtifactsPageButton";
 
 const Persona = () => {
   useAuthGuard();
@@ -86,8 +87,9 @@ const Persona = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-[30px] mb-[30px]">
-      <Card className="flex flex-col" ref={contentRef}>
+    <div className="max-w-3xl mx-auto m-[30px]">
+      <BackToArtifactsPageButton value="1" />
+      <Card className="flex flex-col mt-[20px]" ref={contentRef}>
         <CardHeader>
           <div className="flex items-baseline ">
             <h2 className="font-bold text-[40px]">{"Persona: " + data.name}</h2>

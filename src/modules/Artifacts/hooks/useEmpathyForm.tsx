@@ -9,28 +9,25 @@ interface Inputs extends FormBase {
 
 interface Props {
   id?: string;
-  params?: Inputs;
 }
 
 type EmpathyWatch = UseFormWatch<Inputs>;
 
-const useEmpathyForm = ({ params, id }: Props) => {
+const useEmpathyForm = ({ id }: Props) => {
   const { createEmpathy, updateEmpathy } = useEmpathyApi({ id: id });
 
-  const { watch, handleSubmit, control } = useForm<Inputs>({
-    defaultValues: params
-      ? params
-      : {
-          name: "",
-          age: 0,
-          gender: "",
-          reasons: "",
-          expectations: "",
-          interaction: [],
-          cognition: [],
-          communication: [],
-          behavior: [],
-        },
+  const { watch, handleSubmit, control, reset } = useForm<Inputs>({
+    defaultValues: {
+      name: "",
+      age: 0,
+      gender: "",
+      reasons: "",
+      expectations: "",
+      interaction: [],
+      cognition: [],
+      communication: [],
+      behavior: [],
+    },
   });
 
   const onCreateSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -66,6 +63,7 @@ const useEmpathyForm = ({ params, id }: Props) => {
   return {
     control,
     watch,
+    reset,
     create: handleSubmit(onCreateSubmit),
     update: handleSubmit(onUpdateSubmit),
   };
