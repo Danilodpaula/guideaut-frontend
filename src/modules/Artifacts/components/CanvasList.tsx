@@ -2,14 +2,13 @@ import { useEffect } from "react";
 import useDefault from "../hooks/useDefault";
 import useScriptApi from "../hooks/useScriptApi";
 import useScriptForm from "../hooks/useScriptForm";
-import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Eye, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { titles } from "../i18n/scripts";
 import { Badge } from "@/components/ui/badge";
 
-const CanvasList = () => {
+const CanvasList = ({ goToScripts }: { goToScripts: () => void }) => {
   const { navigate, exibirTexto } = useDefault();
   const { questions } = useScriptForm({});
   const { findAllScript } = useScriptApi({});
@@ -54,7 +53,7 @@ const CanvasList = () => {
             <p className="text-slate-500 mb-4">
               {exibirTexto("Nenhum canvas salvo ainda", "No saved canvas yet")}
             </p>
-            <Button>
+            <Button onClick={goToScripts}>
               {exibirTexto("Crie um roteiro primeiro", "Create a script first")}
             </Button>
           </CardContent>

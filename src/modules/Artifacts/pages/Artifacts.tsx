@@ -3,24 +3,10 @@ import { Button } from "@/components/ui/button";
 import useDefault from "../hooks/useDefault";
 import useAuthGuard from "../hooks/useAuthGuard";
 import { artifacts } from "../i18n/artifacts";
-import useEmpathyApi from "../hooks/useEmpathyApi";
-import { EmpathyCreateDto } from "../types/dto/empathy-create";
 
 const Artifacts = () => {
   useAuthGuard();
   const { navigate, location, exibirTexto } = useDefault();
-  const { createEmpathy } = useEmpathyApi({});
-  const opa: EmpathyCreateDto = {
-    name: "oi",
-    age: 8,
-    gender: "string",
-    reasons: "string",
-    expectations: "string",
-    interactionItems: [""],
-    cognitionItems: [""],
-    communicationItems: [""],
-    behaviorItems: [""],
-  };
   const { value } = location.state || {};
   const defaultValue = value ? value : "1";
 
@@ -60,7 +46,14 @@ const Artifacts = () => {
                     {exibirTexto(artifact.title.pt, artifact.title.en)}
                   </Button>
                 )}
-                <ComponentHome exibirTexto={exibirTexto} />
+                <ComponentHome
+                  goToScripts={() => {
+                    navigate("/");
+                    setTimeout(() => {
+                      navigate("/artifacts", { state: { value: "4" } });
+                    }, 100);
+                  }}
+                />
               </div>
             </TabsContent>
           );

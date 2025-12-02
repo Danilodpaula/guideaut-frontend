@@ -1,6 +1,6 @@
-import { Question } from "../types/script";
+import { FixedQuestion } from "../types/script";
 
-const clientQuestions: Question[] = [
+const clientQuestions: FixedQuestion[] = [
   {
     id: "1",
     pt: "Para qual faixa etária o Software/Aplicativo será aplicado?",
@@ -73,7 +73,7 @@ const clientQuestions: Question[] = [
   },
 ];
 
-const caregiverQuestions: Question[] = [
+const caregiverQuestions: FixedQuestion[] = [
   {
     id: "11",
     pt: "Qual a idade da pessoa?",
@@ -188,7 +188,7 @@ const caregiverQuestions: Question[] = [
   },
 ];
 
-const therapistQuestions: Question[] = [
+const therapistQuestions: FixedQuestion[] = [
   {
     id: "27",
     pt: "Qual a faixa etária em que o tema em questão é mais trabalhoso/observado?",
