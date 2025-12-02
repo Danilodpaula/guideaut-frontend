@@ -1,22 +1,5 @@
-// ============================================================
-// 🌐 TRADUÇÕES INTERNACIONAIS (i18n)
-// ============================================================
-// Este arquivo define o **dicionário de traduções** multilíngue
-// da aplicação GuideAut, atualmente suportando:
-//
-// 🇧🇷 Português (pt-BR)
-// 🇺🇸 Inglês (en-US)
-//
-// Cada seção contém textos reutilizáveis, organizados por contexto
-// (ex: auth, common, nav, users, accessibility, etc.).
-// ============================================================
-
 export const translations = {
-  // ------------------------------------------------------------
-  // 🇧🇷 Português (Brasil)
-  // ------------------------------------------------------------
   "pt-BR": {
-    // 🌍 Comum
     common: {
       loading: "Carregando...",
       save: "Salvar",
@@ -34,9 +17,11 @@ export const translations = {
       previous: "Anterior",
       close: "Fechar",
       skipToContent: "Pular para o conteúdo",
+      details: "Detalhes",
+      noData: "Sem dados",
+      error: "Erro",
+      all: "Todos",
     },
-
-    // 🧭 Navegação
     nav: {
       home: "Início",
       help: "Ajuda",
@@ -49,6 +34,7 @@ export const translations = {
       roles: "Papéis",
       categories: "Categorias",
       audit: "Auditoria",
+      reports: "Denúncias",
       importData: "Importar Dados",
       accessibility: "Acessibilidade",
       proaut: "Processo ProAut",
@@ -57,8 +43,6 @@ export const translations = {
       artifacts: "Artefatos",
       developers: "Desenvolvedores",
     },
-
-    // 🔐 Autenticação
     auth: {
       login: "Entrar",
       signup: "Cadastrar",
@@ -80,9 +64,30 @@ export const translations = {
       emailAlreadyExists: "Este e-mail já está cadastrado",
       continueAsGuest: "Acessar como visitante",
       continueAsGuestMessage: "Navegando como visitante!",
+      userNotActive:
+        "Seu usuário está bloqueado ou inativo. Entre em contato com o administrador.",
+      forgotPasswordTitle: "Esqueci minha senha",
+      forgotPasswordSubtitle:
+        "Informe seu e-mail e enviaremos um código para redefinir sua senha.",
+      forgotPasswordEmailSent:
+        "Se o e-mail existir, enviamos um código de verificação.",
+      forgotPasswordError:
+        "Erro ao solicitar redefinição de senha. Tente novamente.",
+      resetPasswordTitle: "Redefinir senha",
+      resetPasswordSubtitle:
+        "Digite o código recebido por e-mail e escolha uma nova senha.",
+      resetPasswordSuccess:
+        "Senha redefinida com sucesso! Você já pode fazer login.",
+      resetPasswordError: "Erro ao redefinir senha. Tente novamente.",
+      resetPasswordInvalidCode:
+        "Código inválido ou expirado. Solicite um novo código.",
+      resetCodeLabel: "Código de verificação",
+      resetCodePlaceholder: "Ex: 123456",
+      resetCodeRequired: "Informe o código recebido por e-mail.",
+      sendResetCode: "Enviar código",
+      resetPasswordAction: "Redefinir senha",
+      backToLogin: "Voltar para o login",
     },
-
-    // ♿ Acessibilidade
     accessibility: {
       title: "Preferências de Acessibilidade",
       theme: "Tema",
@@ -95,8 +100,6 @@ export const translations = {
       reduceMotion: "Reduzir animações",
       settingsSaved: "Preferências salvas com sucesso",
     },
-
-    // 👥 Administração - Usuários
     users: {
       title: "Gerenciar Usuários",
       createUser: "Criar Usuário",
@@ -119,9 +122,34 @@ export const translations = {
       userBlocked: "Usuário bloqueado",
       userArchived: "Usuário arquivado",
       passwordReset: "Senha resetada",
-    },
 
-    // ⚙️ Administração - Papéis
+      //
+      subtitle: "Gerencie usuários, status e permissões",
+      editRoles: "Editar papéis do usuário",
+      noUserSelected: "Nenhum usuário selecionado.",
+      rolesMustHaveAtLeastOne: "Selecione pelo menos um papel.",
+      fillAllFieldsAndRoles:
+        "Preencha todos os campos e selecione pelo menos um papel.",
+      createUserTitle: "Criar novo usuário",
+      createUserDescription:
+        "Preencha os dados do usuário e selecione os papéis.",
+      nameLabel: "Nome",
+      namePlaceholder: "Nome completo",
+      emailLabel: "E-mail",
+      emailPlaceholder: "email@exemplo.com",
+      passwordLabel: "Senha",
+      passwordPlaceholder: "Defina uma senha temporária",
+      rolesLabel: "Papéis",
+      pageSize: "Tamanho da página",
+      pageSize5: "5 / página",
+      pageSize10: "10 / página",
+      pageSize20: "20 / página",
+      pageSize50: "50 / página",
+      paginationInfo:
+        "Página {{page}} de {{totalPages}} • {{totalElements}} usuários",
+      created: "Usuário criado com sucesso",
+      rolesUpdated: "Papéis atualizados com sucesso.",
+    },
     roles: {
       title: "Gerenciar Papéis",
       createRole: "Criar Papel",
@@ -131,8 +159,6 @@ export const translations = {
       roleUpdated: "Papel atualizado com sucesso",
       roleDeleted: "Papel excluído",
     },
-
-    // 🗂️ Administração - Categorias
     categories: {
       title: "Gerenciar Categorias",
       createCategory: "Criar Categoria",
@@ -142,8 +168,6 @@ export const translations = {
       categoryUpdated: "Categoria atualizada com sucesso",
       categoryArchived: "Categoria arquivada",
     },
-
-    // 🧾 Administração - Auditoria
     audit: {
       title: "Auditoria",
       event: "Evento",
@@ -158,8 +182,6 @@ export const translations = {
       startDate: "Data inicial",
       endDate: "Data final",
     },
-
-    // 📦 Administração - Importação de dados
     importData: {
       title: "Importar Dados",
       uploadFile: "Fazer upload de arquivo",
@@ -175,8 +197,6 @@ export const translations = {
       importError: "Erro na importação",
       validationErrors: "Corrija os erros antes de importar",
     },
-
-    // 📄 Páginas do sistema
     pages: {
       notFound: "Página não encontrada",
       forbidden: "Acesso negado",
@@ -192,13 +212,44 @@ export const translations = {
       institutional:
         "Desenvolvido pela turma de Engenharia de Software da Universidade do Estado do Amazonas (UEA), no período 2025/2, sob orientação da Professora Áurea Hiléia da Silva Melo.",
     },
+    reports: {
+      title: "Gerenciar Denúncias",
+      subtitle: "Visualize e modere denúncias de conteúdo ou usuários",
+      reason: "Motivo",
+      target: "Alvo",
+      reporter: "Denunciante",
+      status: "Status",
+      date: "Data",
+      type: "Tipo",
+      details: "Detalhes da Denúncia",
+      resolve: "Resolver",
+      dismiss: "Ignorar",
+      pending: "Pendente",
+      resolved: "Resolvido",
+      dismissed: "Ignorado",
+      spam: "Spam",
+      inappropriate: "Conteúdo Impróprio",
+      harassment: "Assédio",
+      other: "Outro",
+      actionSuccess: "Status da denúncia atualizado com sucesso",
+      createTitle: "Denunciar Conteúdo",
+      createDescription:
+        "Selecione o motivo e descreva o problema. Nossa equipe analisará o caso.",
+      selectReason: "Selecione um motivo",
+      descriptionPlaceholder: "Descreva detalhadamente o motivo da denúncia...",
+      submit: "Enviar Denúncia",
+      success: "Denúncia enviada com sucesso",
+      error: "Erro ao enviar denúncia",
+      typeUser: "Usuário",
+      typeRecommendation: "Recomendação",
+      typeComment: "Comentário",
+    },
+    errors: {
+      forbidden: "Acesso negado.",
+      generic: "Erro ao processar a requisição.",
+    },
   },
-
-  // ------------------------------------------------------------
-  // 🇺🇸 English (United States)
-  // ------------------------------------------------------------
   "en-US": {
-    // 🌍 Common
     common: {
       loading: "Loading...",
       save: "Save",
@@ -216,9 +267,11 @@ export const translations = {
       previous: "Previous",
       close: "Close",
       skipToContent: "Skip to content",
+      details: "Details",
+      noData: "No data",
+      error: "Error",
+      all: "All",
     },
-
-    // 🧭 Navigation
     nav: {
       home: "Home",
       help: "Help",
@@ -231,6 +284,7 @@ export const translations = {
       roles: "Roles",
       categories: "Categories",
       audit: "Audit",
+      reports: "Reports",
       importData: "Import Data",
       accessibility: "Accessibility",
       proaut: "ProAut Process",
@@ -239,8 +293,6 @@ export const translations = {
       artifacts: "Artifacts",
       developers: "Developers",
     },
-
-    // 🔐 Auth
     auth: {
       login: "Login",
       signup: "Sign Up",
@@ -262,9 +314,28 @@ export const translations = {
       emailAlreadyExists: "This email is already registered",
       continueAsGuest: "Continue as guest",
       continueAsGuestMessage: "Browsing as a guest!",
+      userNotActive:
+        "Your account is blocked or inactive. Please contact the administrator.",
+      forgotPasswordTitle: "Forgot my password",
+      forgotPasswordSubtitle:
+        "Enter your e-mail and we will send you a code to reset your password.",
+      forgotPasswordEmailSent:
+        "If the e-mail exists, we have sent a verification code.",
+      forgotPasswordError: "Error requesting password reset. Please try again.",
+      resetPasswordTitle: "Reset password",
+      resetPasswordSubtitle:
+        "Enter the code you received by e-mail and choose a new password.",
+      resetPasswordSuccess: "Password reset successfully! You can now log in.",
+      resetPasswordError: "Error resetting password. Please try again.",
+      resetPasswordInvalidCode:
+        "Invalid or expired code. Please request a new one.",
+      resetCodeLabel: "Verification code",
+      resetCodePlaceholder: "Ex: 123456",
+      resetCodeRequired: "Enter the code you received by e-mail.",
+      sendResetCode: "Send code",
+      resetPasswordAction: "Reset password",
+      backToLogin: "Back to login",
     },
-
-    // ♿ Accessibility
     accessibility: {
       title: "Accessibility Preferences",
       theme: "Theme",
@@ -277,8 +348,6 @@ export const translations = {
       reduceMotion: "Reduce motion",
       settingsSaved: "Preferences saved successfully",
     },
-
-    // 👥 Admin - Users
     users: {
       title: "Manage Users",
       createUser: "Create User",
@@ -301,9 +370,32 @@ export const translations = {
       userBlocked: "User blocked",
       userArchived: "User archived",
       passwordReset: "Password reset",
-    },
 
-    // ⚙️ Admin - Roles
+      //
+      subtitle: "Manage users, statuses and permissions",
+      editRoles: "Edit user roles",
+      noUserSelected: "No user selected.",
+      rolesMustHaveAtLeastOne: "Select at least one role.",
+      fillAllFieldsAndRoles: "Fill in all fields and select at least one role.",
+      createUserTitle: "Create new user",
+      createUserDescription: "Fill in the user data and select the roles.",
+      nameLabel: "Name",
+      namePlaceholder: "Full name",
+      emailLabel: "Email",
+      emailPlaceholder: "email@example.com",
+      passwordLabel: "Password",
+      passwordPlaceholder: "Set a temporary password",
+      rolesLabel: "Roles",
+      pageSize: "Page size",
+      pageSize5: "5 / page",
+      pageSize10: "10 / page",
+      pageSize20: "20 / page",
+      pageSize50: "50 / page",
+      paginationInfo:
+        "Page {{page}} of {{totalPages}} • {{totalElements}} users",
+      created: "User created successfully",
+      rolesUpdated: "Roles updated successfully.",
+    },
     roles: {
       title: "Manage Roles",
       createRole: "Create Role",
@@ -313,8 +405,6 @@ export const translations = {
       roleUpdated: "Role updated successfully",
       roleDeleted: "Role deleted",
     },
-
-    // 🗂️ Admin - Categories
     categories: {
       title: "Manage Categories",
       createCategory: "Create Category",
@@ -324,8 +414,6 @@ export const translations = {
       categoryUpdated: "Category updated successfully",
       categoryArchived: "Category archived",
     },
-
-    // 🧾 Admin - Audit
     audit: {
       title: "Audit",
       event: "Event",
@@ -340,8 +428,6 @@ export const translations = {
       startDate: "Start date",
       endDate: "End date",
     },
-
-    // 📦 Admin - Import
     importData: {
       title: "Import Data",
       uploadFile: "Upload file",
@@ -357,8 +443,6 @@ export const translations = {
       importError: "Import error",
       validationErrors: "Fix errors before importing",
     },
-
-    // 📄 Pages
     pages: {
       notFound: "Page not found",
       forbidden: "Access denied",
@@ -374,13 +458,44 @@ export const translations = {
       institutional:
         "Developed by the Software Engineering class at the State University of Amazonas (UEA), in the 2025/2 term, under the supervision of Professor Áurea Hiléia da Silva Melo.",
     },
+    reports: {
+      title: "Manage Reports",
+      subtitle: "View and moderate content or user reports",
+      reason: "Reason",
+      target: "Target",
+      reporter: "Reporter",
+      status: "Status",
+      date: "Date",
+      type: "Type",
+      details: "Report Details",
+      resolve: "Resolve",
+      dismiss: "Dismiss",
+      pending: "Pending",
+      resolved: "Resolved",
+      dismissed: "Dismissed",
+      spam: "Spam",
+      inappropriate: "Inappropriate Content",
+      harassment: "Harassment",
+      other: "Other",
+      actionSuccess: "Report status updated successfully",
+      createTitle: "Report Content",
+      createDescription:
+        "Select a reason and describe the issue. Our team will review it.",
+      selectReason: "Select a reason",
+      descriptionPlaceholder: "Describe the reason for the report in detail...",
+      submit: "Submit Report",
+      success: "Report submitted successfully",
+      error: "Error submitting report",
+      typeUser: "User",
+      typeRecommendation: "Recommendation",
+      typeComment: "Comment",
+    },
+    errors: {
+      forbidden: "Access denied.",
+      generic: "Error while processing the request.",
+    },
   },
 } as const;
 
-// ------------------------------------------------------------
-// 🔠 Tipagens auxiliares
-// ------------------------------------------------------------
-// `Language` → retorna os idiomas disponíveis
-// `TranslationKey` → retorna as chaves de tradução base (nível 1)
 export type Language = keyof typeof translations;
 export type TranslationKey = keyof (typeof translations)["pt-BR"];
