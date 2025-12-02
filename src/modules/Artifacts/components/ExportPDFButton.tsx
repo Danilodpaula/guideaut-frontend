@@ -28,6 +28,7 @@ const ExportPDFButton = ({ pageRef, filename }: Props) => {
         html2pdf().set(options(filename)).from(pageRef.current).save();
       }}
       type="button"
+      className="my-[25px]"
     >
       <Download className="w-4 h-4" />
       {exibirTexto("Exportar para PDF", "Export to PDF")}

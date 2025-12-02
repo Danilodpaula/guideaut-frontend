@@ -8,7 +8,7 @@ const BackToArtifactsPageButton = ({ value }: { value: string }) => {
   };
 
   return (
-    <Button onClick={backFn} type="button">
+    <Button onClick={backFn} type="button" className="my-[25px]">
       {exibirTexto(
         "Voltar para a página de Artefatos",
         "Go back to Artifacts page",

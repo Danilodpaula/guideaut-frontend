@@ -29,16 +29,11 @@ const PersonaEditForm = () => {
   const { isFetching, data, isError, refetch } = findOnePersona;
   const [step, setStep] = useState(0);
   const { control, watch, update, reset } = usePersonaForm({ id: id });
-  const [model, setModel] = useState("");
 
   const baseSteps = useMemo(
     () => [
       <PersonaCreateWelcome />,
-      <PersonaChooseModel
-        model={model}
-        control={control}
-        setModel={setModel}
-      />,
+      <PersonaChooseModel control={control} />,
       <Behavior<PersonaInput> control={control} />,
       <Cognition<PersonaInput> control={control} />,
       <Communication<PersonaInput> control={control} />,
@@ -46,7 +41,7 @@ const PersonaEditForm = () => {
       <PersonalData<PersonaInput> control={control} />,
       <PersonaGeneralCharacteristics control={control} />,
     ],
-    [model, control],
+    [control],
   );
 
   const model1Steps = useMemo(
@@ -79,19 +74,18 @@ const PersonaEditForm = () => {
   useEffect(() => {
     if (data) {
       reset(data);
-      setModel(data.model);
     }
   }, [data]);
 
   useEffect(() => {
-    if (model === "1") {
+    if (watch("model") === "1") {
       setSteps([...baseSteps, ...model1Steps, ...confirmationSteps]);
-    } else if (model === "2") {
+    } else if (watch("model") === "2") {
       setSteps([...baseSteps, ...model2Steps, ...confirmationSteps]);
     } else {
       setSteps([...baseSteps, ...confirmationSteps]);
     }
-  }, [model, baseSteps, confirmationSteps, model1Steps, model2Steps]);
+  }, [watch("model"), baseSteps, confirmationSteps, model1Steps, model2Steps]);
 
   if (isFetching) {
     return <p>{exibirTexto("Carregando...", "Loading...")}</p>;

@@ -45,47 +45,11 @@ const usePersonaForm = ({ id }: Props) => {
   });
 
   const onCreateSubmit: SubmitHandler<Inputs> = async (data) => {
-    const persona = {
-      name: data.name,
-      age: data.age,
-      gender: data.gender,
-      language: data.language,
-      supportLevel: data.supportLevel,
-      model: data.model,
-      stressfulActivities: data.stressfulActivities,
-      calmingActivities: data.calmingActivities,
-      stereotypes: data.stereotypes,
-      softwareAspects: data.softwareAspects,
-      socialAspects: data.socialAspects,
-      about: data.about,
-      interaction: data.interaction,
-      cognition: data.cognition,
-      communication: data.communication,
-      behavior: data.behavior,
-    };
-    await createPersona.mutateAsync(persona);
+    await createPersona.mutateAsync(data);
   };
 
   const onUpdateSubmit: SubmitHandler<Inputs> = async (data) => {
-    const persona = {
-      name: data.name,
-      age: data.age,
-      gender: data.gender,
-      language: data.language,
-      supportLevel: data.supportLevel,
-      model: data.model,
-      stressfulActivities: data.stressfulActivities,
-      calmingActivities: data.calmingActivities,
-      stereotypes: data.stereotypes,
-      softwareAspects: data.softwareAspects,
-      socialAspects: data.socialAspects,
-      about: data.about,
-      interaction: data.interaction,
-      cognition: data.cognition,
-      communication: data.communication,
-      behavior: data.behavior,
-    };
-    await updatePersona.mutateAsync(persona);
+    await updatePersona.mutateAsync(data);
   };
 
   return {

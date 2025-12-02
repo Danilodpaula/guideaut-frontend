@@ -53,6 +53,7 @@ const PersonaStressfulActivities = ({
                       setNewActivity("");
                     }
                   }}
+                  type="button"
                 >
                   {exibirTexto("Adicione", "Add")}
                 </Button>

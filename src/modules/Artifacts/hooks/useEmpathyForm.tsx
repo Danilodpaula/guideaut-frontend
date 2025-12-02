@@ -31,33 +31,11 @@ const useEmpathyForm = ({ id }: Props) => {
   });
 
   const onCreateSubmit: SubmitHandler<Inputs> = async (data) => {
-    const empathy = {
-      name: data.name,
-      age: data.age,
-      gender: data.gender,
-      reasons: data.reasons,
-      expectations: data.expectations,
-      interactionItems: data.interaction,
-      cognitionItems: data.cognition,
-      communicationItems: data.communication,
-      behaviorItems: data.behavior,
-    };
-    await createEmpathy.mutateAsync(empathy);
+    await createEmpathy.mutateAsync(data);
   };
 
   const onUpdateSubmit: SubmitHandler<Inputs> = async (data) => {
-    const empathy = {
-      name: data.name,
-      age: data.age,
-      gender: data.gender,
-      reasons: data.reasons,
-      expectations: data.expectations,
-      interactionItems: data.interaction,
-      cognitionItems: data.cognition,
-      communicationItems: data.communication,
-      behaviorItems: data.behavior,
-    };
-    await updateEmpathy.mutateAsync(empathy);
+    await updateEmpathy.mutateAsync(data);
   };
 
   return {

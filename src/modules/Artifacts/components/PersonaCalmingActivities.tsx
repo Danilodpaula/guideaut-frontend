@@ -53,6 +53,7 @@ const PersonaCalmingActivities = ({
                       setNewActivity("");
                     }
                   }}
+                  type="button"
                 >
                   {exibirTexto("Adicione", "Add")}
                 </Button>

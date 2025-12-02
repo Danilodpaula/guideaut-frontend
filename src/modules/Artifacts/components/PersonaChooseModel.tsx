@@ -21,8 +21,8 @@ import { PersonaInput } from "../hooks/usePersonaForm";
 
 type Props = {
   control: Control<PersonaInput, any, PersonaInput>;
-  setModel: (value: string) => void;
-  model: string;
+  setModel?: (value: string) => void;
+  model?: string;
 };
 
 const Model1Modal = () => {

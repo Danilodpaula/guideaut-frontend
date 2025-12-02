@@ -53,6 +53,7 @@ const PersonaSocialAspects = ({
                       setNewAspect("");
                     }
                   }}
+                  type="button"
                 >
                   {exibirTexto("Adicione", "Add")}
                 </Button>

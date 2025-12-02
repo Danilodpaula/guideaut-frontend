@@ -56,6 +56,7 @@ const PersonaStereotypesHabits = ({
                       setNewStereotype("");
                     }
                   }}
+                  type="button"
                 >
                   {exibirTexto("Adicione", "Add")}
                 </Button>

@@ -11,6 +11,7 @@ import Behavior from "../components/Behavior";
 import Communication from "../components/Communication";
 import Cognition from "../components/Cognition";
 import Interaction from "../components/Interaction";
+import BackToArtifactsPageButton from "../components/BackToArtifactsPageButton";
 
 const EmpathyCreateForm = () => {
   useAuthGuard();
@@ -33,6 +34,7 @@ const EmpathyCreateForm = () => {
 
   return (
     <div className="mx-auto p-4">
+      <BackToArtifactsPageButton value="2" />
       <form onSubmit={create} className="mx-auto p-4">
         <h2 className="font-bold text-[30px] text-[#20B4F8] pb-[25px]">
           {exibirTexto("Criar Mapa de Empatia", "Create Empathy Map")}

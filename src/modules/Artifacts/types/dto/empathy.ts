@@ -5,8 +5,8 @@ export interface EmpathyDto {
   gender: string;
   reasons: string;
   expectations: string;
-  interactionItems: string[];
-  cognitionItems: string[];
-  communicationItems: string[];
-  behaviorItems: string[];
+  interaction: string[];
+  cognition: string[];
+  communication: string[];
+  behavior: string[];
 }
