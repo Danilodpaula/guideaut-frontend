@@ -1,7 +1,7 @@
 import CanvasList from "../components/CanvasList";
 import EmpathyList from "../components/EmpathyList";
 import PersonasList from "../components/PersonasList";
-import ScriptSelection from "../pages/ScriptSelection";
+import ScriptSelection from "../components/ScriptSelection";
 
 export const artifacts = [
   {

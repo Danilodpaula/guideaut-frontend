@@ -5,24 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import useAuthGuard from "../hooks/useAuthGuard";
 
-const titles = [
-  {
-    id: "client",
-    pt: "Roteiro de Entrevista do Cliente",
-    en: "Client Interview Script",
-  },
-  {
-    id: "caregiver",
-    pt: "Roteiro de Entrevista do Cuidador",
-    en: "Caregiver Interview Script",
-  },
-  {
-    id: "therapist",
-    pt: "Roteiro de Entrevista do Terapeuta",
-    en: "Therapist Interview Script",
-  },
-];
-
 const ScriptsMyScripts = () => {
   useAuthGuard();
   const { isFetching, data, isError } = useQuery({

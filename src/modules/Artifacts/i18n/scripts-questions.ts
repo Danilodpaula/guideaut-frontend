@@ -1,10 +1,4 @@
-interface Question {
-  id: string;
-  pt: string;
-  en: string;
-  section: string;
-  isFixed: boolean;
-}
+import { Question } from "../types/script";
 
 const clientQuestions: Question[] = [
   {
@@ -275,5 +269,3 @@ const therapistQuestions: Question[] = [
 ];
 
 export { clientQuestions, caregiverQuestions, therapistQuestions };
-
-export type { Question };

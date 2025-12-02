@@ -10,6 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import useDefault from "../hooks/useDefault";
+import { Trash2 } from "lucide-react";
 
 type Props = {
   onClick: () => void;
@@ -21,7 +22,9 @@ const RemoveOptionAlertDialog = ({ onClick }: Props) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <button className="text-[30px]">-</button>
+        <button className="text-[30px]">
+          <Trash2 />
+        </button>
       </AlertDialogTrigger>
       <AlertDialogPortal>
         <AlertDialogOverlay></AlertDialogOverlay>
