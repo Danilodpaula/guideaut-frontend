@@ -11,7 +11,7 @@ const Canvas = () => {
   useAuthGuard();
   const { exibirTexto, contentRef, location, id } = useDefault();
   const { formType } = location.state || {};
-  const { sections, questions, getTitle } = useScriptForm({
+  const { sections, questions } = useScriptForm({
     formType: formType,
   });
   const { findOneScript } = useScriptApi({ id: id });
