@@ -1,128 +1,128 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Eye, FolderOpen, Trash2 } from "lucide-react";
+import { Eye, FolderOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useQuery } from "@tanstack/react-query";
 import useAuthGuard from "../hooks/useAuthGuard";
+import useDefault from "../hooks/useDefault";
+import useScriptApi from "../hooks/useScriptApi";
+import BackToArtifactsPageButton from "../components/BackToArtifactsPageButton";
+import { useEffect } from "react";
+import { toast } from "sonner";
+import { titles } from "../i18n/scripts";
+import DeleteButton from "../components/DeleteButton";
+import useScriptForm from "../hooks/useScriptForm";
 
 const ScriptsMyScripts = () => {
   useAuthGuard();
-  const { isFetching, data, isError } = useQuery({
-    queryKey: ["script-list"],
-    queryFn: ScriptService.findAll,
-  });
+  const { navigate, exibirTexto } = useDefault();
+  const { questions } = useScriptForm({});
+  const { findAllScript, removeScript } = useScriptApi({});
+  const { isFetching, data, isError, refetch } = findAllScript;
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(exibirTexto("Algo deu errado!", "Something went wrong!"));
+    }
+  }, [isError, exibirTexto]);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   if (isFetching) {
-    return (
-      <div>
-        {language === Language.Portuguese ? "Carregando..." : "Loading"}
-      </div>
-    );
-  }
-
-  if (isError) {
-    return <div>{language === Language.Portuguese ? "ERRO" : "ERROR"}</div>;
+    return <div>{exibirTexto("Carregando...", "Loading")}</div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 m-[50px]">
+      <BackToArtifactsPageButton value="4" />
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="mb-2">
-            {language === Language.Portuguese ? "Meus Roteiros" : "My Scripts"}
-          </h2>
+          <h2 className="mb-2">{exibirTexto("Meus Roteiros", "My Scripts")}</h2>
           <p className="text-slate-600">
-            {data.length > 0
-              ? language === Language.Portuguese
-                ? "Gerencie seus roteiros de entrevista salvos"
-                : "Manage your saved interview scripts"
-              : language === Language.Portuguese
-                ? "Você ainda não tem roteiros salvos"
-                : "You don’t have any saved scripts yet"}
+            {data && data.length > 0
+              ? exibirTexto(
+                  "Gerencie seus roteiros de entrevista salvos",
+                  "Manage your saved interview scripts",
+                )
+              : exibirTexto(
+                  "Você ainda não tem roteiros salvos",
+                  "You don’t have any saved scripts yet",
+                )}
           </p>
         </div>
-        <Button
-          onClick={() => navigate("/artifacts", { state: { value: "4" } })}
-          variant="outline"
-        >
-          {language === Language.Portuguese ? "Voltar" : "Back"}
-        </Button>
       </div>
-      {data.length === 0 ? (
+      {data && data.length === 0 ? (
         <Card>
           <CardContent className="pt-6 text-center py-12">
             <FolderOpen className="w-16 h-16 text-slate-300 mx-auto mb-4" />
             <p className="text-slate-500 mb-4">
-              {language === Language.Portuguese
-                ? "Nenhum roteiro salvo ainda"
-                : "No saved scripts yet"}
+              {exibirTexto(
+                "Nenhum roteiro salvo ainda",
+                "No saved scripts yet",
+              )}
             </p>
-            <Button onClick={() => {}}>
-              {language === Language.Portuguese
-                ? "Criar Primeiro Roteiro"
-                : "Create First Script"}
+            <Button
+              onClick={() => {
+                navigate("/artifacts", { state: { value: "4" } });
+              }}
+            >
+              {exibirTexto("Criar Primeiro Roteiro", "Create First Script")}
             </Button>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-4">
-          {data.map((roteiro) => {
-            const formType = titles.find((t) => t.id == roteiro.type);
-            return (
-              <Card
-                key={roteiro.id}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardContent className="pt-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3>{roteiro.name}</h3>
-                        <Badge variant="outline">
-                          {language === Language.Portuguese
-                            ? formType.pt
-                            : formType.en}
-                        </Badge>
+          {data &&
+            data.length > 0 &&
+            data.map((roteiro) => {
+              const formType = titles.find((t) => t.id == roteiro.type);
+              const questionsLength =
+                questions(roteiro.type).length + roteiro.items.length;
+              return (
+                <Card
+                  key={roteiro.id}
+                  className="hover:shadow-md transition-shadow"
+                >
+                  <CardContent className="pt-6">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3>{roteiro.name}</h3>
+                          <Badge variant="outline">
+                            {exibirTexto(formType.pt, formType.en)}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-slate-500 mb-2">
+                          {questionsLength} {}
+                          {exibirTexto("pergunta(s)", "question(s)")}
+                        </p>
                       </div>
-                      <p className="text-sm text-slate-500 mb-2">
-                        {roteiro.items.length} {}
-                        {language === Language.Portuguese
-                          ? "pergunta(s)"
-                          : "question(s)"}
-                      </p>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() =>
+                            navigate(`/script/${roteiro.id}/edit`, {
+                              state: { formType: roteiro.type },
+                            })
+                          }
+                          title={exibirTexto(
+                            "Visualizar e Editar",
+                            "View and Edit",
+                          )}
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                        <DeleteButton
+                          onClick={() => removeScript.mutateAsync(roteiro.id)}
+                        />
+                      </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => navigate(`/script/${roteiro.id}/edit`)}
-                        title={
-                          language === Language.Portuguese
-                            ? "Visualizar e Editar"
-                            : "View and Edit"
-                        }
-                      >
-                        <Eye className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => {}}
-                        className="text-red-500 hover:text-red-600"
-                        title={
-                          language === Language.Portuguese
-                            ? "Excluir"
-                            : "Delete"
-                        }
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                  </CardContent>
+                </Card>
+              );
+            })}
         </div>
       )}
     </div>

@@ -88,7 +88,12 @@ const ScriptCreateForm = () => {
           roteiroName={roteiroName}
           setRoteiroName={setRoteiroName}
         />
-        <ExportPDFButton filename="canvas" pageRef={contentRef} />
+        <ExportPDFButton
+          filename={`script_${
+            roteiroName.trim().length > 0 ? roteiroName : crypto.randomUUID()
+          }_${Date.now()}`}
+          pageRef={contentRef}
+        />
       </div>
     </div>
   );

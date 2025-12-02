@@ -19,7 +19,7 @@ const Empathy = () => {
 
   useEffect(() => {
     refetch();
-  }, [refetch]);
+  }, []);
 
   if (isFetching) {
     return <p>{exibirTexto("Carregando...", "Loading...")}</p>;

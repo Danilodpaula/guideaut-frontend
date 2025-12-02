@@ -20,7 +20,7 @@ const ScriptSelection = () => {
           onClick={() =>
             navigate("/script/create", {
               state: {
-                formType: "client",
+                formType: "1",
               },
             })
           }
@@ -44,7 +44,7 @@ const ScriptSelection = () => {
           onClick={() =>
             navigate("/script/create", {
               state: {
-                formType: "caregiver",
+                formType: "2",
               },
             })
           }
@@ -68,7 +68,7 @@ const ScriptSelection = () => {
           onClick={() =>
             navigate("/script/create", {
               state: {
-                formType: "therapist",
+                formType: "3",
               },
             })
           }

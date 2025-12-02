@@ -1,106 +1,95 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
-import { I18nString } from "../types/i18n-string";
-import { useAuth } from "@/core/auth/AuthContext";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 import useAuthGuard from "../hooks/useAuthGuard";
-
-const titles: Record<string, I18nString> = {
-  client: {
-    id: "1",
-    pt: "Roteiro de Entrevista do Cliente",
-    en: "Client Interview Script",
-  },
-  caregiver: {
-    id: "2",
-    pt: "Roteiro de Entrevista do Cuidador",
-    en: "Caregiver Interview Script",
-  },
-  therapist: {
-    id: "3",
-    pt: "Roteiro de Entrevista do Terapeuta",
-    en: "Therapist Interview Script",
-  },
-  custom: {
-    id: "",
-    pt: "",
-    en: "",
-  },
-  "": {
-    id: "",
-    pt: "",
-    en: "",
-  },
-};
+import BackToArtifactsPageButton from "../components/BackToArtifactsPageButton";
+import useDefault from "../hooks/useDefault";
+import useScriptForm from "../hooks/useScriptForm";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ExportPDFButton from "../components/ExportPDFButton";
+import useScriptApi from "../hooks/useScriptApi";
+import { useEffect } from "react";
 
 const Canvas = () => {
   useAuthGuard();
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-  if (!isAuthenticated) {
-    toast.error("Deu erro!");
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
+  const { exibirTexto, contentRef, location, id } = useDefault();
+  const { formType } = location.state || {};
+  const { sections, questions, getTitle } = useScriptForm({
+    formType: formType,
+  });
+  const { findOneScript } = useScriptApi({ id: id });
+  const fixedQuestions = questions(formType);
+  const fixedSections = sections(formType);
+  const { isFetching, data, isError, refetch } = findOneScript;
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  if (isFetching) {
+    return <p>{exibirTexto("Carregando...", "Loading...")}</p>;
   }
 
-  // Group questions by section
-  const questionsBySection: Record<string, Question[]> = {};
-  sections.forEach((section) => {
-    questionsBySection[section] = questions.filter(
-      (q) => q.section === section,
-    );
-  });
+  if (isError) {
+    return <p>{exibirTexto("Algo deu errado!", "Something went wrong!")}</p>;
+  }
 
-  const canvasTitle =
-    canvasType === "cliente"
-      ? "do Cliente"
-      : canvasType === "cuidadores"
-        ? "dos Cuidadores"
-        : "do Terapeuta";
+  if (!data) {
+    return (
+      <p>{exibirTexto("Nenhum canvas encontrado!", "No canvas found!")}</p>
+    );
+  }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-slate-900 mb-2">Canvas {canvasTitle}</h2>
-        <p className="text-slate-600">Roteiro: {roteiro.name}</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {sections.map((section) => (
-          <Card key={section} className="border-2">
-            <CardHeader className="bg-slate-50 pb-4">
-              <CardTitle className="text-base">{section}</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4">
-              {questionsBySection[section]?.length > 0 ? (
-                <ul className="space-y-2">
-                  {questionsBySection[section].map((question) => (
-                    <li key={question.id} className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0 mt-2" />
-                      <span className="text-sm text-slate-700">
-                        {question.text}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm text-slate-400 italic">
-                  Nenhuma pergunta nesta seção
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <div className="flex justify-center gap-4 pt-4">
-        <Button variant="outline" className="gap-2">
-          <Download className="w-4 h-4" />
-          Exportar Canvas
-        </Button>
+    <div className="max-w-5/10 space-y-6 m-[50px]">
+      <BackToArtifactsPageButton value="3" />
+      <Card ref={contentRef}>
+        <CardHeader>
+          <div className="flex items-start justify-between">
+            <CardTitle>Canvas: {data.name}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <section className="grid grid-cols-3 gap-5">
+            {fixedSections.map((s) => {
+              return (
+                <article
+                  className="border-[1px] border-solid border-[#20B4F8] rounded-[10px] text-center min-h-[90px]"
+                  key={s.id}
+                >
+                  <h2 className="font-bold m-[15px]">
+                    {exibirTexto(s.pt, s.en)}
+                  </h2>
+                  <div className="flex flex-col gap-[20px] mb-[20px]">
+                    {fixedQuestions.map((q) => {
+                      if (q.section === s.id) {
+                        return (
+                          <p key={q.id} className="max-w-[450px]">
+                            {exibirTexto(q.pt, q.en)}
+                          </p>
+                        );
+                      }
+                    })}
+                    {data.items.map((q) => {
+                      if (q.section === s.id) {
+                        return (
+                          <p key={q.question} className="max-w-[450px]">
+                            {exibirTexto(q.question, q.question)}
+                          </p>
+                        );
+                      }
+                    })}
+                  </div>
+                </article>
+              );
+            })}
+          </section>
+        </CardContent>
+      </Card>
+      <div className="flex items-center justify-evenly">
+        <ExportPDFButton
+          filename={`canvas_${
+            data.name.trim().length > 0 ? data.name : crypto.randomUUID()
+          }_${Date.now()}`}
+          pageRef={contentRef}
+        />
       </div>
     </div>
   );

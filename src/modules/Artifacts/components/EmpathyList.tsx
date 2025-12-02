@@ -17,11 +17,14 @@ const EmpathyList = () => {
 
   useEffect(() => {
     refetch();
-  }, [refetch]);
+  }, []);
+
+  if (isFetching) {
+    return <div>{exibirTexto("Carregando...", "Loading")}</div>;
+  }
 
   return (
     <div className="p-4 border rounded mb-4 flex flex-col gap-5">
-      {isFetching && <div>{exibirTexto("Carregando...", "Loading...")}</div>}
       {data &&
         data.length > 0 &&
         data.map((empathy) => {

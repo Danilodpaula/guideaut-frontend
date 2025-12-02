@@ -19,11 +19,11 @@ import { NewQuestion } from "../types/script";
 
 const questions = (formType: string) => {
   switch (formType) {
-    case "client":
+    case "1":
       return clientQuestions;
-    case "caregiver":
+    case "2":
       return caregiverQuestions;
-    case "therapist":
+    case "3":
       return therapistQuestions;
     default:
       return [];
@@ -32,11 +32,11 @@ const questions = (formType: string) => {
 
 const sections = (formType: string) => {
   switch (formType) {
-    case "client":
+    case "1":
       return clientSections;
-    case "caregiver":
+    case "2":
       return caregiverSections;
-    case "therapist":
+    case "3":
       return therapistSections;
     default:
       return [];
@@ -45,11 +45,11 @@ const sections = (formType: string) => {
 
 const getTitle = (formType: string) => {
   switch (formType) {
-    case "client":
+    case "1":
       return titles[0];
-    case "caregiver":
+    case "2":
       return titles[1];
-    case "therapist":
+    case "3":
       return titles[2];
     default:
       return {
@@ -60,7 +60,13 @@ const getTitle = (formType: string) => {
   }
 };
 
-const useScriptForm = ({ formType, id }: { formType: string; id?: string }) => {
+const useScriptForm = ({
+  formType,
+  id,
+}: {
+  formType?: string;
+  id?: string;
+}) => {
   const { exibirTexto } = useDefault();
   const [newQuestions, setNewQuestions] = useState([]);
   const [newQuestionText, setNewQuestionText] = useState("");
@@ -148,6 +154,7 @@ const useScriptForm = ({ formType, id }: { formType: string; id?: string }) => {
     newQuestionSection,
     newQuestionText,
     newQuestions,
+    setNewQuestions,
   };
 };
 
