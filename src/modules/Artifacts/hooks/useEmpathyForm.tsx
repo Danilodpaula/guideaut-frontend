@@ -20,7 +20,7 @@ const useEmpathyForm = ({ id }: Props) => {
     defaultValues: {
       name: "",
       age: 0,
-      gender: "",
+      gender: "prefer-not-to-say",
       reasons: "",
       expectations: "",
       interaction: [],

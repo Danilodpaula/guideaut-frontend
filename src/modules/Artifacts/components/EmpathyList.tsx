@@ -10,17 +10,17 @@ const EmpathyList = () => {
   const { isFetching, data, isError, refetch } = findAllEmpathy;
 
   useEffect(() => {
-    if (isError) {
-      toast.error(exibirTexto("Algo deu errado!", "Something went wrong!"));
-    }
-  }, [isError, exibirTexto]);
-
-  useEffect(() => {
     refetch();
   }, []);
 
   if (isFetching) {
     return <div>{exibirTexto("Carregando...", "Loading")}</div>;
+  }
+
+  if (isError) {
+    return (
+      <div>{exibirTexto("Algo deu errado!", "Something went wrong!")}</div>
+    );
   }
 
   return (

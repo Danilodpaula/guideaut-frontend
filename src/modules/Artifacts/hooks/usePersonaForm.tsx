@@ -27,9 +27,9 @@ const usePersonaForm = ({ id }: Props) => {
     defaultValues: {
       name: "",
       age: 0,
-      gender: "",
-      language: "",
-      supportLevel: "",
+      gender: "prefer-not-to-say",
+      language: "nonverbal",
+      supportLevel: "3",
       model: "",
       stressfulActivities: [],
       calmingActivities: [],
