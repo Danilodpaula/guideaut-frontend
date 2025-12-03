@@ -2,12 +2,18 @@
 // Página informativa do GuideAut que descreve a Fase de Imersão do processo ProAut.
 // Apresenta as atividades, artefatos gerados e recursos para equipes de desenvolvimento.
 
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText as FileTextIcon } from "lucide-react";
 import { useI18n } from "@/core/i18n/I18nContext";
-import { Info, ChevronRight } from "lucide-react";
+import {
+  ChevronRight,
+  FileText,
+  FileText as FileTextIcon,
+  Info,
+  Package,
+  Search,
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 🧩 Componente principal da página "Fase de Imersão".
@@ -34,7 +40,7 @@ export default function ImersionPhase() {
     {
       id: "fca",
       name_pt: "Formulário de Caracterização do Autista (FCA)",
-      name_en: "Autistic Characterization Form",
+      name_en: "Autistic Characterization Form (ACF)",
     },
     {
       id: "vga",
@@ -48,50 +54,64 @@ export default function ImersionPhase() {
   const [activeSection, setActiveSection] = useState("");
 
   // Estrutura da tabela de conteúdos
-  const tableOfContents = [
-    {
-      id: "visao-geral",
-      title: language === "pt-BR" ? "Visão geral" : "Overview",
-      type: "scroll",
-    },
-    {
-      id: "aprender-contexto",
-      title:
-        language === "pt-BR"
-          ? "Aprender sobre o contexto"
-          : "Learn about the context",
-      type: "scroll",
-    },
-    {
-      id: "extrair-requisitos",
-      title:
-        language === "pt-BR" ? "Extrair requisitos" : "Extract requirements",
-      type: "scroll",
-    },
-    {
-      id: "consolidar-dados",
-      title: language === "pt-BR" ? "Consolidar dados" : "Consolidate data",
-      type: "scroll",
-    },
-    {
-      id: "analise",
-      title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
-      type: "navigate",
-      path: "/analysis-phase",
-    },
-    {
-      id: "ideacao",
-      title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
-      type: "navigate",
-      path: "/ideation-phase",
-    },
-    {
-      id: "prototipacao",
-      title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
-      type: "navigate",
-      path: "/prototyping-phase",
-    },
-  ];
+  const tableOfContents = useMemo(
+    () => [
+      {
+        id: "proaut-phases",
+        title: language === "pt-BR" ? "Fases do Processo" : "Process Phases",
+        type: "navigate",
+        path: "/proaut-process",
+      },
+      {
+        id: "visao-geral",
+        title: language === "pt-BR" ? "1. Imersão" : "1. Immersion",
+        type: "scroll",
+      },
+      {
+        id: "aprender-contexto",
+        title:
+          language === "pt-BR"
+            ? "Aprender sobre o contexto"
+            : "Learn about the context",
+        type: "scroll",
+      },
+      {
+        id: "extrair-requisitos",
+        title:
+          language === "pt-BR" ? "Extrair requisitos" : "Extract requirements",
+        type: "scroll",
+      },
+      {
+        id: "consolidar-dados",
+        title: language === "pt-BR" ? "Consolidar dados" : "Consolidate data",
+        type: "scroll",
+      },
+      {
+        id: "analise",
+        title: language === "pt-BR" ? "2. Análise" : "2. Analysis",
+        type: "navigate",
+        path: "/analysis-phase",
+      },
+      {
+        id: "ideacao",
+        title: language === "pt-BR" ? "3. Ideação" : "3. Ideation",
+        type: "navigate",
+        path: "/ideation-phase",
+      },
+      {
+        id: "prototipacao",
+        title: language === "pt-BR" ? "4. Prototipação" : "4. Prototyping",
+        type: "navigate",
+        path: "/prototyping-phase",
+      },
+    ],
+    [language],
+  );
+
+  // Rola para o topo assim que a página carrega
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   // Efeito para detectar a seção ativa durante o scroll
   useEffect(() => {
@@ -116,7 +136,7 @@ export default function ImersionPhase() {
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [language]);
+  }, [language, tableOfContents]);
 
   const handleNavigation = (item: (typeof tableOfContents)[0]) => {
     if (item.type === "navigate" && item.path) {
@@ -137,7 +157,7 @@ export default function ImersionPhase() {
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex flex-col lg:flex-row gap-6">
       {/* Conteúdo Principal */}
       <div className="flex-1 space-y-6 p-6 animate-fade-in">
         {/* Cabeçalho da página */}
@@ -145,6 +165,11 @@ export default function ImersionPhase() {
           <h1 className="text-3xl font-bold tracking-tight">
             {language === "pt-BR" ? "Fase de Imersão" : "Immersion Phase"}
           </h1>
+          <p className="text-lg">
+            {language === "pt-BR"
+              ? "Mergulhando no contexto para compreender as verdadeiras dores do usuário."
+              : "Diving into context to understand the user's real pain points."}
+          </p>
         </div>
 
         {/* Visão Geral */}
@@ -165,6 +190,30 @@ export default function ImersionPhase() {
                 ? "A fase de imersão é a fase caracterizada pela aproximação do problema. É nesta etapa que a equipe busca conhecer conceitos que permeiam o tema da aplicação a ser projetada."
                 : "The immersion phase is characterized by approaching the problem. It is at this stage that the team seeks to understand concepts that permeate the theme of the application to be designed."}
             </p>
+
+            {/* Fluxo da Fase de Imersão */}
+            <div className="my-8 p-4 bg-card rounded-lg border">
+              <div className="max-w-4xl mx-auto flex justify-center">
+                <img
+                  src={
+                    language === "pt-BR"
+                      ? "src/modules/Tutorial/assets/imersion-phase/FluxoImersao-pt-br.png"
+                      : "src/modules/Tutorial/assets/imersion-phase/FluxoImersao-en-us.png"
+                  }
+                  alt={
+                    language === "pt-BR"
+                      ? "Fluxo sugerido para a atividade de Imersão"
+                      : "Suggested flow for Immersion activity"
+                  }
+                  className="rounded-md shadow-sm max-w-full h-auto"
+                />
+              </div>
+              <p className="text-sm text-center mt-2">
+                {language === "pt-BR"
+                  ? "Fluxo sugerido para a atividade"
+                  : "Suggested flow for the activity"}
+              </p>
+            </div>
 
             <ul className="space-y-3 list-disc list-inside mb-4 ml-4">
               <li>
@@ -202,73 +251,24 @@ export default function ImersionPhase() {
                   : "Learn about the context, Elicit Requirements and Consolidate Data."}
               </li>
             </ul>
-
-            {/* Fluxo da Fase de Imersão */}
-            <div className="my-8 p-4 bg-card rounded-lg border">
-              <div className="max-w-3xl mx-auto">
-                <img
-                  src={
-                    language === "pt-BR"
-                      ? "src/modules/Tutorial/assets/imersion-phase/FluxoImersao-pt-br.png"
-                      : "src/modules/Tutorial/assets/imersion-phase/FluxoImersao-en-us.png"
-                  }
-                  alt={
-                    language === "pt-BR"
-                      ? "Fluxo sugerido para a atividade de Imersão"
-                      : "Suggested flow for Immersion activity"
-                  }
-                  className="w-full h-auto rounded-md shadow-sm"
-                />
-                <p className="text-sm text-muted-foreground text-center mt-2">
-                  {language === "pt-BR"
-                    ? "Fluxo sugerido para a atividade"
-                    : "Suggested flow for the activity"}
-                </p>
-              </div>
-            </div>
-
-            <p>
-              {language === "pt-BR"
-                ? "Cada atividade possui pequenas sub-atividades que devem ser cumpridas para concluí-las. Elas são: Aprender sobre o contexto, Extrair Requisitos e Consolidação dos dados."
-                : "Each activity has small sub-activities that must be completed to finish them. They are: Learn about the context, Extract Requirements and Data Consolidation."}
-            </p>
-
-            {/* Artefatos Gerados */}
-            <div className="mt-8">
-              <h3 className="text-xl font-semibold mb-4">
-                {language === "pt-BR"
-                  ? "Artefatos Gerados"
-                  : "Generated Artifacts"}
-              </h3>
-              <ul className="grid gap-2">
-                {phaseDeliverables.map((artifact) => (
-                  <li
-                    key={artifact.id}
-                    className="flex items-center gap-2 text-muted-foreground"
-                  >
-                    <ChevronRight className="h-4 w-4 text-blue-500" />
-                    <span>
-                      {language === "pt-BR"
-                        ? artifact.name_pt
-                        : artifact.name_en}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
         </section>
 
         {/* Seção Aprender sobre o contexto */}
         <section id="aprender-contexto" className="scroll-m-20 space-y-6 mt-12">
-          <h2 className="text-2xl font-bold tracking-tight border-b pb-2">
-            {language === "pt-BR"
-              ? "Aprender sobre o contexto"
-              : "Learn about the context"}
-          </h2>
+          <div className="flex items-center gap-3">
+            <div className="bg-blue-100 p-2 rounded-full">
+              <Search className="h-6 w-6 text-blue-600" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {language === "pt-BR"
+                ? "Atividade: Aprender sobre o contexto"
+                : "Activity: Learn about the context"}
+            </h2>
+          </div>
 
           <div className="my-6 p-4 bg-card rounded-lg border">
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-4xl mx-auto flex justify-center">
               <img
                 src={
                   language === "pt-BR"
@@ -280,14 +280,14 @@ export default function ImersionPhase() {
                     ? "Fluxo sugerido para aprender sobre o contexto"
                     : "Suggested flow for learning about the context"
                 }
-                className="w-full h-auto rounded-md shadow-sm"
+                className="rounded-md shadow-sm max-w-full h-auto"
               />
-              <p className="text-sm text-muted-foreground text-center mt-2">
-                {language === "pt-BR"
-                  ? "Fluxo sugerido para a atividade"
-                  : "Suggested flow for the activity"}
-              </p>
             </div>
+            <p className="text-sm text-center mt-2">
+              {language === "pt-BR"
+                ? "Fluxo sugerido para a atividade"
+                : "Suggested flow for the activity"}
+            </p>
           </div>
 
           <div className="space-y-6">
@@ -384,22 +384,95 @@ export default function ImersionPhase() {
                   : "To keep the research organized and secure, record your searches in documents such as spreadsheets or notepads that preferably have automatic saving and cloud backup."}
               </p>
 
+              {/* Card da Pesquisa Desk*/}
               <div className="my-6 p-4 bg-card rounded-lg border">
-                <div className="max-w-3xl mx-auto">
-                  <img
-                    src={
-                      language === "pt-BR"
-                        ? "src/modules/Tutorial/assets/imersion-phase/ExemploPesquisaDesk-pt-br.png"
-                        : "src/modules/Tutorial/assets/imersion-phase/ExemploPesquisaDesk-en-us.png"
-                    }
-                    alt={
-                      language === "pt-BR"
-                        ? "Exemplo de registro para a pesquisa Desk"
-                        : "Example record for Desk Research"
-                    }
-                    className="w-full h-auto rounded-md shadow-sm"
-                  />
-                  <p className="text-sm text-muted-foreground text-center mt-2">
+                <div className="max-w-4xl mx-auto">
+                  <h4 className="font-semibold text-lg mb-4 text-center">
+                    {language === "pt-BR"
+                      ? "Exemplo de registro para a pesquisa Desk"
+                      : "Example record for Desk Research"}
+                  </h4>
+
+                  <div className="overflow-x-auto border rounded bg-white text-black">
+                    <table className="w-full text-sm text-left">
+                      <thead className="bg-slate-50 border-b text-slate-900">
+                        <tr>
+                          <th className="p-3 font-semibold border-r">
+                            {language === "pt-BR" ? "Fonte" : "Source"}
+                          </th>
+                          <th className="p-3 font-semibold border-r">
+                            {language === "pt-BR" ? "Tipo" : "Type"}
+                          </th>
+                          <th className="p-3 font-semibold border-r">
+                            {language === "pt-BR" ? "Título" : "Title"}
+                          </th>
+                          <th className="p-3 font-semibold">
+                            {language === "pt-BR" ? "Resumo" : "Summary"}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="p-3 border-r border-b font-medium">
+                            PubMed
+                          </td>
+                          <td className="p-3 border-r border-b">
+                            {language === "pt-BR" ? "Artigo" : "Article"}
+                          </td>
+                          <td className="p-3 border-r border-b">
+                            {language === "pt-BR"
+                              ? "Intervenções digitais para stimming em autistas"
+                              : "Digital interventions for stimming in autistics"}
+                          </td>
+                          <td className="p-3 border-b">
+                            {language === "pt-BR"
+                              ? "Estudo sobre eficácia de apps para regulação sensorial"
+                              : "Study about effectiveness of apps for sensory regulation"}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="p-3 border-r border-b font-medium">
+                            Blog Especializado
+                          </td>
+                          <td className="p-3 border-r border-b">
+                            {language === "pt-BR" ? "Blog" : "Blog"}
+                          </td>
+                          <td className="p-3 border-r border-b">
+                            {language === "pt-BR"
+                              ? "Dia a dia com autismo: entendendo o stimming"
+                              : "Daily life with autism: understanding stimming"}
+                          </td>
+                          <td className="p-3 border-b">
+                            {language === "pt-BR"
+                              ? "Relato pessoal sobre estratégias de regulação sensorial"
+                              : "Personal account about sensory regulation strategies"}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="p-3 border-r border-b font-medium">
+                            GuideAut
+                          </td>
+                          <td className="p-3 border-r border-b">
+                            {language === "pt-BR"
+                              ? "Repositório"
+                              : "Repository"}
+                          </td>
+                          <td className="p-3 border-r border-b">
+                            {language === "pt-BR"
+                              ? "Recomendações para design inclusivo"
+                              : "Recommendations for inclusive design"}
+                          </td>
+                          <td className="p-3 border-b">
+                            {language === "pt-BR"
+                              ? "Diretrizes validadas pela comunidade autista"
+                              : "Guidelines validated by the autistic community"}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <p className="text-sm text-center mt-2">
                     {language === "pt-BR"
                       ? "Exemplo de registro para a pesquisa Desk."
                       : "Example record for Desk Research."}
@@ -415,11 +488,16 @@ export default function ImersionPhase() {
           id="extrair-requisitos"
           className="scroll-m-20 space-y-6 mt-12"
         >
-          <h2 className="text-2xl font-bold tracking-tight border-b pb-2">
-            {language === "pt-BR"
-              ? "Extrair requisitos"
-              : "Extract requirements"}
-          </h2>
+          <div className="flex items-center gap-3">
+            <div className="bg-purple-100 p-2 rounded-full">
+              <FileText className="h-6 w-6 text-purple-600" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {language === "pt-BR"
+                ? "Atividade: Extrair requisitos"
+                : "Activity: Extract requirements"}
+            </h2>
+          </div>
 
           <p className="mb-4">
             {language === "pt-BR"
@@ -428,7 +506,7 @@ export default function ImersionPhase() {
           </p>
 
           <div className="my-6 p-4 bg-card rounded-lg border">
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-4xl mx-auto flex justify-center">
               <img
                 src={
                   language === "pt-BR"
@@ -440,24 +518,24 @@ export default function ImersionPhase() {
                     ? "Fluxo sugerido para extrair requisitos"
                     : "Suggested flow for extracting requirements"
                 }
-                className="w-full h-auto rounded-md shadow-sm"
+                className="rounded-md shadow-sm max-w-full h-auto"
               />
-              <p className="text-sm text-muted-foreground text-center mt-2">
-                {language === "pt-BR"
-                  ? "Fluxo sugerido para a atividade"
-                  : "Suggested flow for the activity"}
-              </p>
             </div>
+            <p className="text-sm text-center mt-2">
+              {language === "pt-BR"
+                ? "Fluxo sugerido para a atividade"
+                : "Suggested flow for the activity"}
+            </p>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <div className="flex items-start space-x-3">
-              <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <Info className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-blue-800 font-medium">
+                <p className="text-yellow-800 font-medium">
                   {language === "pt-BR"
-                    ? "INFO: O ProAut foi idealizado para focar em autistas de baixo funcionamento. A maioria deles possui dificuldades de comunicação verbal."
-                    : "INFO: ProAut was designed to focus on low-functioning autistics. Most of them have verbal communication difficulties."}
+                    ? "INFO: O ProAut foi idealizado para focar em autistas com grau de suporte 3. A maioria deles possui dificuldades de comunicação verbal."
+                    : "INFO: ProAut was designed to focus on autistics with support level 3. Most of them have verbal communication difficulties."}
                 </p>
               </div>
             </div>
@@ -473,12 +551,12 @@ export default function ImersionPhase() {
               <p>
                 {language === "pt-BR"
                   ? "O ProAut indica a utilização de entrevistas junto a um Formulário de Caracterização do Autista (FCA) com os clientes, cuidadores e especialistas de autistas para gerar um conjunto de anotações bem como o FCA preenchido."
-                  : "ProAut indicates the use of interviews together with an Autistic Characterization Form (FCA) with clients, caregivers and autism specialists to generate a set of notes as well as the completed FCA."}
+                  : "ProAut indicates the use of interviews together with an Autistic Characterization Form (ACF) with clients, caregivers and autism specialists to generate a set of notes as well as the completed ACF."}
               </p>
               <p>
                 {language === "pt-BR"
                   ? "O FCA é uma ferramenta para caracterizar autistas, dividido em quatro seções, representando as 4 principais áreas de limitação de um autista, a saber: Interação, Comunicação, Comportamento e Cognição. Cada seção é composta de um conjunto de características para as quais o entrevistador deve assinalar com o valor 1, para quando a criança apresentar a característica, e 0 caso contrário."
-                  : "The FCA is a tool to characterize autistics, divided into four sections, representing the 4 main areas of limitation of an autistic person, namely: Interaction, Communication, Behavior and Cognition. Each section consists of a set of characteristics for which the interviewer must mark with value 1, when the child presents the characteristic, and 0 otherwise."}
+                  : "The ACF is a tool to characterize autistics, divided into four sections, representing the 4 main areas of limitation of an autistic person, namely: Interaction, Communication, Behavior and Cognition. Each section consists of a set of characteristics for which the interviewer must mark with value 1, when the child presents the characteristic, and 0 otherwise."}
               </p>
               <p className="italic">
                 {language === "pt-BR"
@@ -488,64 +566,64 @@ export default function ImersionPhase() {
               <p>
                 {language === "pt-BR"
                   ? "O preenchimento do FCA produz um gráfico denominado Gráfico de Visão Geral do Autista (VGA), o qual permite visualizar o grau de comprometimento em cada uma das áreas citadas anteriormente, de forma que, quanto mais alto o percentual do autista em uma determinada área, maior é o comprometimento nela."
-                  : "Completing the FCA produces a graph called Autistic Overview Graph (VGA), which allows visualizing the degree of impairment in each of the previously mentioned areas, so that the higher the autistic person's percentage in a given area, the greater the impairment in it."}
+                  : "Completing the ACF produces a graph called Autistic Overview Graph (AOG), which allows visualizing the degree of impairment in each of the previously mentioned areas, so that the higher the autistic person's percentage in a given area, the greater the impairment in it."}
               </p>
 
               <div className="my-6 p-4 bg-card rounded-lg border">
-                <div className="max-w-3xl mx-auto">
+                <div className="max-w-3xl mx-auto flex justify-center">
                   <img
                     src={
                       language === "pt-BR"
                         ? "src/modules/Tutorial/assets/imersion-phase/VGA-pt-br.png"
-                        : "src/modules/Tutorial/assets/imersion-phase/VGA-en-us.png"
+                        : "src/modules/Tutorial/assets/imersion-phase/VGA-pt-br.png"
                     }
                     alt={
                       language === "pt-BR"
                         ? "Gráfico de visão geral do Autista (VGA)"
-                        : "Autistic Overview Graph (VGA)"
+                        : "Autistic Overview Graph (AOG)"
                     }
-                    className="w-full h-auto rounded-md shadow-sm"
+                    className="rounded-md shadow-sm max-w-full h-auto"
                   />
-                  <p className="text-sm text-muted-foreground text-center mt-2">
-                    {language === "pt-BR"
-                      ? "Gráfico de visão geral do Autista (VGA)"
-                      : "Autistic Overview Graph (VGA)"}
-                  </p>
                 </div>
+                <p className="text-sm text-center mt-2">
+                  {language === "pt-BR"
+                    ? "Gráfico de visão geral do Autista (VGA)"
+                    : "Autistic Overview Graph (AOG)"}
+                </p>
               </div>
 
               <p>
                 {language === "pt-BR"
                   ? "A produção do FCA e do VGA junto aos entrevistados pode permitir direcionar melhor as possíveis funcionalidades a serem desenvolvidas para resolução de problemas da interação do usuário com sua tecnologia."
-                  : "The production of the FCA and VGA with the interviewees can allow better directing the possible functionalities to be developed for solving user interaction problems with their technology."}
+                  : "The production of the ACF and AOG with the interviewees can allow better directing the possible functionalities to be developed for solving user interaction problems with their technology."}
               </p>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="font-semibold text-blue-800 mb-2">
                   {language === "pt-BR"
                     ? "Sugestão de Procedimento para preenchimento do FCA:"
-                    : "Suggested Procedure for FCA completion:"}
+                    : "Suggested Procedure for ACF completion:"}
                 </h4>
-                <ol className="text-yellow-700 list-decimal list-inside space-y-2 ml-4">
+                <ol className="text-blue-700 list-decimal list-inside space-y-2 ml-4">
                   <li>
                     {language === "pt-BR"
                       ? "Imprima o FCA (caso não seja possível aplicar por meio eletrônico);"
-                      : "Print the FCA (if it's not possible to apply electronically);"}
+                      : "Print the ACF (if it's not possible to apply electronically);"}
                   </li>
                   <li>
                     {language === "pt-BR"
                       ? "Antes de iniciar a entrevista com os clientes/pais/mães/responsáveis, fale sobre a necessidade de preencher o FCA ressaltando o que ele significa e qual a sua importância para o desenvolvimento da tecnologia;"
-                      : "Before starting the interview with clients/parents/guardians, talk about the need to complete the FCA emphasizing what it means and its importance for technology development;"}
+                      : "Before starting the interview with clients/parents/guardians, talk about the need to complete the ACF emphasizing what it means and its importance for technology development;"}
                   </li>
                   <li>
                     {language === "pt-BR"
                       ? "Defina se o FCA será aplicado antes ou depois da entrevista;"
-                      : "Define whether the FCA will be applied before or after the interview;"}
+                      : "Define whether the ACF will be applied before or after the interview;"}
                   </li>
                   <li>
                     {language === "pt-BR"
                       ? "Iniciar a aplicação do FCA marcando para cada item de característica, o valor 1 caso a característica esteja presente na criança ou 0 no caso de ausência;"
-                      : "Start the FCA application by marking for each characteristic item, value 1 if the characteristic is present in the child or 0 in case of absence;"}
+                      : "Start the ACF application by marking for each characteristic item, value 1 if the characteristic is present in the child or 0 in case of absence;"}
                   </li>
                 </ol>
               </div>
@@ -561,11 +639,11 @@ export default function ImersionPhase() {
                   : "Regarding interviews, it is recommended to maintain a pre-established script with your development team. This script should be distinct for clients, caregivers and therapists."}
               </p>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <div className="flex items-start space-x-3">
-                  <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <Info className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-blue-800 font-medium">
+                    <p className="text-yellow-800 font-medium">
                       {language === "pt-BR"
                         ? "INFO: As entrevistas com solicitante é obrigatória, uma vez que é ele quem repassará as necessidades do software/Aplicativo/tecnologia. Se não for possível realizar entrevistas com pais ou especialistas, o designer/desenvolvedor poderá fazer uso do GuideAut para encontrar recomendações de interface vindas da curadoria ou da própria comunidade autista."
                         : "INFO: Interviews with the requester are mandatory, since they are the ones who will convey the software/application/technology needs. If it's not possible to conduct interviews with parents or specialists, the designer/developer can use GuideAut to find interface recommendations from the curation or from the autistic community itself."}
@@ -576,7 +654,7 @@ export default function ImersionPhase() {
 
               <div className="grid gap-4 md:grid-cols-3 mt-6">
                 <div className="border rounded-lg p-4">
-                  <div className="mb-4">
+                  <div className="mb-4 flex justify-center">
                     <img
                       src={
                         language === "pt-BR"
@@ -588,7 +666,7 @@ export default function ImersionPhase() {
                           ? "Roteiro de Perguntas para Cliente"
                           : "Questionnaire for Client"
                       }
-                      className="w-full h-auto rounded-md shadow-sm"
+                      className="rounded-md shadow-sm max-w-full h-auto"
                     />
                   </div>
                   <h5 className="font-semibold text-lg mb-2">
@@ -596,7 +674,7 @@ export default function ImersionPhase() {
                       ? "Roteiro para Cliente"
                       : "Questionnaire for Client"}
                   </h5>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm">
                     {language === "pt-BR"
                       ? "A primeira entrevista deve ser feita, obrigatoriamente, com o solicitante do aplicativo. O roteiro de perguntas foca em coletar informações sobre o objetivo do aplicativo, quais habilidades que se deseja que sejam trabalhadas pelo aplicativo, bem como os requisitos e funcionalidades almejadas."
                       : "The first interview must be conducted, mandatorily, with the application requester. The questionnaire focuses on collecting information about the application's objective, which skills are desired to be worked on by the application, as well as the desired requirements and functionalities."}
@@ -604,7 +682,7 @@ export default function ImersionPhase() {
                 </div>
 
                 <div className="border rounded-lg p-4">
-                  <div className="mb-4">
+                  <div className="mb-4 flex justify-center">
                     <img
                       src={
                         language === "pt-BR"
@@ -616,7 +694,7 @@ export default function ImersionPhase() {
                           ? "Roteiro de Perguntas para Cuidador"
                           : "Questionnaire for Caregiver"
                       }
-                      className="w-full h-auto rounded-md shadow-sm"
+                      className="rounded-md shadow-sm max-w-full h-auto"
                     />
                   </div>
                   <h5 className="font-semibold text-lg mb-2">
@@ -624,7 +702,7 @@ export default function ImersionPhase() {
                       ? "Roteiro para Cuidador"
                       : "Questionnaire for Caregiver"}
                   </h5>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm">
                     {language === "pt-BR"
                       ? "A entrevista com os pais/mães/responsáveis deve ser realizada após a entrevista com o solicitante do aplicativo. Com conhecimentos sobre objetivos e necessidades do aplicativo em mãos, faça perguntas relacionadas ao tema/contexto do aplicativo ao passo que descobre aspectos do autista, atividades que acalmam/estressam, relação com tecnologias, entre outras informações."
                       : "The interview with parents/guardians should be conducted after the interview with the application requester. With knowledge about application objectives and needs in hand, ask questions related to the application's theme/context while discovering aspects of the autistic person, activities that calm/stress, relationship with technologies, among other information."}
@@ -632,7 +710,7 @@ export default function ImersionPhase() {
                 </div>
 
                 <div className="border rounded-lg p-4">
-                  <div className="mb-4">
+                  <div className="mb-4 flex justify-center">
                     <img
                       src={
                         language === "pt-BR"
@@ -644,7 +722,7 @@ export default function ImersionPhase() {
                           ? "Roteiro de Perguntas para Terapeuta"
                           : "Questionnaire for Therapist"
                       }
-                      className="w-full h-auto rounded-md shadow-sm"
+                      className="rounded-md shadow-sm max-w-full h-auto"
                     />
                   </div>
                   <h5 className="font-semibold text-lg mb-2">
@@ -652,7 +730,7 @@ export default function ImersionPhase() {
                       ? "Roteiro para Terapeuta"
                       : "Questionnaire for Therapist"}
                   </h5>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm">
                     {language === "pt-BR"
                       ? "A entrevista com os especialistas deve ser realizada após entrevista com cuidadores e a seleção de especialistas deve ser feita de acordo com os objetivos e necessidades do aplicativo. A coleta de informações deve focar em conhecer os aspectos sociais do autista, atividades que acalmam/estressam, relação com tecnologias, validações do seu aplicativo junto à opiniões técnicas."
                       : "The interview with specialists should be conducted after the interview with caregivers and the selection of specialists should be made according to the application's objectives and needs. Information collection should focus on knowing the autistic person's social aspects, activities that calm/stress, relationship with technologies, validations of your application with technical opinions."}
@@ -660,13 +738,13 @@ export default function ImersionPhase() {
                 </div>
               </div>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                <h4 className="font-semibold text-blue-800 mb-2">
                   {language === "pt-BR"
                     ? "Sugestão de Procedimento para entrevista:"
                     : "Suggested Procedure for interview:"}
                 </h4>
-                <ol className="text-yellow-700 list-decimal list-inside space-y-2 ml-4">
+                <ol className="text-blue-700 list-decimal list-inside space-y-2 ml-4">
                   <li>
                     {language === "pt-BR"
                       ? "Agende com o entrevistado;"
@@ -700,7 +778,7 @@ export default function ImersionPhase() {
                   <li>
                     {language === "pt-BR"
                       ? "Também, exceto para o solicitante, explique sobre o preenchimento do FCA. Sendo que para o especialista, ele deverá responder com base na maioria dos atendimentos;"
-                      : "Also, except for the requester, explain about FCA completion. For the specialist, they should answer based on the majority of their cases;"}
+                      : "Also, except for the requester, explain about ACF completion. For the specialist, they should answer based on the majority of their cases;"}
                   </li>
                   <li>
                     {language === "pt-BR"
@@ -728,13 +806,13 @@ export default function ImersionPhase() {
                   : "It is an optional activity and is done through observation in a real environment (school, office, home) that involves an autistic person in relation to the project theme. There should be no intervention during the observation activity and as a result, it is expected that the designer/team can better understand the profile of autistics."}
               </p>
 
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <h4 className="font-semibold text-yellow-800 mb-2">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="font-semibold text-blue-800 mb-2">
                   {language === "pt-BR"
                     ? "Sugestão de Procedimento da Pesquisa Exploratória:"
                     : "Suggested Procedure for Exploratory Research:"}
                 </h4>
-                <ol className="text-yellow-700 list-decimal list-inside space-y-2 ml-4">
+                <ol className="text-blue-700 list-decimal list-inside space-y-2 ml-4">
                   <li>
                     {language === "pt-BR"
                       ? "Agende o procedimento com uma família/especialista/professor/escola, ou seja, o responsável pelo local onde será realizada a pesquisa exploratória;"
@@ -768,9 +846,16 @@ export default function ImersionPhase() {
 
         {/* Seção Consolidar dados */}
         <section id="consolidar-dados" className="scroll-m-20 space-y-6 mt-12">
-          <h2 className="text-2xl font-bold tracking-tight border-b pb-2">
-            {language === "pt-BR" ? "Consolidar Dados" : "Consolidate Data"}
-          </h2>
+          <div className="flex items-center gap-3">
+            <div className="bg-orange-100 p-2 rounded-full">
+              <Package className="h-6 w-6 text-orange-600" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {language === "pt-BR"
+                ? "Atividade: Consolidar dados"
+                : "Activity: Consolidate data"}
+            </h2>
+          </div>
 
           <p className="mb-4">
             {language === "pt-BR"
@@ -799,11 +884,11 @@ export default function ImersionPhase() {
             </li>
           </ul>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <div className="flex items-start space-x-3">
-              <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+              <Info className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-blue-800 font-medium">
+                <p className="text-yellow-800 font-medium">
                   {language === "pt-BR"
                     ? "INFO: o Canvas é um painel feito para descrever as principais áreas dos elementos que envolvem um modelo de negócios e foi criado pelo especialista em estratégia e inovação suíço Alexander Osterwalder em meados dos anos 2000. O objetivo do método é criar um mapa que permita uma visualização direta de cada etapa do crescimento de uma iniciativa."
                     : "INFO: the Canvas is a panel made to describe the main areas of elements that involve a business model and was created by Swiss strategy and innovation expert Alexander Osterwalder in the mid-2000s. The method's objective is to create a map that allows direct visualization of each stage of an initiative's growth."}
@@ -814,7 +899,7 @@ export default function ImersionPhase() {
 
           <div className="grid gap-6 md:grid-cols-3 mt-6">
             <div className="border rounded-lg p-4">
-              <div className="mb-4">
+              <div className="mb-4 flex justify-center">
                 <img
                   src={
                     language === "pt-BR"
@@ -826,15 +911,15 @@ export default function ImersionPhase() {
                       ? "Canvas para entrevista do solicitante (CSS)"
                       : "Canvas for requester interview (CSS)"
                   }
-                  className="w-full h-auto rounded-md shadow-sm"
+                  className="rounded-md shadow-sm max-w-full h-auto"
                 />
               </div>
               <h5 className="font-semibold text-lg mb-2">
                 {language === "pt-BR"
                   ? "Canvas do Solicitante (CSS)"
-                  : "Requester Canvas (CSS)"}
+                  : "Software Requester Canvas (RSC)"}
               </h5>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm">
                 {language === "pt-BR"
                   ? "Observe o canvas criado para o solicitante acima. Ele possui 8 campos, cada um com um número inserido dentro de um círculo preenchido em azul que mapeia a resposta das perguntas para determinado campo."
                   : "Observe the canvas created for the requester above. It has 8 fields, each with a number inserted inside a blue filled circle that maps the answer of questions to a specific field."}
@@ -842,7 +927,7 @@ export default function ImersionPhase() {
             </div>
 
             <div className="border rounded-lg p-4">
-              <div className="mb-4">
+              <div className="mb-4 flex justify-center">
                 <img
                   src={
                     language === "pt-BR"
@@ -852,17 +937,17 @@ export default function ImersionPhase() {
                   alt={
                     language === "pt-BR"
                       ? "Canvas para entrevista do cuidador (CCA)"
-                      : "Canvas for caregiver interview (CCA)"
+                      : "Canvas for caregiver interview (ACC)"
                   }
-                  className="w-full h-auto rounded-md shadow-sm"
+                  className="rounded-md shadow-sm max-w-full h-auto"
                 />
               </div>
               <h5 className="font-semibold text-lg mb-2">
                 {language === "pt-BR"
                   ? "Canvas do Cuidador (CCA)"
-                  : "Caregiver Canvas (CCA)"}
+                  : "Caregiver Canvas (ACC)"}
               </h5>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm">
                 {language === "pt-BR"
                   ? "Canvas específico para mapear as informações obtidas nas entrevistas com pais, mães e responsáveis por autistas."
                   : "Specific canvas to map information obtained in interviews with parents, mothers and guardians of autistics."}
@@ -870,7 +955,7 @@ export default function ImersionPhase() {
             </div>
 
             <div className="border rounded-lg p-4">
-              <div className="mb-4">
+              <div className="mb-4 flex justify-center">
                 <img
                   src={
                     language === "pt-BR"
@@ -882,7 +967,7 @@ export default function ImersionPhase() {
                       ? "Canvas para entrevista do terapeuta (CCT)"
                       : "Canvas for therapist interview (CCT)"
                   }
-                  className="w-full h-auto rounded-md shadow-sm"
+                  className="rounded-md shadow-sm max-w-full h-auto"
                 />
               </div>
               <h5 className="font-semibold text-lg mb-2">
@@ -890,24 +975,11 @@ export default function ImersionPhase() {
                   ? "Canvas do Terapeuta (CTA)"
                   : "Therapist Canvas (CTA)"}
               </h5>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm">
                 {language === "pt-BR"
                   ? "Canvas específico para mapear as informações obtidas nas entrevistas com especialistas e terapeutas que atendem autistas."
                   : "Specific canvas to map information obtained in interviews with specialists and therapists who serve autistics."}
               </p>
-            </div>
-          </div>
-
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-6">
-            <div className="flex items-start space-x-3">
-              <Info className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-yellow-800 font-medium">
-                  {language === "pt-BR"
-                    ? "INFO: Não se preocupe, caso queira as versões didáticas destes canvas, você pode baixá-los em (?). Considere imprimi-los e preenchê-los à mão."
-                    : "INFO: Don't worry, if you want the didactic versions of these canvases, you can download them at (?). Consider printing them and filling them out by hand."}
-                </p>
-              </div>
             </div>
           </div>
 
@@ -923,22 +995,87 @@ export default function ImersionPhase() {
                 : "During the interview, it is common for verbal communication to result in long, scattered or informal responses. It is the Requirements Analyst's responsibility to filter, structure and formalize this information to ensure that essential requirements are not lost or ambiguous, avoiding the need to repeat the interview."}
             </p>
 
+            {/* Tabela para substituir a imagem de filtragem de resposta da entrevista */}
             <div className="my-6 p-4 bg-card rounded-lg border">
-              <div className="max-w-3xl mx-auto">
-                <img
-                  src={
-                    language === "pt-BR"
-                      ? "src/modules/Tutorial/assets/imersion-phase/FiltragemRespostaEntrevista-pt-br.png"
-                      : "src/modules/Tutorial/assets/imersion-phase/FiltragemRespostaEntrevista-en-us.png"
-                  }
-                  alt={
-                    language === "pt-BR"
-                      ? "Exemplo de como filtrar as respostas do cliente após uma entrevista"
-                      : "Example of how to filter client responses after an interview"
-                  }
-                  className="w-full h-auto rounded-md shadow-sm"
-                />
-                <p className="text-sm text-muted-foreground text-center mt-2">
+              <div className="max-w-4xl mx-auto">
+                <h4 className="font-semibold text-lg mb-4 text-center">
+                  {language === "pt-BR"
+                    ? "Exemplo de como filtrar as respostas do cliente após uma entrevista"
+                    : "Example of how to filter client responses after an interview"}
+                </h4>
+
+                <div className="overflow-x-auto border rounded bg-white text-black">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-slate-50 border-b text-slate-900">
+                      <tr>
+                        <th className="p-3 font-semibold border-r">
+                          {language === "pt-BR"
+                            ? "Resposta Original"
+                            : "Original Response"}
+                        </th>
+                        <th className="p-3 font-semibold border-r">
+                          {language === "pt-BR"
+                            ? "Informação Filtrada"
+                            : "Filtered Information"}
+                        </th>
+                        <th className="p-3 font-semibold">
+                          {language === "pt-BR"
+                            ? "Campo no Canvas"
+                            : "Canvas Field"}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="p-3 border-r border-b text-xs">
+                          {language === "pt-BR"
+                            ? '"Comunicação com os professores responsáveis pelo atendimento do autista, disponibilização de informações do autista de forma acessível como se fosse um perfil que o professor pode acessar."'
+                            : '"Communication with teachers responsible for autistic care, providing autistic information in an accessible way like a profile that the teacher can access."'}
+                        </td>
+                        <td className="p-3 border-r border-b">
+                          {language === "pt-BR"
+                            ? "Perfil do autista acessível para professores"
+                            : "Accessible autistic profile for teachers"}
+                        </td>
+                        <td className="p-3 border-b font-medium">
+                          {language === "pt-BR" ? "Recursos" : "Resources"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 border-r border-b text-xs">
+                          {language === "pt-BR"
+                            ? '"Quero que haja perfil para mentor, professor, autista e até especialista se possível. Cada perfil teria acesso a funções específicas do sistema."'
+                            : '"I want there to be profiles for mentor, teacher, autistic and even specialist if possible. Each profile would have access to specific system functions."'}
+                        </td>
+                        <td className="p-3 border-r border-b">
+                          {language === "pt-BR"
+                            ? "Múltiplos perfis de usuário com permissões específicas"
+                            : "Multiple user profiles with specific permissions"}
+                        </td>
+                        <td className="p-3 border-b font-medium">
+                          {language === "pt-BR" ? "Segmentos" : "Segments"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 border-r border-b text-xs">
+                          {language === "pt-BR"
+                            ? '"Botões de alerta para autistas se sentirem muito ameaçados ou desconfortáveis e quiserem reportar isso com mais clareza para serem atendidos virtualmente ou presencialmente."'
+                            : '"Alert buttons for autistics who feel very threatened or uncomfortable and want to report this more clearly to be served virtually or in person."'}
+                        </td>
+                        <td className="p-3 border-r border-b">
+                          {language === "pt-BR"
+                            ? "Sistema de alerta para situações de desconforto"
+                            : "Alert system for uncomfortable situations"}
+                        </td>
+                        <td className="p-3 border-b font-medium">
+                          {language === "pt-BR" ? "Recursos" : "Resources"}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <p className="text-sm text-center mt-2">
                   {language === "pt-BR"
                     ? "Exemplo de como filtrar as respostas do cliente após uma entrevista."
                     : "Example of how to filter client responses after an interview."}
@@ -963,7 +1100,7 @@ export default function ImersionPhase() {
               <p className="text-blue-700">
                 {language === "pt-BR"
                   ? "Por fim, elimine os conflitos entre o CCA e o CTA. O conflito entre os canvas ocorre quando em uma determinada entrevista, caso seja obtida uma resposta que conflite com a de outra entrevista, deve-se usar aquela que tiver mais incidência (quantidade de semelhantes)."
-                  : "Finally, eliminate conflicts between the CCA and CTA. The conflict between canvases occurs when in a given interview, if a response is obtained that conflicts with another interview, the one with higher incidence (number of similar ones) should be used."}
+                  : "Finally, eliminate conflicts between the ACC and ATC. The conflict between canvases occurs when in a given interview, if a response is obtained that conflicts with another interview, the one with higher incidence (number of similar ones) should be used."}
               </p>
               <p className="text-blue-700 mt-2">
                 <strong>
@@ -979,7 +1116,7 @@ export default function ImersionPhase() {
       </div>
 
       {/* Tabela de Conteúdos */}
-      <div className="w-80 flex-shrink-0 pt-6 pr-6 sticky top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto">
+      <div className="w-full lg:w-80 flex-shrink-0 p-6 lg:pt-6 lg:pr-6 lg:sticky lg:top-20 self-start max-h-[calc(100vh-5rem)] overflow-y-auto order-first lg:order-none">
         <Card className="shadow-lg border-l-4 border-l-blue-500">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
@@ -995,7 +1132,7 @@ export default function ImersionPhase() {
                 <button
                   key={item.id}
                   onClick={() => handleNavigation(item)}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 text-white/90${
                     activeSection === item.id
                       ? "bg-blue-50 text-blue-700 border-l-4 border-l-blue-500 font-medium"
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
@@ -1004,7 +1141,7 @@ export default function ImersionPhase() {
                   <ChevronRight
                     className={`h-3 w-3 transition-transform duration-200 ${
                       activeSection === item.id
-                        ? "text-blue-500"
+                        ? "text-blue-500 rotate-90"
                         : "text-gray-400"
                     }`}
                   />
