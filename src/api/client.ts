@@ -5,6 +5,8 @@ const api = axios.create({
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
+    // PULA A TELA DE AVISO DO NGROK 👇
+    "ngrok-skip-browser-warning": "true",
   },
 });
 
