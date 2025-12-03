@@ -4,17 +4,23 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Search, Filter } from "lucide-react";
+import { CategoriaRecomendacaoDTO } from "@/api/types/categoriaRecomendacaoTypes";
+// Importamos a constante do Form para evitar duplicação, ou redefinimos aqui se preferir isolamento
+import { DEFAULT_CATEGORIES } from "./RecommendationFormDialog";
 
 interface RecommendationFiltersProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
   categoryFilter: string;
   setCategoryFilter: (value: string) => void;
+  categories: CategoriaRecomendacaoDTO[];
 }
 
 export const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({
@@ -22,6 +28,7 @@ export const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({
   setSearchTerm,
   categoryFilter,
   setCategoryFilter,
+  categories,
 }) => {
   return (
     <Card>
@@ -43,12 +50,31 @@ export const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="ALL">Todas as categorias</SelectItem>
-              <SelectItem value="NAVIGATION">Navegação</SelectItem>
-              <SelectItem value="INTERACTION">Interação</SelectItem>
-              <SelectItem value="VISUAL">Visual</SelectItem>
-              <SelectItem value="CONTENT">Conteúdo</SelectItem>
-              <SelectItem value="FEEDBACK">Feedback</SelectItem>
-              <SelectItem value="GENERAL">Geral</SelectItem>
+
+              <SelectGroup>
+                <SelectLabel>Padrão</SelectLabel>
+                {DEFAULT_CATEGORIES.map((cat) => (
+                  <SelectItem key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+
+              {categories.length > 0 && (
+                <SelectGroup>
+                  <SelectLabel>Personalizadas</SelectLabel>
+                  {categories.map(
+                    (cat) =>
+                      !DEFAULT_CATEGORIES.some(
+                        (def) => def.value === cat.nome,
+                      ) && (
+                        <SelectItem key={cat.id} value={cat.nome}>
+                          {cat.nome}
+                        </SelectItem>
+                      ),
+                  )}
+                </SelectGroup>
+              )}
             </SelectContent>
           </Select>
         </div>

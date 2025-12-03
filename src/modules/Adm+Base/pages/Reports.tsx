@@ -1,8 +1,15 @@
 import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useI18n } from "@/core/i18n/I18nContext";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import {
+  Loader2,
+  FileText,
+  User,
+  MessageSquare,
+  LayoutList,
+} from "lucide-react";
 
 import { Report, ReportStatus } from "../types/reportTypes";
 import { ReportsFilter } from "../components/reports/ReportsFilter";
@@ -17,6 +24,7 @@ export default function Reports() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("ALL"); // Novo estado para abas
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -39,6 +47,7 @@ export default function Reports() {
 
   const filteredReports = useMemo(() => {
     return reports.filter((report) => {
+      // 1. Filtro de Busca (Texto)
       const targetName = report.targetName || "";
       const description = report.description || "";
       const reporterName = report.reporterName || "";
@@ -48,12 +57,16 @@ export default function Reports() {
         description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reporterName.toLowerCase().includes(searchTerm.toLowerCase());
 
+      // 2. Filtro de Status
       const matchesStatus =
         statusFilter === "all" || report.status === statusFilter;
 
-      return matchesSearch && matchesStatus;
+      // 3. Filtro de Tipo (Abas)
+      const matchesType = typeFilter === "ALL" || report.type === typeFilter;
+
+      return matchesSearch && matchesStatus && matchesType;
     });
-  }, [reports, searchTerm, statusFilter]);
+  }, [reports, searchTerm, statusFilter, typeFilter]);
 
   const handleUpdateStatus = async (id: string, newStatus: ReportStatus) => {
     try {
@@ -87,7 +100,6 @@ export default function Reports() {
           <p className="text-muted-foreground mt-2">{t("reports.subtitle")}</p>
         </div>
 
-        {/* Botão de Recarregar Manual */}
         <button
           onClick={loadReports}
           className="text-sm text-primary hover:underline"
@@ -97,30 +109,62 @@ export default function Reports() {
         </button>
       </div>
 
-      {/* Componente de Filtros */}
-      <ReportsFilter
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-      />
+      {/* Abas de Navegação por Tipo */}
+      <Tabs defaultValue="ALL" className="w-full" onValueChange={setTypeFilter}>
+        <TabsList className="grid w-full grid-cols-4 max-w-[600px]">
+          <TabsTrigger value="ALL" className="flex items-center gap-2">
+            <LayoutList className="h-4 w-4" />
+            Todas
+          </TabsTrigger>
+          <TabsTrigger
+            value="RECOMMENDATION"
+            className="flex items-center gap-2"
+          >
+            <FileText className="h-4 w-4" />
+            Recomendações
+          </TabsTrigger>
+          <TabsTrigger value="USER" className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            Usuários
+          </TabsTrigger>
+          <TabsTrigger value="COMMENT" className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" />
+            Comentários
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Tabela de Resultados */}
-      <Card>
-        <CardContent className="p-0">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-              <Loader2 className="h-8 w-8 animate-spin mb-2" />
-              <p>{t("common.loading")}</p>
-            </div>
-          ) : (
-            <ReportsTable
-              reports={filteredReports}
-              onViewDetails={handleViewDetails}
-            />
-          )}
-        </CardContent>
-      </Card>
+        <div className="mt-6 space-y-6">
+          {/* Filtros de Texto e Status */}
+          <ReportsFilter
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+          />
+
+          {/* Tabela de Resultados */}
+          <Card>
+            <CardContent className="p-0">
+              {isLoading ? (
+                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+                  <Loader2 className="h-8 w-8 animate-spin mb-2" />
+                  <p>{t("common.loading")}</p>
+                </div>
+              ) : (
+                <ReportsTable
+                  reports={filteredReports}
+                  onViewDetails={handleViewDetails}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <TabsContent value="ALL" />
+        <TabsContent value="RECOMMENDATION" />
+        <TabsContent value="USER" />
+        <TabsContent value="COMMENT" />
+      </Tabs>
 
       {/* Diálogo de Detalhes */}
       <ReportDetailsDialog

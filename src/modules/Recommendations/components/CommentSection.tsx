@@ -9,6 +9,8 @@ import {
 } from "@/api/recomendacaoService";
 import { toast } from "sonner";
 import { Send, MessageSquare } from "lucide-react";
+// Import do componente de denúncia
+import { CreateReportDialog } from "@/components/reports/CreateReportDialog";
 
 interface CommentSectionProps {
   recomendacaoId: string;
@@ -101,7 +103,7 @@ export const CommentSection = ({
               comments.map((comment) => (
                 <div
                   key={comment.id}
-                  className="flex gap-3 bg-muted/30 p-3 rounded-lg"
+                  className="flex gap-3 bg-muted/30 p-3 rounded-lg group"
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={comment.autorAvatar || undefined} />
@@ -110,13 +112,23 @@ export const CommentSection = ({
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-semibold">
-                        {comment.autorNome}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(comment.criadoEm).toLocaleDateString()}
-                      </span>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-sm font-semibold mr-2">
+                          {comment.autorNome}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(comment.criadoEm).toLocaleDateString()}
+                        </span>
+                      </div>
+
+                      {/* Botão de Denúncia - visível apenas se autenticado */}
+                      {isAuthenticated && (
+                        <CreateReportDialog
+                          targetId={comment.id}
+                          targetType="COMMENT"
+                        />
+                      )}
                     </div>
                     <p className="text-sm mt-1 text-foreground/90">
                       {comment.texto}

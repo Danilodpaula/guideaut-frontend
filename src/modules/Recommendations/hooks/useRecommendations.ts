@@ -13,6 +13,8 @@ import {
   Recomendacao,
   RecomendacaoRequest,
 } from "@/api/types/recomendacaoTypes";
+import { listarCategoriasRecomendacaoApi } from "@/api/categoriaRecomendacaoService";
+import { CategoriaRecomendacaoDTO } from "@/api/types/categoriaRecomendacaoTypes";
 
 export interface RecommendationUi extends Recomendacao {
   user_vote?: string;
@@ -27,10 +29,6 @@ const emptyFormData = {
   referencia: "",
 };
 
-/**
- * @param searchTerm
- * @param categoryFilter
- */
 export const useRecommendations = (
   searchTerm: string,
   categoryFilter: string,
@@ -41,6 +39,7 @@ export const useRecommendations = (
   const [allRecommendations, setAllRecommendations] = useState<
     RecommendationUi[]
   >([]);
+  const [categories, setCategories] = useState<CategoriaRecomendacaoDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
@@ -50,23 +49,32 @@ export const useRecommendations = (
   const [formData, setFormData] = useState(emptyFormData);
 
   useEffect(() => {
-    loadRecommendations();
+    loadData();
   }, []);
 
-  const loadRecommendations = async () => {
+  const loadData = async () => {
     try {
       setIsLoading(true);
-      const { data: recs } = await listarRecomendacoesApi();
+      // Carrega recomendações e categorias em paralelo
+      const [recsResponse, catsResponse] = await Promise.all([
+        listarRecomendacoesApi(),
+        listarCategoriasRecomendacaoApi(),
+      ]);
+
       setAllRecommendations(
-        recs.map((rec: Recomendacao) => ({
+        recsResponse.data.map((rec: Recomendacao) => ({
           ...rec,
           user_vote: undefined,
           is_favorited: false,
         })),
       );
+
+      // Filtra apenas categorias ativas para uso no sistema
+      const activeCats = catsResponse.data.filter((c) => c.ativo !== false);
+      setCategories(activeCats);
     } catch (error) {
-      console.error("Erro ao carregar recomendações:", error);
-      toast.error("Erro ao carregar recomendações");
+      console.error("Erro ao carregar dados:", error);
+      toast.error("Erro ao carregar recomendações e categorias");
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +113,15 @@ export const useRecommendations = (
       }
 
       handleFormOpenChange(false);
-      await loadRecommendations();
+      // Recarrega apenas as recomendações para atualizar a lista
+      const { data } = await listarRecomendacoesApi();
+      setAllRecommendations(
+        data.map((rec: Recomendacao) => ({
+          ...rec,
+          user_vote: undefined,
+          is_favorited: false,
+        })),
+      );
     } catch (error) {
       console.error("Erro ao salvar recomendação:", error);
       toast.error(
@@ -123,7 +139,15 @@ export const useRecommendations = (
       toast.success("Recomendação deletada com sucesso!");
       setDeletingRecId(null);
       setIsDeleteAlertOpen(false);
-      await loadRecommendations();
+
+      const { data } = await listarRecomendacoesApi();
+      setAllRecommendations(
+        data.map((rec: Recomendacao) => ({
+          ...rec,
+          user_vote: undefined,
+          is_favorited: false,
+        })),
+      );
     } catch (error) {
       console.error("Erro ao deletar recomendação:", error);
       toast.error("Erro ao deletar recomendação.");
@@ -203,6 +227,7 @@ export const useRecommendations = (
   return {
     isLoading,
     filteredRecommendations,
+    categories, // Retorna as categorias carregadas
     isFormOpen,
     editingRec,
     formData,
