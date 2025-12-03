@@ -13,13 +13,26 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Recomendacao } from "@/api/types/recomendacaoTypes";
+import { CategoriaRecomendacaoDTO } from "@/api/types/categoriaRecomendacaoTypes";
 import { Plus } from "lucide-react";
+
+// Constante com as categorias padrão (Enum)
+export const DEFAULT_CATEGORIES = [
+  { value: "NAVIGATION", label: "Navegação" },
+  { value: "INTERACTION", label: "Interação" },
+  { value: "VISUAL", label: "Visual" },
+  { value: "CONTENT", label: "Conteúdo" },
+  { value: "FEEDBACK", label: "Feedback" },
+  { value: "GENERAL", label: "Geral" },
+];
 
 interface FormData {
   title: string;
@@ -36,11 +49,20 @@ interface RecommendationFormDialogProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   editingRec: Recomendacao | null;
+  categories: CategoriaRecomendacaoDTO[];
 }
 
 export const RecommendationFormDialog: React.FC<
   RecommendationFormDialogProps
-> = ({ isOpen, onOpenChange, onSubmit, formData, setFormData, editingRec }) => {
+> = ({
+  isOpen,
+  onOpenChange,
+  onSubmit,
+  formData,
+  setFormData,
+  editingRec,
+  categories,
+}) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
@@ -61,7 +83,6 @@ export const RecommendationFormDialog: React.FC<
           </DialogDescription>
         </DialogHeader>
 
-        {/* Formulário de criação/edição */}
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Título</Label>
@@ -116,12 +137,31 @@ export const RecommendationFormDialog: React.FC<
                 <SelectValue placeholder="Selecione..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="NAVIGATION">Navegação</SelectItem>
-                <SelectItem value="INTERACTION">Interação</SelectItem>
-                <SelectItem value="VISUAL">Visual</SelectItem>
-                <SelectItem value="CONTENT">Conteúdo</SelectItem>
-                <SelectItem value="FEEDBACK">Feedback</SelectItem>
-                <SelectItem value="GENERAL">Geral</SelectItem>
+                <SelectGroup>
+                  <SelectLabel>Categorias Padrão</SelectLabel>
+                  {DEFAULT_CATEGORIES.map((cat) => (
+                    <SelectItem key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+
+                {categories.length > 0 && (
+                  <SelectGroup>
+                    <SelectLabel>Outras Categorias</SelectLabel>
+                    {categories.map(
+                      (cat) =>
+                        // Evita duplicidade se o nome for igual a um padrão
+                        !DEFAULT_CATEGORIES.some(
+                          (def) => def.value === cat.nome,
+                        ) && (
+                          <SelectItem key={cat.id} value={cat.nome}>
+                            {cat.nome}
+                          </SelectItem>
+                        ),
+                    )}
+                  </SelectGroup>
+                )}
               </SelectContent>
             </Select>
           </div>
