@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+  Design System centralizado.
+  - Tudo que for token global (cores, raios, fontes, transições) fica aqui.
+  - Mantido em HSL para facilitar ajustes de tema e variações de opacidade.
+*/
+
+@layer base {
+  :root {
+    /* ===== Light Theme (padrão) ===== */
+    /* Fundo geral da aplicação */
+    --background: 0 0% 98%;
+    /* Cor principal de texto (boa legibilidade sobre fundo claro) */
+    --foreground: 217 19% 17%;
+
+    /* Tokens de cartão / superfícies elevadas */
+    --card: 0 0% 100%;
+    --card-foreground: 217 19% 17%;
+
+    /* Popovers, dropdowns, tooltips */
+    --popover: 0 0% 100%;
+    --popover-foreground: 217 19% 17%;
+
+    /* Ação principal (CTA) – azul inspirado no GuideAut */
+    --primary: 199 94% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Ações secundárias / elementos de destaque quentes */
+    --secondary: 48 100% 67%;
+    --secondary-foreground: 222 84% 5%;
+
+    /* Áreas neutras (chips, abas, placeholders) */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Acentos positivos (tags, badges de status OK) */
+    --accent: 142 71% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Estado destrutivo (erros, remoção) */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Estados semânticos extras */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 48 100% 67%;
+    --warning-foreground: 222 84% 5%;
+
+    --info: 199 94% 55%;
+    --info-foreground: 0 0% 100%;
+
+    /* Bordas, inputs e foco */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 199 94% 55%;
+
+    /* Raio base para componentes (pode ser usado no Tailwind via var) */
+    --radius: 0.5rem;
+
+    /* Tokens específicos de sidebar / layouts com painel lateral */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 217 19% 17%;
+    --sidebar-primary: 199 94% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 199 94% 95%;
+    --sidebar-accent-foreground: 199 94% 25%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 199 94% 55%;
+
+    /* Acessibilidade – tamanhos mínimos de fonte globais */
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.125rem;
+
+    /* Transições padrão para hover / focus */
+    --transition-normal: 200ms ease-in-out;
+    --transition-fast: 100ms ease-in-out;
+  }
+
+  .dark {
+    /* 🌚 Tema Escuro - completo */
+    --background: 222 84% 5%; /* Fundo (escuro) */
+    --foreground: 210 40% 98%; /* Texto (claro) */
+
+    /* Cartões, popovers e áreas padrão (ESCURAS) */
+    --card: 222 84% 8%; /* Cor do card (um pouco mais claro que o fundo) */
+    --card-foreground: 210 40% 98%;
+    --popover: 222 84% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Paleta principal */
+    --primary: 199 94% 55%;
+    --primary-foreground: 0 0% 100%; /* Texto do botão primário */
+    --secondary: 48 100% 67%;
+    --secondary-foreground: 222 84% 5%; /* Texto do badge 'secondary' (escuro) */
+    --accent: 142 71% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Texto "muted" (cinza claro) */
+    --muted: 217 33% 18%;
+    --muted-foreground: 217 33% 50%; /* Cor do texto "muted" (ex: descrições) */
+
+    /* Estados e feedback */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 48 100% 67%;
+    --warning-foreground: 222 84% 5%;
+
+    --info: 199 94% 55%;
+
+    /* Bordas, inputs e raio padrão */
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 199 94% 55%;
+
+    /* Sidebar */
+    --sidebar-background: 222 84% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 199 94% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 199 94% 15%;
+    --sidebar-accent-foreground: 199 94% 95%;
+    --sidebar-border: 217 33% 18%;
+    --sidebar-ring: 199 94% 55%;
+  }
+
+  /* 
+    Respeito à preferência do usuário por menos movimento.
+    Útil para acessibilidade e testes de UI.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Classe manual para forçar redução de movimento na UI */
+  .reduce-motion *,
+  .reduce-motion *::before,
+  .reduce-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Helpers de tipografia acessível */
+  .font-size-sm {
+    font-size: var(--font-size-sm);
+  }
+
+  .font-size-md {
+    font-size: var(--font-size-md);
+  }
+
+  .font-size-lg {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@layer base {
+  * {
+    /* Garantimos que todas as bordas usem o token global de border */
+    @apply border-border;
+  }
+
+  body {
+    /* Fundo e texto acordados com o tema atual (light/dark) */
+    @apply bg-background text-foreground;
+  }
+
+  /* ===== Utilitários globais ===== */
+
+  /* Efeito de “card vivo” para dashboards e listagens */
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-[1.02];
+  }
+
+  /* Link com underline animado – bom para navegação secundária */
+  .story-link {
+    @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+  }
+}
