@@ -1,12 +1,23 @@
 import { useMemo } from "react";
-import { Watch } from "./usePersonaAutForm";
 
-export const useVGA = (watch: Watch) => {
+interface Props {
+  interactionList: string[];
+  cognitionList: string[];
+  communicationList: string[];
+  behaviorList: string[];
+}
+
+export const useVGA = ({
+  interactionList,
+  cognitionList,
+  communicationList,
+  behaviorList,
+}: Props) => {
   const dataVGA = useMemo(() => {
-    const interaction = Math.trunc((watch("interaction").length * 100) / 9);
-    const cognition = Math.trunc((watch("cognition").length * 100) / 9);
-    const communication = Math.trunc((watch("communication").length * 100) / 9);
-    const behavior = Math.trunc((watch("behavior").length * 100) / 13);
+    const interaction = Math.trunc((interactionList.length * 100) / 9);
+    const cognition = Math.trunc((cognitionList.length * 100) / 9);
+    const communication = Math.trunc((communicationList.length * 100) / 9);
+    const behavior = Math.trunc((behaviorList.length * 100) / 13);
 
     return [
       {
@@ -31,10 +42,10 @@ export const useVGA = (watch: Watch) => {
       },
     ];
   }, [
-    watch("interaction").length,
-    watch("cognition").length,
-    watch("communication").length,
-    watch("behavior").length,
+    interactionList.length,
+    cognitionList.length,
+    communicationList.length,
+    behaviorList.length,
   ]);
 
   return { dataVGA };

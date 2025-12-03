@@ -24,6 +24,9 @@ import { useI18n } from "@/core/i18n/I18nContext";
 import { Search, Palette, Eye, Volume2, Gauge, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAuth } from "@/core/auth/AuthContext";
+import { useNavigate } from "react-router-dom";
+import useAuthGuard from "../hooks/useAuthGuard";
 
 /**
  * Estrutura de categoria e padrão de design.
@@ -50,8 +53,17 @@ interface Pattern {
  * Mostra padrões de interface categorizados e relacionados a atributos de qualidade,
  * com suporte a filtros por texto, categoria e tipo de qualidade.
  */
-export default function DesignPatterns() {
+const DesignPatterns = () => {
+  useAuthGuard();
   const { language } = useI18n();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  if (!isAuthenticated) {
+    toast.error("Deu erro!");
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
+  }
 
   // Filtros de busca
   const [searchTerm, setSearchTerm] = useState("");
@@ -335,4 +347,6 @@ export default function DesignPatterns() {
       )}
     </div>
   );
-}
+};
+
+export default DesignPatterns;

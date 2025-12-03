@@ -39,13 +39,18 @@ import Audit from "./modules/Adm+Base/pages/Audit";
 import Profile from "./modules/Adm+Base/pages/Profile";
 import NotFound from "./modules/Adm+Base/pages/NotFound";
 import { Footer } from "./components/layout/Footer";
-import Stepper from "./modules/Artifacts/pages/EmpathyAutStepper";
+import Persona from "./modules/Artifacts/pages/Persona";
+import Canvas from "./modules/Artifacts/pages/Canvas";
+import Script from "./modules/Artifacts/pages/Script";
+import Empathy from "./modules/Artifacts/pages/Empathy";
+import ScriptCreateForm from "./modules/Artifacts/pages/ScriptCreateForm";
+import ScriptsMyScripts from "./modules/Artifacts/pages/ScriptsMyScripts";
+import EmpathyCreateForm from "./modules/Artifacts/pages/EmpathyCreateForm";
+import EmpathyEditForm from "./modules/Artifacts/pages/EmpathyEditForm";
+import PersonaCreateForm from "./modules/Artifacts/pages/PersonaCreateForm";
+import PersonaEditForm from "./modules/Artifacts/pages/PersonaEditForm";
 import Developers from "./modules/Adm+Base/pages/Developers";
 import Reports from "./modules/Adm+Base/pages/Reports";
-import PersonaAutReadAll from "./modules/Artifacts/pages/PersonaAutReadAll";
-import PersonaAutReadOne from "./modules/Artifacts/pages/PersonaAutReadOne";
-import PersonaAutUpdate from "./modules/Artifacts/pages/PersonaAutUpdate";
-import PersonaAutCreate from "./modules/Artifacts/pages/PersonaAutCreate";
 import ForgotPassword from "./modules/Adm+Base/pages/ForgotPassword";
 
 const queryClient = new QueryClient();
@@ -77,15 +82,30 @@ const AppLayout = () => (
             <Route path="help" element={<Help />} />
             <Route path="me" element={<Profile />} />
             <Route path="settings/accessibility" element={<Accessibility />} />
-            <Route path="empathy-aut">
-              <Route path="create" element={<Stepper />} />
-            </Route>
-            <Route path="persona-aut">
-              <Route index element={<PersonaAutReadAll />} />
-              <Route path="create" element={<PersonaAutCreate />} />
+            <Route path="empathy">
+              <Route path="create" element={<EmpathyCreateForm />} />
               <Route path=":id">
-                <Route index element={<PersonaAutReadOne />} />
-                <Route path="update" element={<PersonaAutUpdate />} />
+                <Route index element={<Empathy />} />
+                <Route path="update" element={<EmpathyEditForm />} />
+              </Route>
+            </Route>
+            <Route path="persona">
+              <Route path="create" element={<PersonaCreateForm />} />
+              <Route path=":id">
+                <Route index element={<Persona />} />
+                <Route path="update" element={<PersonaEditForm />} />
+              </Route>
+            </Route>
+            <Route path="script">
+              <Route path="my-scripts" element={<ScriptsMyScripts />} />
+              <Route path="create" element={<ScriptCreateForm />} />
+              <Route path=":id">
+                <Route path="edit" element={<Script />} />
+              </Route>
+            </Route>
+            <Route path="canvas">
+              <Route path=":id">
+                <Route index element={<Canvas />} />
               </Route>
             </Route>
             {/* Rotas administrativas protegidas */}
