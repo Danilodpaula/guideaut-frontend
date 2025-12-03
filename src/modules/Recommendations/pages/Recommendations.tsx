@@ -18,32 +18,34 @@ import {
 import { useRecommendations } from "../hooks/useRecommendations";
 
 import { RecommendationFilters } from "../components/RecommendationFilters";
-import { RecommendationFormDialog } from "../components/RecommendationFormDialog";
+import {
+  RecommendationFormDialog,
+  DEFAULT_CATEGORIES,
+} from "../components/RecommendationFormDialog"; // Importa as categorias padrão
 import { RecommendationCard } from "../components/RecommendationCard";
 
-const getCategoryIcon = (category: string) =>
-  ({
+const getCategoryIcon = (category: string) => {
+  const map: Record<string, string> = {
     NAVIGATION: "🧭",
     INTERACTION: "👆",
     VISUAL: "👁️",
     CONTENT: "📝",
     FEEDBACK: "💬",
     GENERAL: "⚙️",
-  })[category] || "📌";
+  };
+  // Tenta achar pelo nome exato ou retorna um pin padrão
+  return map[category] || "📌";
+};
 
-const getCategoryLabel = (category: string) =>
-  ({
-    NAVIGATION: "Navegação",
-    INTERACTION: "Interação",
-    VISUAL: "Visual",
-    CONTENT: "Conteúdo",
-    FEEDBACK: "Feedback",
-    GENERAL: "Geral",
-  })[category] || category;
+// Função ajustada para traduzir os ENUMs
+const getCategoryLabel = (category: string) => {
+  const found = DEFAULT_CATEGORIES.find((c) => c.value === category);
+  return found ? found.label : category;
+};
 
 export default function Recommendations() {
   const { t } = useI18n();
-  const { isAuthenticated, can } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,6 +54,7 @@ export default function Recommendations() {
   const {
     isLoading,
     filteredRecommendations,
+    categories,
     isFormOpen,
     editingRec,
     formData,
@@ -70,7 +73,6 @@ export default function Recommendations() {
 
   return (
     <div className="flex-1 space-y-6 p-6">
-      {/* Cabeçalho */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -89,6 +91,7 @@ export default function Recommendations() {
             formData={formData}
             setFormData={setFormData}
             editingRec={editingRec}
+            categories={categories}
           />
         ) : (
           <Button onClick={() => navigate("/login")} variant="outline">
@@ -97,15 +100,14 @@ export default function Recommendations() {
         )}
       </div>
 
-      {/* Filtros */}
       <RecommendationFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         categoryFilter={categoryFilter}
         setCategoryFilter={setCategoryFilter}
+        categories={categories}
       />
 
-      {/* Lista de Recomendações */}
       {isLoading ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground">Carregando...</p>
@@ -136,7 +138,6 @@ export default function Recommendations() {
         </div>
       )}
 
-      {/* Diálogo de Confirmação de Exclusão */}
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
